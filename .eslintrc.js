@@ -47,13 +47,7 @@ module.exports = {
 
   overrides: [
     {
-      files: [
-        'liquidity/ui/**/*',
-        'liquidity/components/**/*',
-        'liquidity/lib/**/*',
-        'theme/**/*',
-        'governance/ui/**/*',
-      ],
+      files: ['liquidity/ui/**/*', 'liquidity/components/**/*', 'liquidity/lib/**/*'],
 
       env: {
         browser: true,

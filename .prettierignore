@@ -15,4 +15,3 @@ contracts/deployments
 **/junit.xml
 .yarnrc.yml
 lerna.json
-governance/subgraph/generated/*

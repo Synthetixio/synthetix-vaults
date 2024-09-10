@@ -146,13 +146,6 @@ module.exports = {
     ])
 
     .concat([
-      new webpack.NormalModuleReplacementPlugin(
-        new RegExp(`^@synthetixio/v3-theme$`),
-        path.resolve(path.dirname(require.resolve(`@synthetixio/v3-theme/package.json`)), 'src')
-      ),
-    ])
-
-    .concat([
       new webpack.ProvidePlugin({
         Buffer: ['buffer', 'Buffer'],
         process: 'process/browser.js',

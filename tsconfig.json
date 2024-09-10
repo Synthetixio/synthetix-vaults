@@ -32,8 +32,7 @@
     "**/*.test.tsx",
     "**/*.stories.tsx",
     "**/stories/**",
-    "**/cache/**",
-    "governance/subgraph/*"
+    "**/cache/**"
   ],
   "include": ["**/*.ts", "**/*.tsx"]
 }

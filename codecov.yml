@@ -21,7 +21,6 @@ ignore:
   - 'tools'
   - 'liquidity/cypress'
   - 'contracts'
-  - 'governance'
   - 'liquidity/ui/assert-deployment.js'
   - 'liquidity/ui/babel.config.js'
   - 'liquidity/ui/jest.config.js'

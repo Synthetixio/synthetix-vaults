@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { HashRouter } from 'react-router-dom';
 import { ChakraProvider, extendTheme, useColorMode } from '@chakra-ui/react';
-import { Fonts, theme } from '@synthetixio/v3-theme';
+import { Fonts, theme } from '@snx-v3/theme';
 import { DEFAULT_QUERY_STALE_TIME } from '@snx-v3/constants';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
