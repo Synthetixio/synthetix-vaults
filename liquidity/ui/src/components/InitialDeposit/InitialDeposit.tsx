@@ -203,7 +203,8 @@ export const InitialDepositUi: FC<{
             <Alert mb={6} status="error" borderRadius="6px">
               <AlertIcon />
               <AlertDescription>
-                Your deposit must be {formatNumber(minDelegation.toString())} {symbol} or higher
+                Your deposit must be {formatNumber(parseFloat(minDelegation.toString()))} {symbol}{' '}
+                or higher
               </AlertDescription>
             </Alert>
           </Collapse>
