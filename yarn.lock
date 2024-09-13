@@ -6591,8 +6591,8 @@ __metadata:
 
 "@synthetixio/v3-contracts@synthetixio/v3-contracts#master":
   version: 6.8.0
-  resolution: "@synthetixio/v3-contracts@https://github.com/synthetixio/v3-contracts.git#commit=403a17d295b3690aeac93aafdeb260b13de05d1e"
-  checksum: 10/cf23936ad69694c594d37b72b9c8daf7847e2ece1d96e4a8199d5a5ae2ece4408c27772e370eb5f1db132fe7edc7b2c29aee18fcad01a439cb856acd2703eae6
+  resolution: "@synthetixio/v3-contracts@https://github.com/synthetixio/v3-contracts.git#commit=f842754be50c39e18de5078867565ac6013f03f8"
+  checksum: 10/559d8e085495f388924398b9a5821343e22fdda7e708929906a191417e8ddea06743ef3cee7f4b389dbd089c48d82aec34393c73f3ad06b104375ae58d1e1647
   languageName: node
   linkType: hard
 
@@ -10072,9 +10072,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:1":
-  version: 1.0.30001659
-  resolution: "caniuse-lite@npm:1.0.30001659"
-  checksum: 10/bd8964faa9fe2d511673986621aca43b52e43fdbfc620372919c5895672f0d3537b589af8f66239e1e715f912d8eeea02e753ac95781314598882d137754198c
+  version: 1.0.30001660
+  resolution: "caniuse-lite@npm:1.0.30001660"
+  checksum: 10/5d83f0b7e2075b7e31f114f739155dc6c21b0afe8cb61180f625a4903b0ccd3d7591a5f81c930f14efddfa57040203ba0890850b8a3738f6c7f17c7dd83b9de8
   languageName: node
   linkType: hard
 
