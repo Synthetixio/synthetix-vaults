@@ -8,12 +8,15 @@ import { Wei, wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { BigNumber } from 'ethers';
 import { z } from 'zod';
+import { useSynthTokens } from '../useSynthTokens';
 
 const RewardsResponseSchema = z.array(
   z.object({
     address: z.string(),
     name: z.string(),
     symbol: z.string(),
+    payoutTokenAddress: z.string(),
+    displaySymbol: z.string().optional(),
     distributorAddress: z.string(),
     decimals: z.number(),
     claimableAmount: z.instanceof(Wei),
@@ -56,6 +59,7 @@ export function useRewards({
   const { data: collateralType } = useCollateralType(collateralSymbol);
   const collateralAddress = collateralType?.tokenAddress;
   const { network } = useNetwork();
+  const { data: synthTokens } = useSynthTokens();
 
   const { data: Multicall3 } = useMulticall3(network);
   const { data: CoreProxy } = useCoreProxy({ customNetwork: network });
@@ -170,14 +174,21 @@ export function useRewards({
           const claimableAmount = amounts[i];
           const historicalClaims = historicalData[i]?.data?.rewardsClaimeds;
           const distributions = metaData[i]?.data?.rewardsDistributions;
+          const symbol = item.payoutToken.symbol;
+          const synthToken = synthTokens?.find(
+            (synth) => synth.address.toUpperCase() === item.payoutToken.address?.toUpperCase()
+          );
+          const displaySymbol = synthToken ? synthToken?.symbol.slice(1) : symbol;
 
           if (!distributions || !distributions.length) {
             return {
               address: item.address,
               name: item.name,
-              symbol: item.payoutToken.symbol,
+              symbol,
+              displaySymbol,
               distributorAddress: item.address,
               decimals: item.payoutToken.decimals,
+              payoutTokenAddress: item.payoutToken.address,
               claimableAmount: wei(0),
               lifetimeClaimed: historicalClaims
                 .reduce(
@@ -191,9 +202,11 @@ export function useRewards({
           return {
             address: item.address,
             name: item.name,
-            symbol: item.payoutToken.symbol,
+            symbol,
+            displaySymbol,
             distributorAddress: item.address,
             decimals: item.payoutToken.decimals,
+            payoutTokenAddress: item.payoutToken.address,
             claimableAmount,
             lifetimeClaimed: historicalClaims
               .reduce(

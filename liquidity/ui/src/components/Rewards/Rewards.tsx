@@ -74,10 +74,11 @@ export const Rewards = ({ ...props }: FlexProps) => {
               ? rewards?.map((item) => (
                   <RewardsRow
                     key={item.address}
-                    symbol={item.symbol}
-                    claimableAmount={item.claimableAmount.toNumber()}
+                    displaySymbol={item.displaySymbol}
+                    claimableAmount={item.claimableAmount}
                     lifetimeClaimed={item.lifetimeClaimed}
-                    address={item.distributorAddress}
+                    distributorAddress={item.distributorAddress}
+                    payoutTokenAddress={item.payoutTokenAddress}
                   />
                 ))
               : null}

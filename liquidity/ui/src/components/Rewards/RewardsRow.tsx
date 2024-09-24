@@ -4,65 +4,72 @@ import { etherscanLink } from '@snx-v3/etherscanLink';
 import { truncateAddress } from '@snx-v3/formatters';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { useClaimRewards } from '@snx-v3/useClaimRewards';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useParams } from '@snx-v3/useParams';
-import { wei } from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { TokenIcon } from '../TokenIcon';
 import { RewardsModal } from './RewardsModal';
+import { useClaimUnwrapRewards } from '../../../../lib/useClaimUnwrapRewards';
+import { useCallback } from 'react';
 
 interface RewardsRowInterface {
-  symbol: string;
-  claimableAmount: number; // The immediate amount claimable as read from the contracts
+  displaySymbol?: string;
+  claimableAmount: Wei; // The immediate amount claimable as read from the contracts
   lifetimeClaimed: number;
-  address: string;
+  distributorAddress: string;
+  payoutTokenAddress: string;
 }
 
 export const RewardsRow = ({
-  symbol,
+  displaySymbol,
   claimableAmount,
   lifetimeClaimed,
-  address,
+  distributorAddress,
+  payoutTokenAddress,
 }: RewardsRowInterface) => {
   const { accountId, collateralSymbol, poolId } = useParams();
 
   const { data: collateralData } = useCollateralType(collateralSymbol);
   const { network } = useNetwork();
 
-  const { exec, txnState } = useClaimRewards(
-    poolId || '',
-    collateralData?.tokenAddress || '',
-    accountId,
-    address,
-    claimableAmount
-  );
+  const { exec: claimUnWrap, txnState } = useClaimUnwrapRewards({
+    poolId: poolId || '',
+    collateralAddress: collateralData?.tokenAddress || '',
+    accountId: accountId,
+    distributorAddress: distributorAddress,
+    amount: claimableAmount,
+    payoutTokenAddress,
+  });
 
-  const onClick = () => {
-    exec();
-  };
+  const onClick = useCallback(() => {
+    claimUnWrap();
+  }, [claimUnWrap]);
 
   const { txnStatus, txnHash } = txnState;
 
   return (
     <>
       <RewardsModal
-        amount={claimableAmount}
-        collateralSymbol={symbol}
+        amount={claimableAmount.toNumber()}
+        collateralSymbol={displaySymbol}
         txnStatus={txnStatus}
         txnHash={txnHash}
       />
       <Tr>
         <Td display="flex" alignItems="center" px={4} py={3} border="none" w="100%">
           <Fade in>
-            <TokenIcon height={30} width={30} symbol={symbol} />
+            <TokenIcon height={30} width={30} symbol={displaySymbol} />
           </Fade>
           <Fade in>
             <Flex flexDirection="column" ml="12px">
               <Link
-                href={etherscanLink({ chain: network?.name || 'mainnet', address })}
+                href={etherscanLink({
+                  chain: network?.name || 'mainnet',
+                  address: distributorAddress,
+                })}
                 target="_blank"
               >
-                <Tooltip label={`Distributed by ${truncateAddress(address)}`}>
+                <Tooltip label={`Distributed by ${truncateAddress(distributorAddress)}`}>
                   <Text
                     color="gray.50"
                     fontSize="14px"
@@ -70,7 +77,7 @@ export const RewardsRow = ({
                     fontWeight={500}
                     lineHeight="20px"
                   >
-                    {symbol}
+                    {displaySymbol}
                   </Text>
                 </Tooltip>
               </Link>
@@ -86,7 +93,7 @@ export const RewardsRow = ({
               fontWeight={500}
               lineHeight="20px"
             >
-              <Amount value={wei(claimableAmount)} />
+              <Amount value={claimableAmount} showTooltip />
             </Text>
             {lifetimeClaimed > 0 && (
               <Text color="gray.500" fontSize="12px" fontFamily="heading" lineHeight="16px">
@@ -102,7 +109,7 @@ export const RewardsRow = ({
               w="100%"
               size="sm"
               variant="solid"
-              isDisabled={claimableAmount === 0}
+              isDisabled={claimableAmount.eq(0)}
               _disabled={{
                 bg: 'gray.900',
                 backgroundImage: 'none',
@@ -112,7 +119,7 @@ export const RewardsRow = ({
               }}
               onClick={onClick}
             >
-              {claimableAmount > 0 || !lifetimeClaimed ? 'Claim' : 'Claimed'}
+              {claimableAmount.gt(0) || !lifetimeClaimed ? 'Claim' : 'Claimed'}
             </Button>
           </Fade>
         </Td>
