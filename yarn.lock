@@ -5099,6 +5099,7 @@ __metadata:
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
     "@cypress/code-coverage": "npm:^3.12.39"
+    "@pythnetwork/pyth-evm-js": "npm:^1.42.0"
     "@snx-cy/onLogAdded": "workspace:*"
     "@snx-cy/printBrowserLogs": "workspace:*"
     "@snx-v3/contracts": "workspace:*"
@@ -5339,8 +5340,6 @@ __metadata:
     "@snx-v3/useAccountProxy": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useGasPrice": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
@@ -5428,6 +5427,7 @@ __metadata:
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/constants": "workspace:*"
+    "@snx-v3/contracts": "workspace:*"
     "@snx-v3/icons": "workspace:*"
     "@web3-onboard/react": "npm:^2.9.1"
     ethers: "npm:^5.7.2"
