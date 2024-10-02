@@ -76,7 +76,7 @@ async function fetchOffchainData({
   );
   const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
   const updateType = 1;
-  const stalenessTolerance = 1800;
+  const stalenessTolerance = 3300;
   return ethers.utils.defaultAbiCoder.encode(
     ['uint8', 'uint64', 'bytes32[]', 'bytes[]'],
     [updateType, stalenessTolerance, priceIds, signedOffchainData]
@@ -303,6 +303,7 @@ export const withERC7412 = async (
           [signedOffchainData]
         ),
         value: ethers.BigNumber.from(missingPriceUpdates.length),
+        requireSuccess: false,
       };
       // return [extraPriceUpdateTxn, ...calls.map()];
       console.log(`[${label}]`, { extraPriceUpdateTxn });
