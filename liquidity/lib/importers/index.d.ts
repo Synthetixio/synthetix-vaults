@@ -158,9 +158,19 @@ declare module '@snx-v3/contracts' {
     preset?: string
   ): Promise<{ address: string; abi: string[] }>;
 
+  function importDebtRepayer(
+    chainId?: number,
+    preset?: string
+  ): Promise<{ address: string; abi: string[] }>;
+
   function importPythFeeds(chainId?: number, preset?: string): Promise<string[]>;
 
   function importPythVerfier(
+    chainId?: number,
+    preset?: string
+  ): Promise<{ address: string; abi: string[] }>;
+
+  function importClosePosition(
     chainId?: number,
     preset?: string
   ): Promise<{ address: string; abi: string[] }>;

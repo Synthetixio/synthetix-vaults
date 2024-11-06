@@ -15,12 +15,12 @@ commands:
       - run: date +"%Y-%m" > /tmp/month.txt && cat /tmp/month.txt
       - restore_cache:
           keys:
-            - yarn-{{ .Environment.YARN_CACHE_VERSION }}-{{ checksum "/tmp/month.txt" }}-{{ checksum "yarn.lock" }}
-            - yarn-{{ .Environment.YARN_CACHE_VERSION }}-{{ checksum "/tmp/month.txt" }}-
+            - &yarn_cache yarn-{{ .Environment.NODE_MODULES_VERSION }}-{{ .Environment.HOME }}-{{ checksum "/tmp/month.txt" }}-{{ checksum "yarn.lock" }}
+            - yarn-{{ .Environment.NODE_MODULES_VERSION }}-{{ .Environment.HOME }}-{{ checksum "/tmp/month.txt" }}-
       - run: yarn -v
       - run: yarn install --immutable
       - save_cache:
-          key: yarn-{{ .Environment.YARN_CACHE_VERSION }}-{{ checksum "/tmp/month.txt" }}-{{ checksum "yarn.lock" }}
+          key: *yarn_cache
           paths:
             - '~/.yarn/berry'
 
@@ -28,37 +28,34 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - foundry-{{ .Environment.FOUNDRY_CACHE_VERSION }}
+            - &foundry_cache foundry-{{ .Environment.FOUNDRY_CACHE_VERSION }}-{{ .Environment.HOME }}
 
       - run:
-          name: 'Add .foundry/bin to PATH'
+          name: 'Install Foundry'
+          working_directory: ~/
+          environment:
+            SHELL: /bin/bash
           command: |-
             export PATH="$PATH:$HOME/.foundry/bin"
             echo 'export PATH=$PATH:$HOME/.foundry/bin' >> $BASH_ENV
-
-      - run:
-          name: 'forge --version'
-          command: |-
             if command -v curl; then
               curl --version
             else
               apt update && apt install --yes curl
             fi
 
-            if command -v forge; then
-              forge --version
+            if command -v anvil; then
+              echo "Anvil already installed"
+              anvil --version
             else
-              echo "Forge needs to be installed"
-
               curl -L https://foundry.paradigm.xyz | bash
               foundryup
-              forge --version
             fi
 
       - save_cache:
-          key: foundry-{{ .Environment.FOUNDRY_CACHE_VERSION }}
+          key: *foundry_cache
           paths:
-            - '~/.foundry/bin'
+            - '~/.foundry'
 
   ipfs-deploy:
     parameters:
@@ -118,6 +115,7 @@ jobs:
       - image: cimg/node:<< pipeline.parameters.node-version >>
     steps:
       - checkout
+      - install-foundry
       - yarn-install
       - run: yarn npm audit --recursive --severity critical
       - run: yarn dedupe --check
