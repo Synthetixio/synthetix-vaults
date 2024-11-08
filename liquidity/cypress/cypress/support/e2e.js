@@ -15,8 +15,9 @@ beforeEach(() => {
 
   cy.on('log:added', onLogAdded);
 
-  cy.intercept('https://analytics.synthetix.io/matomo.js', { statusCode: 204 }).as('matomo');
-  cy.intercept('https://analytics.synthetix.io/matomo.js', { log: false });
+  cy.intercept('https://analytics.synthetix.io/matomo.js', { statusCode: 204, log: false }).as(
+    'matomo'
+  );
   cy.intercept('https://cloudflare-eth.com/**', { statusCode: 400, log: false }).as(
     'cloudflare-eth'
   );
