@@ -60,12 +60,8 @@ jobs:
           ref: 'master'
           ssh-key: '${{ secrets.LIQUIDITY_SYNTHETIX_IO_SSH_KEY }}'
 
-      - run: rm -rf ./liquidity.synthetix.io/*
-
-      - run: git checkout HEAD -- CNAME || true
-        working-directory: liquidity.synthetix.io
-
-      - run: cp -r ./liquidity-ui/liquidity/ui/dist/* ./liquidity.synthetix.io/
+      - run: rm -rf ./liquidity.synthetix.io/dist
+      - run: cp -r ./liquidity-ui/liquidity/ui/dist ./liquidity.synthetix.io/
 
       - run: git add .
         working-directory: liquidity.synthetix.io
