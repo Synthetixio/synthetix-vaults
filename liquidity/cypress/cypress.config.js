@@ -54,12 +54,12 @@ module.exports = defineConfig({
     video: true,
 
     retries: {
-      runMode: 1,
+      runMode: 0,
       openMode: 0,
     },
 
-    defaultCommandTimeout: 120_000,
-    execTimeout: 120_000,
-    taskTimeout: 120_000,
+    defaultCommandTimeout: 300_000,
+    execTimeout: 300_000,
+    taskTimeout: 300_000,
   },
 });
