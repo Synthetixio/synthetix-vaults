@@ -3,21 +3,24 @@ import { Button, Divider, Link, Text, useToast } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ZEROWEI } from '@snx-v3/constants';
 import { ContractError } from '@snx-v3/ContractError';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getWrappedStataUSDCOnBase, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { Multistep } from '@snx-v3/Multistep';
 import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useDefaultProvider, useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { LiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { useParams } from '@snx-v3/useParams';
+import { useStaticAaveUSDC } from '@snx-v3/useStaticAaveUSDC';
 import { useSystemToken } from '@snx-v3/useSystemToken';
+import { useUnwrapStataUSDC } from '@snx-v3/useUnwrapStataUSDC';
 import { useWithdraw } from '@snx-v3/useWithdraw';
 import { useWithdrawBaseAndromeda } from '@snx-v3/useWithdrawBaseAndromeda';
 import { Wei } from '@synthetixio/wei';
 import { useQueryClient } from '@tanstack/react-query';
-import React, { FC, useCallback, useContext, useState } from 'react';
+import { ethers } from 'ethers';
+import React, { FC, useContext, useState } from 'react';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 
 export const WithdrawModalUi: FC<{
@@ -31,9 +34,10 @@ export const WithdrawModalUi: FC<{
   };
   onSubmit: () => void;
   isDebtWithdrawal: boolean;
-}> = ({ isDebtWithdrawal, amount, isOpen, onClose, onSubmit, state, symbol }) => {
+  isStataUSDC: boolean;
+}> = ({ isStataUSDC, isDebtWithdrawal, amount, isOpen, onClose, onSubmit, state, symbol }) => {
   if (isOpen) {
-    if (state.step > 1) {
+    if (state.status === 'success') {
       return (
         <LiquidityPositionUpdated
           onClose={onSubmit}
@@ -79,6 +83,18 @@ export const WithdrawModalUi: FC<{
             loading: state.step === 1 && state.status === 'pending',
           }}
         />
+        {isStataUSDC && (
+          <Multistep
+            step={2}
+            title="Unwrap"
+            subtitle={<Text as="div">unwrap Static aUSDC into USDC</Text>}
+            status={{
+              failed: state.step === 2 && state.status === 'error',
+              success: state.status === 'success',
+              loading: state.step === 2 && state.status === 'pending',
+            }}
+          />
+        )}
 
         <Button
           isDisabled={state.status === 'pending'}
@@ -93,7 +109,7 @@ export const WithdrawModalUi: FC<{
                 return 'Retry';
               case state.status === 'pending':
                 return 'Processing...';
-              case state.step > 1:
+              case state.status === 'success':
                 return 'Done';
               default:
                 return 'Execute Transaction';
@@ -121,6 +137,8 @@ export function WithdrawModal({
     status: 'idle',
   });
 
+  const provider = useDefaultProvider();
+  const { activeWallet } = useWallet();
   const params = useParams();
   const toast = useToast({ isClosable: true, duration: 9000 });
   const { network } = useNetwork();
@@ -132,8 +150,16 @@ export function WithdrawModal({
   const errorParser = useContractErrorParser();
   const accountId = liquidityPosition?.accountId;
 
+  const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const isStataUSDC =
+    collateralType?.address.toLowerCase() === getWrappedStataUSDCOnBase(network?.id).toLowerCase();
+
   const { data: systemToken } = useSystemToken();
   const { data: systemTokenBalance } = useAccountCollateral(accountId, systemToken?.address);
+
+  const { data: StaticAaveUSDC } = useStaticAaveUSDC();
+
+  const { mutateAsync: unwrapStata } = useUnwrapStataUSDC();
 
   const { mutation: withdrawMain } = useWithdraw({
     amount: withdrawAmount,
@@ -152,53 +178,83 @@ export function WithdrawModal({
     collateralSymbol: params.collateralSymbol,
   });
 
-  const onSubmit = useCallback(async () => {
+  const onSubmit = async () => {
     try {
-      if (txState.step === 1) {
+      if (!(provider && StaticAaveUSDC)) {
+        throw new Error('Not ready');
+      }
+
+      if (txState.status === 'success') {
+        onClose();
+      }
+      let step = txState.step;
+      if (step === 1) {
         setTxState({
           step: 1,
           status: 'pending',
         });
 
-        if (!isBaseAndromeda(network?.id, network?.preset)) {
+        if (!isBase) {
           await withdrawMain.mutateAsync();
         } else {
           await withdrawAndromeda.mutateAsync();
+
+          step = 2;
+          if (isStataUSDC) {
+            setTxState({
+              step: 2,
+              status: 'pending',
+            });
+          } else {
+            setTxState({
+              step: 2,
+              status: 'success',
+            });
+          }
         }
+      }
+      if (step === 2) {
+        setTxState({
+          step: 2,
+          status: 'pending',
+        });
+
+        const StaticAaveUSDCContract = new ethers.Contract(
+          StaticAaveUSDC.address,
+          StaticAaveUSDC.abi,
+          provider
+        );
+
+        const balance = await StaticAaveUSDCContract.balanceOf(activeWallet?.address);
+        await unwrapStata(balance);
 
         setTxState({
           step: 2,
           status: 'success',
         });
-
-        queryClient.invalidateQueries({
-          queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition', { accountId }],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [
-            `${network?.id}-${network?.preset}`,
-            'AccountSpecificCollateral',
-            { accountId },
-          ],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions', { accountId }],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [
-            `${network?.id}-${network?.preset}`,
-            'AccountCollateralUnlockDate',
-            { accountId },
-          ],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
-        });
-
-        setWithdrawAmount(ZEROWEI);
-      } else {
-        onClose();
       }
+
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition', { accountId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'AccountSpecificCollateral', { accountId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions', { accountId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          `${network?.id}-${network?.preset}`,
+          'AccountCollateralUnlockDate',
+          { accountId },
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
+      });
+
+      setWithdrawAmount(ZEROWEI);
     } catch (error) {
       setTxState((state) => ({
         ...state,
@@ -223,29 +279,18 @@ export function WithdrawModal({
       });
       throw Error('Withdraw failed', { cause: error });
     }
-  }, [
-    accountId,
-    errorParser,
-    network?.id,
-    network?.preset,
-    onClose,
-    queryClient,
-    setWithdrawAmount,
-    toast,
-    txState.step,
-    withdrawAndromeda,
-    withdrawMain,
-  ]);
+  };
 
   return (
     <WithdrawModalUi
       amount={withdrawAmount}
       isOpen={isOpen}
       onClose={onClose}
-      symbol={isDebtWithdrawal ? systemToken?.symbol : collateralType?.symbol}
+      symbol={isDebtWithdrawal ? systemToken?.symbol : collateralType?.displaySymbol}
       state={txState}
       onSubmit={onSubmit}
       isDebtWithdrawal={isDebtWithdrawal}
+      isStataUSDC={isStataUSDC}
     />
   );
 }

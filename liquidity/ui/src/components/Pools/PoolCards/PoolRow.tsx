@@ -17,11 +17,14 @@ import { formatNumber, formatNumberToUsd } from '@snx-v3/formatters';
 import { formatApr } from '../CollateralSection';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { getSpotMarketId, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
+import { getSpotMarketId, getUSDCOnBase, isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { useGetWrapperToken } from '@snx-v3/useGetUSDTokens';
 import { ZEROWEI } from '@snx-v3/constants';
 import { MigrationBanner } from '../../Migration/MigrationBanner';
 import { Specifics } from './Specifics';
+import { useStataUSDCApr } from '@snx-v3/useApr/useStataUSDCApr';
+import { useMemo } from 'react';
+import { useStaticAaveUSDCRate } from '@snx-v3/useStaticAaveUSDCRate';
 
 interface CollateralTypeWithDeposited extends CollateralType {
   collateralDeposited: string;
@@ -51,15 +54,30 @@ export const PoolRow = ({ pool, network, apr, collateralType, collateralPrices }
     network
   );
   const isBase = isBaseAndromeda(network?.id, network?.preset);
+  const { data: stataUSDC } = useStataUSDCApr(network.id, network.preset);
+
   // TODO: This will need refactoring
   const balanceAddress = isBase ? wrapperToken : collateralType?.tokenAddress;
 
-  const { data: balance } = useTokenBalance(balanceAddress, network);
+  const { data: stataUSDCRate } = useStaticAaveUSDCRate();
+  const { data: tokenBalance } = useTokenBalance(balanceAddress, network);
+  const { data: usdcBalance } = useTokenBalance(getUSDCOnBase(network?.id));
+
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
 
   const { network: currentNetwork, setNetwork } = useNetwork();
   const { connect } = useWallet();
+
+  const isStataUSDC = collateralType.symbol === 'stataUSDC';
+
+  const balance = useMemo(() => {
+    if (!isStataUSDC || !stataUSDCRate) {
+      return tokenBalance || ZEROWEI;
+    }
+
+    return ((usdcBalance || ZEROWEI).div(stataUSDCRate) || ZEROWEI).add(tokenBalance || ZEROWEI);
+  }, [isStataUSDC, stataUSDCRate, tokenBalance, usdcBalance]);
 
   const price = wei(
     collateralPrices?.find(
@@ -128,7 +146,7 @@ export const PoolRow = ({ pool, network, apr, collateralType, collateralPrices }
                 lineHeight="1.25rem"
                 fontFamily="heading"
               >
-                {collateralType.symbol}
+                {collateralType.displaySymbol}
               </Text>
               <Text
                 textTransform="capitalize"
@@ -152,7 +170,7 @@ export const PoolRow = ({ pool, network, apr, collateralType, collateralPrices }
               {balance ? formatNumberToUsd(balance.mul(price).toNumber()) : '-'}
             </Text>
             <Text color="gray.500" fontFamily="heading" fontSize="12px" lineHeight="16px">
-              {balance ? formatNumber(balance.toNumber()) : ''} {collateralType.symbol}
+              {balance ? formatNumber(balance.toNumber()) : ''} {collateralType.displaySymbol}
             </Text>
           </Flex>
           <Flex width="189px" flexDir="column" justifyContent="cetner" alignItems="flex-end">
@@ -195,7 +213,9 @@ export const PoolRow = ({ pool, network, apr, collateralType, collateralPrices }
               fontWeight={500}
               color="white"
             >
-              {formatApr(apr7d * 100, network?.id)}
+              {isBase && collateralType.symbol === 'stataUSDC' && stataUSDC
+                ? formatApr(apr7d * 100 + stataUSDC, network?.id)
+                : formatApr(apr7d * 100, network?.id)}
               <Tooltip
                 label={
                   <Flex direction="column">

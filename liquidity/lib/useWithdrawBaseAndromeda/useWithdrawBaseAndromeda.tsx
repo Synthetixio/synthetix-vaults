@@ -1,5 +1,5 @@
 import { ZEROWEI } from '@snx-v3/constants';
-import { getSpotMarketId } from '@snx-v3/isBaseAndromeda';
+import { getSpotMarketId, STATA_BASE_MARKET, USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
 import { notNil } from '@snx-v3/tsHelpers';
 import { initialState, reducer } from '@snx-v3/txnReducer';
 import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
@@ -75,8 +75,14 @@ export const useWithdrawBaseAndromeda = ({
         ? amountToWithdraw.sub(wrappedCollateralAmount)
         : ZEROWEI;
 
+      let sUSDC_amount = ZEROWEI;
+
       try {
         const spotMarketId = getSpotMarketId(collateralSymbol);
+
+        if (spotMarketId === USDC_BASE_MARKET) {
+          sUSDC_amount = sUSDC_amount.add(wrappedCollateralAmount);
+        }
 
         dispatch({ type: 'prompting' });
 
@@ -98,6 +104,7 @@ export const useWithdrawBaseAndromeda = ({
             )
           : undefined;
 
+        //snxUSD
         const withdraw_snxUSD = snxUSDAmount.gt(0)
           ? CoreProxyContract.populateTransaction.withdraw(
               ethers.BigNumber.from(accountId),
@@ -112,9 +119,10 @@ export const useWithdrawBaseAndromeda = ({
               snxUSDAmount.toBN()
             )
           : undefined;
-        const buy_wrappedCollateral = snxUSDAmount.gt(0)
+        //snxUSD => sUSDC
+        const buy_sUSDC = snxUSDAmount.gt(0)
           ? SpotProxyContract.populateTransaction.buy(
-              spotMarketId,
+              USDC_BASE_MARKET,
               snxUSDAmount.toBN(),
               0,
               ethers.constants.AddressZero
@@ -124,47 +132,53 @@ export const useWithdrawBaseAndromeda = ({
         const synthAmount = snxUSDAmount.gt(0)
           ? (
               await SpotProxyContract.callStatic.quoteBuyExactIn(
-                spotMarketId,
+                USDC_BASE_MARKET,
                 snxUSDAmount.toBN(),
                 0
               )
             ).synthAmount
           : ZEROWEI;
-        const withdrawAmount = availableCollateral.add(synthAmount);
+        const unwrapAmount = sUSDC_amount.add(synthAmount);
 
-        const unwrapTxnPromised = SpotProxyContract.populateTransaction.unwrap(
-          spotMarketId,
-          withdrawAmount.toBN(),
-          // 2% slippage
-          Number(
-            ethers.utils
-              .formatUnits(withdrawAmount.toBN().mul(98).div(100).toString(), 12)
-              .toString()
-          ).toFixed()
-        );
+        //sUSDC => USDC
+        const unwrapTxnPromised = unwrapAmount.gt(0)
+          ? SpotProxyContract.populateTransaction.unwrap(USDC_BASE_MARKET, unwrapAmount.toBN(), 0)
+          : undefined;
+
+        const unwrapCollateralTxnPromised =
+          spotMarketId === STATA_BASE_MARKET && wrappedCollateralAmount.gt(0)
+            ? SpotProxyContract.populateTransaction.unwrap(
+                STATA_BASE_MARKET,
+                wrappedCollateralAmount.toBN(),
+                0
+              )
+            : undefined;
 
         const [
           gasPrices,
           withdraw_collateral_txn,
           withdraw_snxUSD_txn,
           snxUSDApproval_txn,
-          buy_wrappedCollateral_txn,
+          buy_sUSDC_txn,
           unwrapTxnPromised_txn,
+          unwrapCollateralTxnPromised_txn,
         ] = await Promise.all([
           gasPricesPromised,
           withdraw_collateral,
           withdraw_snxUSD,
           snxUSDApproval,
-          buy_wrappedCollateral,
+          buy_sUSDC,
           unwrapTxnPromised,
+          unwrapCollateralTxnPromised,
         ]);
 
         const allCalls = [
           withdraw_collateral_txn,
           withdraw_snxUSD_txn,
           snxUSDApproval_txn,
-          buy_wrappedCollateral_txn,
+          buy_sUSDC_txn,
           unwrapTxnPromised_txn,
+          unwrapCollateralTxnPromised_txn,
         ].filter(notNil);
 
         if (priceUpdateTx) {

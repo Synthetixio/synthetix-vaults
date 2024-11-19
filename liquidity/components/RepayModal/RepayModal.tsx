@@ -313,7 +313,7 @@ export const RepayModal: React.FC<{
         onClose();
       }}
       isOpen={isOpen}
-      symbol={isBase ? collateralType.symbol : systemToken?.symbol}
+      symbol={isBase ? collateralType.displaySymbol : systemToken?.symbol}
     />
   );
 };

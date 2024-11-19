@@ -19,17 +19,17 @@ it('Manage WETH Position - Deposit', () => {
     cy.visit(`/#${path}?manageAction=deposit&accountId=${accountId}`);
   });
 
-  cy.get('[data-cy="balance amount"]').should('exist').and('include.text', 'Balance: 100');
+  cy.get('[data-cy="balance amount"]').should('exist').and('include.text', 'Max');
   cy.get('[data-cy="deposit amount input"]').type('1');
   cy.get('[data-cy="deposit submit"]').should('be.enabled');
   cy.get('[data-cy="deposit submit"]').click();
 
   cy.get('[data-cy="deposit multistep"]')
     .should('exist')
-    .and('include.text', 'Open Liquidity Position')
+    .and('include.text', 'Manage Collateral')
     .and('include.text', 'Approve WETH transfer')
-    .and('include.text', 'Deposit & Lock WETH')
-    .and('include.text', 'This will deposit and lock 1 WETH to Spartan Council Pool.');
+    .and('include.text', 'Deposit and Lock WETH')
+    .and('include.text', 'This will deposit and lock 1 WETH into Spartan Council Pool.');
 
   cy.get('[data-cy="deposit confirm button"]').should('include.text', 'Execute Transaction');
   cy.get('[data-cy="deposit confirm button"]').click();
@@ -44,7 +44,7 @@ it('Manage WETH Position - Deposit', () => {
   //  cy.get('@wallet').then(async (address) => {
   //    cy.task('setEthBalance', { address, balance: 100 });
   //  });
-  //  cy.get('[data-cy="balance amount"]').should('exist').and('include.text', 'Balance: 100');
+  //  cy.get('[data-cy="balance amount"]').should('exist').and('include.text', 'Max');
   //  cy.get('[data-cy="deposit amount input"]').clear();
   //  cy.get('[data-cy="deposit amount input"]').type('0.69');
   //  cy.get('[data-cy="deposit submit"]').should('be.enabled');
@@ -54,7 +54,7 @@ it('Manage WETH Position - Deposit', () => {
   //    .should('exist')
   //    .and('include.text', 'Manage Collateral')
   //    .and('include.text', 'Approve WETH transfer')
-  //    .and('include.text', 'Deposit & Lock WETH')
+  //    .and('include.text', 'Deposit and Lock WETH')
   //    .and('include.text', 'This will deposit and lock 0.69 WETH to Spartan Council Pool.');
   //
   //  cy.get('[data-cy="deposit confirm button"]')

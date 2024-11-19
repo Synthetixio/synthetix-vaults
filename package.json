@@ -25,7 +25,7 @@
     "lint:fix": "eslint . --fix",
     "pretty": "prettier . --check && forge fmt --check contracts",
     "pretty:fix": "prettier . --write && forge fmt contracts",
-    "clean": "yarn workspaces foreach --parallel exec rm -rf dist coverage build && find . -name 'tsconfig.tsbuildinfo' -delete",
+    "clean": "yarn workspaces foreach --all --parallel exec rm -rf dist coverage build && find . -name 'tsconfig.tsbuildinfo' -delete",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "deps": "deps",
