@@ -3,11 +3,7 @@ version: 2.1
 parameters:
   node-version:
     type: string
-    default: '20.17.0'
-
-  cypress-version:
-    type: string
-    default: '13.16.0'
+    default: '22.11.0'
 
 commands:
   yarn-install:
@@ -15,14 +11,18 @@ commands:
       - run: date +"%Y-%m" > /tmp/month.txt && cat /tmp/month.txt
       - restore_cache:
           keys:
-            - &yarn_cache yarn-{{ .Environment.NODE_MODULES_VERSION }}-{{ .Environment.HOME }}-{{ checksum "/tmp/month.txt" }}-{{ checksum "yarn.lock" }}
-            - yarn-{{ .Environment.NODE_MODULES_VERSION }}-{{ .Environment.HOME }}-{{ checksum "/tmp/month.txt" }}-
+            - &yarn_cache yarn-{{ .Environment.NODE_MODULES_VERSION }}-{{ checksum "/tmp/month.txt" }}-{{ checksum "yarn.lock" }}
+            - yarn-{{ .Environment.NODE_MODULES_VERSION }}-{{ checksum "/tmp/month.txt" }}-
       - run: yarn -v
       - run: yarn install --immutable
+      - run: sudo apt update
+      - run: sudo apt install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb
       - save_cache:
           key: *yarn_cache
           paths:
+            - '~/.cache'
             - '~/.yarn/berry'
+            - 'node_modules'
 
   install-foundry:
     steps:
@@ -110,7 +110,6 @@ commands:
 
 jobs:
   checks:
-    working_directory: /tmp/app
     docker:
       - image: cimg/node:<< pipeline.parameters.node-version >>
     steps:
@@ -128,7 +127,6 @@ jobs:
       - run: yarn svg:check
 
   tests:
-    working_directory: /tmp/app
     docker:
       - image: cimg/node:<< pipeline.parameters.node-version >>
     steps:
@@ -141,23 +139,9 @@ jobs:
           path: 'coverage'
 
   e2e:
-    parameters:
-      chainId:
-        type: integer
-      preset:
-        type: string
-      provider-url:
-        type: string
-      fork-block-number:
-        type: integer
-    working_directory: /tmp/app
     docker:
-      - image: cypress/included:<< pipeline.parameters.cypress-version >>
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: xlarge
-    environment:
-      NODE_ENV: test
-      CYPRESS_CHAIN_ID: << parameters.chainId >>
-      CYPRESS_PRESET: << parameters.preset >>
     steps:
       - checkout
       - install-foundry
@@ -172,13 +156,8 @@ jobs:
 
       - run:
           name: Run server localhost:3000
-          working_directory: /tmp/app/liquidity/ui
-          command: yarn start
-          background: true
-
-      - run:
-          name: Run anvil localhost:8545
-          command: anvil --auto-impersonate --chain-id "<< parameters.chainId >>" --fork-url "<< parameters.provider-url >>" --no-rate-limit --steps-tracing --fork-block-number "<< parameters.fork-block-number >>"
+          working_directory: liquidity/ui
+          command: NODE_ENV=test yarn start
           background: true
 
       - run:
@@ -186,23 +165,24 @@ jobs:
           command: wget --retry-connrefused --waitretry=20 --read-timeout=20 --timeout=15 -t 10 http://localhost:3000
 
       - run:
-          name: Wait for anvil localhost:8545
-          command: wget -q -O - --retry-connrefused --waitretry=20 --read-timeout=20 --timeout=15 -t 10 --post-data='{"method":"eth_chainId","params":[],"id":1,"jsonrpc":"2.0"}' --header='Content-Type:application/json' http://localhost:8545
-
-      - run:
-          working_directory: /tmp/app/liquidity/cypress
+          working_directory: liquidity/cypress
           command: |
             echo "0" > /tmp/cypress_exit_code
-            cypress run --e2e --browser chrome \
-              --config specPattern="./cypress/e2e/<< parameters.chainId >>-<< parameters.preset >>/*.e2e.js" \
-              || echo $? > /tmp/cypress_exit_code
 
-      - run: pkill anvil
+            export NODE_ENV=test
+            export CYPRESS_INFURA_KEY=$INFURA_KEY
+
+            circleci tests glob 'cypress/e2e/**/*.e2e.js' | circleci tests run --verbose --split-by=timings --command="xargs yarn cypress run --e2e --spec" || echo $? > /tmp/cypress_exit_code
 
       - save_cache:
           key: *anvil-fork-cache
           paths:
             - '~/.foundry/cache'
+
+      - run: |-
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          chmod +x codecov
+          ./codecov -t ${CODECOV_TOKEN} --file liquidity/cypress/.nyc_output/out.json
 
       - run: exit $(cat /tmp/cypress_exit_code)
 
@@ -222,9 +202,8 @@ jobs:
           destination: 'videos'
 
   cy:
-    working_directory: /tmp/app
     docker:
-      - image: cypress/included:<< pipeline.parameters.cypress-version >>
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     environment:
       NODE_ENV: test
     steps:
@@ -232,8 +211,13 @@ jobs:
       - yarn-install
 
       - run:
-          working_directory: /tmp/app/liquidity/cypress
-          command: cypress run --component
+          working_directory: liquidity/cypress
+          command: yarn cypress run --component
+
+      - run: |-
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          chmod +x codecov
+          ./codecov -t ${CODECOV_TOKEN} --file liquidity/cypress/.nyc_output/out.json
 
       - store_test_results:
           path: 'liquidity/cypress/cypress/reports'
@@ -251,7 +235,6 @@ jobs:
           destination: 'videos'
 
   combine-coverage:
-    working_directory: /tmp/app
     docker:
       - image: cimg/node:<< pipeline.parameters.node-version >>
     steps:
@@ -260,8 +243,7 @@ jobs:
       - run: rm -rf /tmp/cov
       - run: yarn download-cci-coverage tests /tmp/cov || true
       - run: yarn download-cci-coverage cy /tmp/cov || true
-      - run: yarn download-cci-coverage e2e-base-mainnet /tmp/cov || true
-      - run: yarn download-cci-coverage e2e-arbitrum-mainnet /tmp/cov || true
+      - run: yarn download-cci-coverage e2e /tmp/cov || true
       - run: mkdir -p /tmp/cov
       - run: ls -alR /tmp/cov
       - run: mkdir -p /tmp/cov/combined
@@ -272,7 +254,6 @@ jobs:
           ./codecov -t ${CODECOV_TOKEN} --file /tmp/cov/combined/coverage.json
 
   ipfs:
-    working_directory: /tmp/app
     docker:
       - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: large
@@ -290,7 +271,6 @@ jobs:
     parameters:
       workspace:
         type: string
-    working_directory: /tmp/app
     docker:
       - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: large
@@ -323,7 +303,6 @@ jobs:
     parameters:
       workspace:
         type: string
-    working_directory: /tmp/app
     docker:
       - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: large
@@ -368,40 +347,20 @@ workflows:
           workspace: '@snx-v3/close-position-arbitrum'
 
       - cy
+      - e2e
 
-      - e2e:
-          name: e2e-base-mainnet
-          chainId: 8453
-          preset: andromeda
-          provider-url: wss://base-mainnet.infura.io/ws/v3/$INFURA_KEY
-          fork-block-number: 22683522
-      - e2e:
-          name: e2e-arbitrum-mainnet
-          chainId: 42161
-          preset: main
-          provider-url: wss://arbitrum-mainnet.infura.io/ws/v3/$INFURA_KEY
-          fork-block-number: 271813668
-      - e2e:
-          name: e2e-mainnet
-          chainId: 1
-          preset: main
-          provider-url: wss://mainnet.infura.io/ws/v3/$INFURA_KEY
-          fork-block-number: 21233424
-
-      - combine-coverage:
-          requires:
-            - tests
-            - cy
-            - e2e-base-mainnet
-            - e2e-arbitrum-mainnet
+      #      - combine-coverage:
+      #          requires:
+      #            - tests
+      #            - cy
+      #            - e2e
 
       - ipfs:
           requires:
             - checks
             - tests
             - cy
-            - e2e-base-mainnet
-            - e2e-arbitrum-mainnet
+            - e2e
           filters:
             branches:
               only:

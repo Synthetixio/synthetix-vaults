@@ -1,20 +1,50 @@
 import '@cypress/code-coverage/support';
-import { onLogAdded } from '@snx-cy/onLogAdded';
-import { subgraph } from '../lib/subgraph';
+import { default as installLogsCollector } from 'cypress-terminal-report/src/installLogsCollector';
 
-//afterEach(() => {
-//  cy.get('@snapshot').then(async (snapshot) => {
-//    cy.task('evmRevert', snapshot);
-//  });
-//});
+import { approveCollateral } from './commands/approveCollateral';
+import { borrowUsd } from './commands/borrowUsd';
+import { delegateCollateral } from './commands/delegateCollateral';
+import { depositCollateral } from './commands/depositCollateral';
+import { getSNX } from './commands/getSNX';
+import { getUSDC } from './commands/getUSDC';
+import { setEthBalance } from './commands/setEthBalance';
+import { wrapCollateral } from './commands/wrapCollateral';
+import { wrapEth } from './commands/wrapEth';
+
+Cypress.Commands.add('approveCollateral', approveCollateral);
+Cypress.Commands.add('borrowUsd', borrowUsd);
+Cypress.Commands.add('delegateCollateral', delegateCollateral);
+Cypress.Commands.add('depositCollateral', depositCollateral);
+Cypress.Commands.add('getSNX', getSNX);
+Cypress.Commands.add('getUSDC', getUSDC);
+Cypress.Commands.add('setEthBalance', setEthBalance);
+Cypress.Commands.add('wrapCollateral', wrapCollateral);
+Cypress.Commands.add('wrapEth', wrapEth);
+
+installLogsCollector({
+  enableExtendedCollector: true,
+  enableContinuousLogging: true,
+});
+
+function subgraph(req) {
+  const body = JSON.parse(req.body);
+  if (body.query.trim().startsWith('query pool($id: String)')) {
+    return req.reply({
+      data: {
+        pool: {
+          id: body.variables.id,
+          name: 'TEST_POOL',
+          total_weight: (1e18).toString(),
+          configurations: [],
+        },
+      },
+    });
+  }
+
+  return req.reply({ data: null });
+}
 
 beforeEach(() => {
-  //  cy.task('evmSnapshot').then((snapshot) => {
-  //    cy.wrap(snapshot).as('snapshot');
-  //  });
-
-  cy.on('log:added', onLogAdded);
-
   cy.intercept('https://analytics.synthetix.io/matomo.js', { statusCode: 204, log: false }).as(
     'matomo'
   );
@@ -74,51 +104,14 @@ beforeEach(() => {
   cy.intercept(`https://api.synthetix.io/**`, { log: false });
 
   cy.on('window:before:load', (win) => {
+    win.console.log = () => {};
+    win.console.error = () => {};
+    win.console.warn = () => {};
+
     win.sessionStorage.setItem('TERMS_CONDITIONS_ACCEPTED', 'true');
-    win.localStorage.setItem(
-      'DEFAULT_NETWORK',
-      `${Cypress.env('CHAIN_ID')}-${Cypress.env('PRESET')}`
-    );
     win.localStorage.setItem('UNSAFE_IMPORT', 'true');
     win.localStorage.setItem('connectedWallets', '"MetaMask"');
     win.localStorage.setItem('CONTRACT_ERROR_OPEN', 'true');
-    win.localStorage.setItem('DEBUG', 'true');
+    win.localStorage.setItem('DEBUG', 'snx:*');
   });
-});
-
-Cypress.Commands.add('connectWallet', () => {
-  const address = '0xc3Cf311e04c1f8C74eCF6a795Ae760dc6312F345';
-
-  let accountId;
-  switch (`${Cypress.env('CHAIN_ID')}-${Cypress.env('PRESET')}`) {
-    case '1-main':
-      accountId = '651583203448';
-      break;
-    case '11155111-main':
-      accountId = '777777';
-      break;
-    case '10-main':
-      accountId = '58655818123';
-      break;
-    case '8453-andromeda':
-      accountId = '522433293696';
-      break;
-    case '84532-andromeda':
-      // does not exist but will create one
-      accountId = '522433293696';
-    case '42161-main':
-      accountId = '58655818123';
-      break;
-    case '421614-main':
-      accountId = '200489353353';
-      break;
-
-    default:
-      accountId = '777777';
-  }
-
-  cy.on('window:before:load', (win) => {
-    win.localStorage.setItem('MAGIC_WALLET', address);
-  });
-  return { address, accountId };
 });
