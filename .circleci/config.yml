@@ -16,7 +16,7 @@ commands:
       - run: yarn -v
       - run: yarn install --immutable
       - run: sudo apt update
-      - run: sudo apt install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+      - run: sudo apt install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb lcov
       - save_cache:
           key: *yarn_cache
           paths:
@@ -179,10 +179,12 @@ jobs:
           paths:
             - '~/.foundry/cache'
 
-      - run: |-
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov -t ${CODECOV_TOKEN} --file liquidity/cypress/.nyc_output/out.json
+      - run:
+          name: 'Upload coverage report to Codecov'
+          command: |-
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x codecov
+            ./codecov -t ${CODECOV_TOKEN} --file liquidity/cypress/.nyc_output/out.json
 
       - run: exit $(cat /tmp/cypress_exit_code)
 
@@ -214,10 +216,12 @@ jobs:
           working_directory: liquidity/cypress
           command: yarn cypress run --component
 
-      - run: |-
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov -t ${CODECOV_TOKEN} --file liquidity/cypress/.nyc_output/out.json
+      - run:
+          name: 'Upload coverage report to Codecov'
+          command: |-
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x codecov
+            ./codecov -t ${CODECOV_TOKEN} --file liquidity/cypress/.nyc_output/out.json
 
       - store_test_results:
           path: 'liquidity/cypress/cypress/reports'
@@ -233,25 +237,6 @@ jobs:
       - store_artifacts:
           path: 'liquidity/cypress/cypress/videos'
           destination: 'videos'
-
-  combine-coverage:
-    docker:
-      - image: cimg/node:<< pipeline.parameters.node-version >>
-    steps:
-      - checkout
-      - yarn-install
-      - run: rm -rf /tmp/cov
-      - run: yarn download-cci-coverage tests /tmp/cov || true
-      - run: yarn download-cci-coverage cy /tmp/cov || true
-      - run: yarn download-cci-coverage e2e /tmp/cov || true
-      - run: mkdir -p /tmp/cov
-      - run: ls -alR /tmp/cov
-      - run: mkdir -p /tmp/cov/combined
-      - run: yarn nyc merge /tmp/cov /tmp/cov/combined/coverage.json || true
-      - run: |-
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov -t ${CODECOV_TOKEN} --file /tmp/cov/combined/coverage.json
 
   ipfs:
     docker:
@@ -269,7 +254,7 @@ jobs:
 
   contract-test:
     parameters:
-      workspace:
+      working_directory:
         type: string
     docker:
       - image: cimg/node:<< pipeline.parameters.node-version >>
@@ -287,9 +272,11 @@ jobs:
             - anvil-fork-cache-{{ .Environment.ANVIL_CACHE_VERSION }}-
 
       - run:
-          command: |
+          name: 'Run tests'
+          working_directory: << parameters.working_directory >>
+          command: |-
             echo "0" > /tmp/test_exit_code
-            yarn workspace << parameters.workspace >> run test-cov \
+            yarn run test-cov \
               || echo $? > /tmp/test_exit_code
 
       - save_cache:
@@ -298,10 +285,13 @@ jobs:
             - '~/.foundry/cache'
 
       - run: exit $(cat /tmp/test_exit_code)
+
+      - store_artifacts:
+          path: '<< parameters.working_directory >>/coverage'
 
   contract-e2e:
     parameters:
-      workspace:
+      working_directory:
         type: string
     docker:
       - image: cimg/node:<< pipeline.parameters.node-version >>
@@ -319,9 +309,11 @@ jobs:
             - anvil-fork-cache-{{ .Environment.ANVIL_CACHE_VERSION }}-
 
       - run:
-          command: |
+          name: 'Run tests'
+          working_directory: << parameters.working_directory >>
+          command: |-
             echo "0" > /tmp/test_exit_code
-            yarn workspace << parameters.workspace >> run e2e-cov \
+            yarn run e2e-cov \
               || echo $? > /tmp/test_exit_code
 
       - save_cache:
@@ -330,6 +322,9 @@ jobs:
             - '~/.foundry/cache'
 
       - run: exit $(cat /tmp/test_exit_code)
+
+      - store_artifacts:
+          path: '<< parameters.working_directory >>/coverage'
 
 workflows:
   ui:
@@ -342,18 +337,20 @@ workflows:
       - tests
 
       - contract-test:
-          workspace: '@snx-v3/close-position-arbitrum'
+          name: close-position-arbitrum-test
+          working_directory: 'contracts/close-position-arbitrum'
       - contract-e2e:
-          workspace: '@snx-v3/close-position-arbitrum'
+          name: close-position-arbitrum-e2e
+          working_directory: 'contracts/close-position-arbitrum'
+      - contract-test:
+          name: debt-repayer-base-andromeda-test
+          working_directory: 'contracts/debt-repayer-base-andromeda'
+      - contract-e2e:
+          name: debt-repayer-base-andromeda-e2e
+          working_directory: 'contracts/debt-repayer-base-andromeda'
 
       - cy
       - e2e
-
-      #      - combine-coverage:
-      #          requires:
-      #            - tests
-      #            - cy
-      #            - e2e
 
       - ipfs:
           requires:
