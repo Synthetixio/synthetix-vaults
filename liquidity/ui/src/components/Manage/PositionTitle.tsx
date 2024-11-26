@@ -1,20 +1,27 @@
 import { Flex, Heading, Text } from '@chakra-ui/react';
-import { FC } from 'react';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
+import { useParams } from '@snx-v3/useParams';
+import { usePool } from '@snx-v3/usePoolsList';
 import { useNavigate } from 'react-router-dom';
 import { TokenIcon } from '../TokenIcon';
-import { useCollateralType } from '@snx-v3/useCollateralTypes';
 
-export const PositionTitle: FC<{
+export function PositionTitle({
+  collateralSymbol,
+  isOpen,
+}: {
   collateralSymbol?: string;
-  poolName?: string;
-  isOpen?: boolean;
-  poolId?: string;
-}> = ({ collateralSymbol, poolName, isOpen, poolId }) => {
-  const { data: collateral } = useCollateralType(collateralSymbol);
+  isOpen: boolean;
+}) {
+  const params = useParams();
 
   const { network } = useNetwork();
+  const { data: pool } = usePool(network?.id, String(params.poolId));
+
+  const poolName = pool?.poolInfo?.[0]?.pool?.name ?? '';
+
   const navigate = useNavigate();
+  const { data: collateral } = useCollateralType(collateralSymbol);
 
   return (
     <Flex alignItems="center">
@@ -52,9 +59,13 @@ export const PositionTitle: FC<{
           display="flex"
           alignItems="center"
           _hover={{ cursor: 'pointer' }}
-          onClick={() => navigate(`/pools/${network?.id}/${poolId}`)}
+          onClick={
+            params.poolId && network?.id
+              ? () => navigate(`/pools/${network?.id}/${params.poolId}`)
+              : undefined
+          }
         >
-          {poolName && <Text mr={2}>{poolName}</Text>}
+          <Text mr={2}>{poolName}</Text>
           <Flex
             mt={0.25}
             alignItems="center"
@@ -69,4 +80,4 @@ export const PositionTitle: FC<{
       </Flex>
     </Flex>
   );
-};
+}
