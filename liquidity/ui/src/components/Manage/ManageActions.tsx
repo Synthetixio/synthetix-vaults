@@ -10,7 +10,6 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react';
-import { calculateCRatio } from '@snx-v3/calculations';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -20,39 +19,31 @@ import { useParams } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';
 import { safeImport } from '@synthetixio/safe-import';
 import { wei } from '@synthetixio/wei';
-import { FormEvent, lazy, Suspense, useCallback, useContext, useEffect, useState } from 'react';
+import { FormEvent, lazy, Suspense, useCallback, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { Borrow, Claim, Deposit, Repay, Undelegate } from '../';
+import { Claim } from '../Claim/Claim';
+import { Deposit } from '../Deposit/Deposit';
+import { Repay } from '../Repay/Repay';
+import { Undelegate } from '../Undelegate/Undelegate';
 import { Withdraw } from '../Withdraw/Withdraw';
 import { COLLATERALACTIONS, DEBTACTIONS } from './actions';
 
 const RepayModal = lazy(() => safeImport(() => import('@snx-v3/RepayModal')));
-const BorrowModal = lazy(() => safeImport(() => import('@snx-v3/BorrowModal')));
 const ClaimModal = lazy(() => safeImport(() => import('@snx-v3/ClaimModal')));
 const DepositModal = lazy(() => safeImport(() => import('@snx-v3/DepositModal')));
 const UndelegateModal = lazy(() => safeImport(() => import('@snx-v3/UndelegateModal')));
 const WithdrawModal = lazy(() => safeImport(() => import('@snx-v3/WithdrawModal')));
 
-const validActions = [
-  'borrow',
+const ManageActionSchema = z.enum([
   'deposit',
   'repay',
   'claim',
   'undelegate',
   'withdraw',
   'withdraw-debt',
-] as const;
-const ManageActionSchema = z.enum(validActions);
-export type ManageAction = z.infer<typeof ManageActionSchema>;
-
-const getInitialTab = (manageAction?: ManageAction) => {
-  if (!manageAction || COLLATERALACTIONS.find((aciton) => aciton.link === manageAction)) {
-    return 'collateral';
-  }
-
-  return 'debt';
-};
+]);
+export type ManageActionType = z.infer<typeof ManageActionSchema>;
 
 export const ManageAction = ({
   liquidityPosition,
@@ -60,8 +51,8 @@ export const ManageAction = ({
   txnModalOpen,
 }: {
   liquidityPosition?: LiquidityPosition;
-  setTxnModalOpen: (action?: ManageAction) => void;
-  txnModalOpen?: ManageAction;
+  setTxnModalOpen: (action?: ManageActionType) => void;
+  txnModalOpen?: ManageActionType;
 }) => {
   const params = useParams();
   const { network } = useNetwork();
@@ -84,8 +75,10 @@ export const ManageAction = ({
     debtChange,
   });
 
-  const parsedActionParam = ManageActionSchema.safeParse(params.manageAction);
-  const parsedAction = parsedActionParam.success ? parsedActionParam.data : undefined;
+  const manageActionParam = ManageActionSchema.safeParse(params.manageAction);
+  const manageAction = manageActionParam.success ? manageActionParam.data : undefined;
+  const debtActions = DEBTACTIONS(isBase);
+  const tab = debtActions.some((action) => action.link === manageAction) ? 'debt' : 'collateral';
 
   const isFormValid = isBase ? true : isValid;
 
@@ -96,42 +89,10 @@ export const ManageAction = ({
       if (!form.reportValidity() || !isFormValid) {
         return;
       }
-      setTxnModalOpen(parsedAction);
+      setTxnModalOpen(manageAction);
     },
-    [isFormValid, parsedAction, setTxnModalOpen]
+    [isFormValid, manageAction, setTxnModalOpen]
   );
-
-  useEffect(() => {
-    // This is just for initial state, if we have a manage action selected return
-    const queryParams = new URLSearchParams(location.search);
-
-    if (queryParams.get('manageAction')) {
-      return;
-    }
-    if (!liquidityPosition) return;
-    if (!collateralType) return;
-
-    const cRatio = calculateCRatio(liquidityPosition.debt, liquidityPosition.collateralValue);
-    const canBorrow =
-      !isBase && (liquidityPosition.debt.eq(0) || cRatio.gt(collateralType.issuanceRatioD18));
-
-    if (canBorrow) {
-      queryParams.set('manageAction', 'borrow');
-      navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
-      return;
-    }
-
-    const cRatioIsCloseToLiqRatio = cRatio.mul(0.9).lt(collateralType.liquidationRatioD18);
-
-    if (cRatioIsCloseToLiqRatio) {
-      queryParams.set('manageAction', isBase ? 'deposit' : 'repay');
-      navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
-      return;
-    }
-
-    queryParams.set('manageAction', 'deposit');
-    navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
-  }, [collateralType, isBase, liquidityPosition, location.pathname, location.search, navigate]);
 
   const setActiveAction = (action: string) => {
     setCollateralChange(wei(0));
@@ -140,14 +101,6 @@ export const ManageAction = ({
     queryParams.set('manageAction', action);
     navigate({ pathname: location.pathname, search: queryParams.toString() }, { replace: true });
   };
-  const manageAction = parsedAction;
-
-  const [tab, setTab] = useState(getInitialTab(manageAction));
-  const debtActions = DEBTACTIONS(isBase);
-
-  useEffect(() => {
-    setTab(getInitialTab(manageAction));
-  }, [manageAction]);
 
   return (
     <>
@@ -179,7 +132,7 @@ export const ManageAction = ({
                 }}
                 whiteSpace="nowrap"
               >
-                {`Manage ${isBase ? 'PnL' : 'Debt'}`}
+                {isBase ? 'Manage PnL' : 'Manage Debt'}
               </Tab>
             </TabList>
 
@@ -254,7 +207,6 @@ export const ManageAction = ({
           </Tabs>
 
           <Flex direction="column">
-            {manageAction === 'borrow' ? <Borrow liquidityPosition={liquidityPosition} /> : null}
             {manageAction === 'claim' ? <Claim liquidityPosition={liquidityPosition} /> : null}
             {manageAction === 'withdraw' ? (
               <Withdraw liquidityPosition={liquidityPosition} />
@@ -290,16 +242,6 @@ export const ManageAction = ({
               setTxnModalOpen(undefined);
             }}
             isOpen={txnModalOpen === 'repay'}
-          />
-        ) : null}
-        {txnModalOpen === 'borrow' ? (
-          <BorrowModal
-            onClose={() => {
-              setCollateralChange(wei(0));
-              setDebtChange(wei(0));
-              setTxnModalOpen(undefined);
-            }}
-            isOpen={txnModalOpen === 'borrow'}
           />
         ) : null}
         {txnModalOpen === 'claim' ? (

@@ -1,6 +1,7 @@
 import { Alert, AlertIcon, Button, Collapse, Flex, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
+import { ZEROWEI } from '@snx-v3/constants';
 import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
@@ -14,8 +15,7 @@ import { useTokenPrice } from '@snx-v3/useTokenPrice';
 import { useWithdrawTimer } from '@snx-v3/useWithdrawTimer';
 import { useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { ZEROWEI } from '@snx-v3/constants';
-import { TokenIcon } from '../TokenIcon';
+import { TokenIcon } from '../TokenIcon/TokenIcon';
 
 export const Withdraw = ({
   liquidityPosition,
@@ -149,7 +149,7 @@ export const Withdraw = ({
         isDisabled={
           withdrawAmount.lte(0) || isRunning || !unlockDate || withdrawAmount.gt(maxWithdrawable)
         }
-        data-cy="claim submit"
+        data-cy="withdraw submit"
         type="submit"
       >
         {withdrawAmount.gt(0) ? 'Withdraw' : 'Enter Amount'}
