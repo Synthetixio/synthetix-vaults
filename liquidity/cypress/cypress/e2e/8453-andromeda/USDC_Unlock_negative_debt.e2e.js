@@ -1,4 +1,4 @@
-describe('should be able to unlock USDC collateral after depositing', () => {
+describe(__filename, () => {
   Cypress.env('chainId', '8453');
   Cypress.env('preset', 'andromeda');
   Cypress.env('walletAddress', '0xc3Cf311e04c1f8C74eCF6a795Ae760dc6312F345');
@@ -8,7 +8,7 @@ describe('should be able to unlock USDC collateral after depositing', () => {
     cy.task('startAnvil', {
       chainId: Cypress.env('chainId'),
       forkUrl: `wss://base-mainnet.infura.io/ws/v3/${Cypress.env('INFURA_KEY')}`,
-      block: '22683522',
+      block: '22683522', // negative debt
     }).then(() => cy.log('Anvil started'));
 
     cy.on('window:before:load', (win) => {
@@ -21,7 +21,7 @@ describe('should be able to unlock USDC collateral after depositing', () => {
   });
   afterEach(() => cy.task('stopAnvil').then(() => cy.log('Anvil stopped')));
 
-  it('works', () => {
+  it(__filename, () => {
     cy.setEthBalance({ balance: 100 });
     cy.getUSDC({ amount: 1000 });
     cy.approveCollateral({ symbol: 'USDC', spender: 'SpotMarketProxy' });
@@ -32,7 +32,7 @@ describe('should be able to unlock USDC collateral after depositing', () => {
 
     cy.visit(`/#/positions/USDC/1?manageAction=undelegate&accountId=${Cypress.env('accountId')}`);
 
-    cy.get('[data-cy="unlock collateral form"]').should('exist');
+    cy.get('[data-cy="unlock collateral form"]', { timeout: 180_000 }).should('exist');
     cy.get('[data-cy="locked amount"]').should('exist').and('include.text', 'Max');
 
     cy.get('[data-cy="undelegate amount input"]').should('exist');

@@ -1,4 +1,4 @@
-describe('Manage Static AaveUSDC Position - Close Position', () => {
+describe(__filename, () => {
   Cypress.env('chainId', '8453');
   Cypress.env('preset', 'andromeda');
   Cypress.env('walletAddress', '0xc3Cf311e04c1f8C74eCF6a795Ae760dc6312F345');
@@ -8,7 +8,7 @@ describe('Manage Static AaveUSDC Position - Close Position', () => {
     cy.task('startAnvil', {
       chainId: Cypress.env('chainId'),
       forkUrl: `wss://base-mainnet.infura.io/ws/v3/${Cypress.env('INFURA_KEY')}`,
-      block: '22683522',
+      block: '22946353',
     }).then(() => cy.log('Anvil started'));
 
     cy.on('window:before:load', (win) => {
@@ -21,13 +21,13 @@ describe('Manage Static AaveUSDC Position - Close Position', () => {
   });
   afterEach(() => cy.task('stopAnvil').then(() => cy.log('Anvil stopped')));
 
-  it('works', () => {
+  it(__filename, () => {
     cy.setEthBalance({ balance: 100 });
     cy.getUSDC({ amount: 1000 });
 
     cy.visit(`/#/positions/stataUSDC/1?manageAction=deposit&accountId=${Cypress.env('accountId')}`);
 
-    cy.get('[data-cy="close position"]').should('exist').click();
+    cy.get('[data-cy="close position"]', { timeout: 180_000 }).should('exist').click();
 
     cy.get('[data-cy="close position multistep"]')
       .should('exist')

@@ -1,4 +1,4 @@
-describe('Manage WETH Position - Repay', () => {
+describe(__filename, () => {
   Cypress.env('chainId', '42161');
   Cypress.env('preset', 'main');
   Cypress.env('walletAddress', '0xc3Cf311e04c1f8C74eCF6a795Ae760dc6312F345');
@@ -21,7 +21,7 @@ describe('Manage WETH Position - Repay', () => {
   });
   afterEach(() => cy.task('stopAnvil').then(() => cy.log('Anvil stopped')));
 
-  it('works', () => {
+  it(__filename, () => {
     cy.setEthBalance({ balance: 100 });
     cy.approveCollateral({ symbol: 'WETH', spender: 'CoreProxy' });
     cy.wrapEth({ amount: 20 });
@@ -31,7 +31,7 @@ describe('Manage WETH Position - Repay', () => {
 
     cy.visit(`/#/positions/WETH/1?manageAction=repay&accountId=${Cypress.env('accountId')}`);
 
-    cy.get('[data-cy="repay debt form"]').should('exist');
+    cy.get('[data-cy="repay debt form"]', { timeout: 180_000 }).should('exist');
     cy.get('[data-cy="current debt amount"]').should('exist').and('include.text', 'Max');
 
     cy.get('[data-cy="repay amount input"]').type('5');
