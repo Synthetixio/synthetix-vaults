@@ -8,7 +8,7 @@ describe(__filename, () => {
     cy.task('startAnvil', {
       chainId: Cypress.env('chainId'),
       forkUrl: `wss://base-mainnet.infura.io/ws/v3/${Cypress.env('INFURA_KEY')}`,
-      block: '22946353',
+      block: '22991081',
     }).then(() => cy.log('Anvil started'));
 
     cy.on('window:before:load', (win) => {
@@ -42,6 +42,8 @@ describe(__filename, () => {
       expect(urlAccountId).equal(Cypress.env('accountId'));
     });
 
-    cy.get(`[data-cy="account id"][data-account-id="${Cypress.env('accountId')}"]`).should('exist');
+    cy.get(`[data-cy="account id"][data-account-id="${Cypress.env('accountId')}"]`, {
+      timeout: 180_000,
+    }).should('exist');
   });
 });

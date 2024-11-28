@@ -8,7 +8,7 @@ describe(__filename, () => {
     cy.task('startAnvil', {
       chainId: Cypress.env('chainId'),
       forkUrl: `wss://base-mainnet.infura.io/ws/v3/${Cypress.env('INFURA_KEY')}`,
-      block: '22946353',
+      block: '22991081',
     }).then(() => cy.log('Anvil started'));
 
     cy.on('window:before:load', (win) => {
@@ -27,8 +27,10 @@ describe(__filename, () => {
 
     cy.visit(`/#/positions/USDC/1?manageAction=deposit&accountId=${Cypress.env('accountId')}`);
 
-    cy.get('[data-cy="deposit and lock collateral form"]', { timeout: 180_000 }).should('exist');
-    cy.get('[data-cy="balance amount"]').should('exist').and('include.text', 'Max');
+    cy.get('[data-cy="deposit and lock collateral form"]').should('exist');
+    cy.get('[data-cy="balance amount"]', { timeout: 180_000 })
+      .should('exist')
+      .and('include.text', 'Max');
 
     cy.get('[data-cy="deposit amount input"]').should('exist');
     cy.get('[data-cy="deposit amount input"]').type('101');

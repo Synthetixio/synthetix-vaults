@@ -8,7 +8,7 @@ describe(__filename, () => {
     cy.task('startAnvil', {
       chainId: Cypress.env('chainId'),
       forkUrl: `wss://base-mainnet.infura.io/ws/v3/${Cypress.env('INFURA_KEY')}`,
-      block: '22946353', // positive debt
+      block: '22991081', // positive debt
     }).then(() => cy.log('Anvil started'));
 
     cy.on('window:before:load', (win) => {
@@ -27,8 +27,10 @@ describe(__filename, () => {
 
     cy.visit(`/#/positions/USDC/1?manageAction=undelegate&accountId=${Cypress.env('accountId')}`);
 
-    cy.get('[data-cy="unlock collateral form"]', { timeout: 180_000 }).should('exist');
-    cy.get('[data-cy="locked amount"]').should('exist').and('include.text', 'Max');
+    cy.get('[data-cy="unlock collateral form"]').should('exist');
+    cy.get('[data-cy="locked amount"]', { timeout: 180_000 })
+      .should('exist')
+      .and('include.text', 'Max');
 
     cy.get('[data-cy="undelegate amount input"]').should('exist');
     cy.get('[data-cy="undelegate amount input"]').type('30');
