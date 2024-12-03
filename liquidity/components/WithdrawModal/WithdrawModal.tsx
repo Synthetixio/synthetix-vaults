@@ -59,7 +59,7 @@ export function WithdrawModal({
   const { data: systemToken } = useSystemToken();
   const { data: systemTokenBalance } = useAccountCollateral(params.accountId, systemToken?.address);
 
-  const { data: StaticAaveUSDC } = useStaticAaveUSDC();
+  const { data: StaticAaveUSDC, isPending: isPendingStaticAaveUSDC } = useStaticAaveUSDC();
 
   const { mutateAsync: unwrapStata } = useUnwrapStataUSDC();
 
@@ -82,13 +82,10 @@ export function WithdrawModal({
 
   const onSubmit = async () => {
     try {
-      if (!(provider && StaticAaveUSDC)) {
-        throw new Error('Not ready');
-      }
-
       if (txState.status === 'success') {
         onClose();
       }
+
       let step = txState.step;
       if (step === 1) {
         setTxState({
@@ -100,22 +97,26 @@ export function WithdrawModal({
           await withdrawMain.mutateAsync();
         } else {
           await withdrawAndromeda.mutateAsync();
+        }
 
+        if (isStataUSDC) {
           step = 2;
-          if (isStataUSDC) {
-            setTxState({
-              step: 2,
-              status: 'pending',
-            });
-          } else {
-            setTxState({
-              step: 2,
-              status: 'success',
-            });
-          }
+          setTxState({
+            step: 2,
+            status: 'pending',
+          });
+        } else {
+          setTxState({
+            step: 2,
+            status: 'success',
+          });
         }
       }
       if (step === 2) {
+        if (!(provider && StaticAaveUSDC)) {
+          throw new Error('Not ready');
+        }
+
         setTxState({
           step: 2,
           status: 'pending',
@@ -213,7 +214,6 @@ export function WithdrawModal({
         Manage {isDebtWithdrawal ? 'Debt' : 'Collateral'}
       </Text>
       <Divider my={4} />
-
       <Multistep
         step={1}
         title="Withdraw"
@@ -236,9 +236,8 @@ export function WithdrawModal({
           }}
         />
       )}
-
       <Button
-        isDisabled={state.status === 'pending' || !Boolean(provider && StaticAaveUSDC)}
+        isDisabled={state.status === 'pending' || isPendingStaticAaveUSDC || !provider}
         onClick={onSubmit}
         width="100%"
         mt="6"
