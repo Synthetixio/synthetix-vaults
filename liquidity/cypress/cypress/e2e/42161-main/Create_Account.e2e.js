@@ -24,7 +24,7 @@ describe(__filename, () => {
   it(__filename, () => {
     cy.setEthBalance({ balance: 100 });
 
-    cy.visit('/#/dashboard');
+    cy.visit('?page=dashboard');
 
     cy.get('[data-cy="wallet button"]').click();
     cy.get('[data-cy="accounts list"]').children().should('have.length', 1);
@@ -37,8 +37,7 @@ describe(__filename, () => {
 
     cy.url().then((url) => {
       const u1 = new URL(url);
-      const u2 = new URL(`http://whatever${u1.hash.slice(1)}`);
-      const urlAccountId = u2.searchParams.get('accountId');
+      const urlAccountId = u1.searchParams.get('accountId');
       expect(urlAccountId).equal(Cypress.env('accountId'));
     });
 

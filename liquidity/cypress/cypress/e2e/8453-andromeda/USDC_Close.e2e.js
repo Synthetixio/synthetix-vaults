@@ -1,3 +1,5 @@
+import { makeSearch } from '@snx-v3/useParams';
+
 describe(__filename, () => {
   Cypress.env('chainId', '8453');
   Cypress.env('preset', 'andromeda');
@@ -23,25 +25,32 @@ describe(__filename, () => {
 
   it(__filename, () => {
     cy.setEthBalance({ balance: 100 });
+    cy.getUSDC({ amount: 1000 });
 
-    cy.visit('?page=dashboard');
+    cy.visit(
+      `?${makeSearch({
+        page: 'position',
+        collateralSymbol: 'USDC',
+        poolId: 1,
+        manageAction: 'deposit',
+        accountId: Cypress.env('accountId'),
+      })}`
+    );
 
-    cy.get('[data-cy="wallet button"]').click();
-    cy.get('[data-cy="accounts list"]').children().should('have.length', 1);
-    cy.contains('[data-cy="create new account button"]', 'Create Account')
+    cy.get('[data-cy="close position"]', { timeout: 180_000 }).should('exist').click();
+
+    cy.get('[data-cy="close position multistep"]')
       .should('exist')
-      .and('be.visible')
-      .and('be.enabled');
-    cy.get('[data-cy="create new account button"]').click();
-    cy.get('[data-cy="accounts list"]').children().should('have.length', 2);
+      .and('include.text', 'Repay Debt')
+      .and('include.text', 'Unlock Collateral');
 
-    cy.url().then((url) => {
-      const u1 = new URL(url);
-      const urlAccountId = u1.searchParams.get('accountId');
-      expect(urlAccountId).equal(Cypress.env('accountId'));
-    });
+    cy.get('[data-cy="close position submit"]').should('exist').click();
 
-    cy.get(`[data-cy="account id"][data-account-id="${Cypress.env('accountId')}"]`, {
+    cy.get('[data-cy="close position multistep"]').should('exist');
+
+    cy.get('[data-cy="close position confirm button"]').should('exist').click();
+
+    cy.contains('[data-status="success"]', 'Position successfully Closed', {
       timeout: 180_000,
     }).should('exist');
   });
