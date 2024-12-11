@@ -4,7 +4,6 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "@snx-v3/format": "workspace:*",
     "@snx-v3/tsHelpers": "workspace:*",
     "@snx-v3/txnReducer": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
@@ -16,6 +15,7 @@
     "@snx-v3/withERC7412": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^5.8.3",
+    "debug": "^4.3.7",
     "ethers": "^5.7.2",
     "react": "^18.2.0"
   }

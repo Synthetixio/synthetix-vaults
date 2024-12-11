@@ -2,14 +2,16 @@ import { ZEROWEI } from '@snx-v3/constants';
 import { getSpotMarketId, STATA_BASE_MARKET, USDC_BASE_MARKET } from '@snx-v3/isBaseAndromeda';
 import { notNil } from '@snx-v3/tsHelpers';
 import { initialState, reducer } from '@snx-v3/txnReducer';
-import { AccountCollateralType } from '@snx-v3/useAccountCollateral';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
+import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { formatGasPriceForTransaction } from '@snx-v3/useGasOptions';
 import { getGasPrice } from '@snx-v3/useGasPrice';
 import { useGasSpeed } from '@snx-v3/useGasSpeed';
 import { useGetUSDTokens } from '@snx-v3/useGetUSDTokens';
+import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
+import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { useUSDProxy } from '@snx-v3/useUSDProxy';
 import { withERC7412 } from '@snx-v3/withERC7412';
@@ -17,22 +19,20 @@ import { Wei } from '@synthetixio/wei';
 import { useMutation } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import { useReducer } from 'react';
+import debug from 'debug';
 
-export const useWithdrawBaseAndromeda = ({
-  accountId,
-  availableCollateral,
-  snxUSDCollateral,
-  amountToWithdraw,
-  accountCollateral,
-  collateralSymbol,
-}: {
-  availableCollateral: Wei;
-  snxUSDCollateral: Wei;
-  amountToWithdraw: Wei;
-  accountId?: string;
-  collateralSymbol?: string;
-  accountCollateral: AccountCollateralType | undefined;
-}) => {
+const log = debug('snx:useWithdrawBaseAndromeda');
+
+export const useWithdrawBaseAndromeda = ({ amountToWithdraw }: { amountToWithdraw: Wei }) => {
+  const [params] = useParams<PositionPageSchemaType>();
+  const { data: collateralType } = useCollateralType(params.collateralSymbol);
+  const { data: liquidityPosition } = useLiquidityPosition({
+    accountId: params.accountId,
+    collateralType,
+  });
+
+  const accountId = params.accountId;
+
   const [txnState, dispatch] = useReducer(reducer, initialState);
   const { data: CoreProxy } = useCoreProxy();
   const { data: SpotMarketProxy } = useSpotMarketProxy();
@@ -55,34 +55,46 @@ export const useWithdrawBaseAndromeda = ({
           USDProxy &&
           accountId &&
           usdTokens?.sUSD &&
-          usdTokens.snxUSD
+          usdTokens.snxUSD &&
+          params.collateralSymbol &&
+          collateralType &&
+          liquidityPosition
         )
       ) {
         throw new Error('Not ready');
       }
 
-      const total = snxUSDCollateral.add(availableCollateral);
+      const total = liquidityPosition.availableSystemToken.add(
+        liquidityPosition.availableCollateral
+      );
+      log('total', total);
 
+      log('amountToWithdraw', amountToWithdraw);
       if (total.lt(amountToWithdraw)) {
         throw new Error('Exceeds balance');
       }
 
-      const wrappedCollateralAmount = amountToWithdraw.gt(availableCollateral)
-        ? availableCollateral
+      const wrappedCollateralAmount = amountToWithdraw.gt(liquidityPosition.availableCollateral)
+        ? liquidityPosition.availableCollateral
         : amountToWithdraw;
+      log('wrappedCollateralAmount', wrappedCollateralAmount);
 
       const snxUSDAmount = amountToWithdraw.sub(wrappedCollateralAmount).gt(0)
         ? amountToWithdraw.sub(wrappedCollateralAmount)
         : ZEROWEI;
 
+      log('snxUSDAmount', snxUSDAmount);
+
       let sUSDC_amount = ZEROWEI;
 
       try {
-        const spotMarketId = getSpotMarketId(collateralSymbol);
+        const spotMarketId = getSpotMarketId(params.collateralSymbol);
+        log('spotMarketId', spotMarketId);
 
         if (spotMarketId === USDC_BASE_MARKET) {
           sUSDC_amount = sUSDC_amount.add(wrappedCollateralAmount);
         }
+        log('sUSDC_amount', sUSDC_amount);
 
         dispatch({ type: 'prompting' });
 
@@ -99,7 +111,7 @@ export const useWithdrawBaseAndromeda = ({
         const withdraw_collateral = wrappedCollateralAmount.gt(0)
           ? CoreProxyContract.populateTransaction.withdraw(
               ethers.BigNumber.from(accountId),
-              accountCollateral?.tokenAddress,
+              collateralType.tokenAddress,
               wrappedCollateralAmount.toBN()
             )
           : undefined;
@@ -119,6 +131,7 @@ export const useWithdrawBaseAndromeda = ({
               snxUSDAmount.toBN()
             )
           : undefined;
+
         //snxUSD => sUSDC
         const buy_sUSDC = snxUSDAmount.gt(0)
           ? SpotProxyContract.populateTransaction.buy(

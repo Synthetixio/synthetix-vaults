@@ -12,7 +12,6 @@ import {
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { ZEROWEI } from '@snx-v3/constants';
-import { isBaseAndromeda } from '@snx-v3/isBaseAndromeda';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { useNetwork, useProvider } from '@snx-v3/useBlockchain';
@@ -27,7 +26,6 @@ import React from 'react';
 import { TokenIcon } from '../TokenIcon/TokenIcon';
 import { ClosePositionOneStep } from './ClosePositionOneStep';
 import { ClosePositionTransactions } from './ClosePositionTransactions';
-import { useAccountAvailableCollateral } from './useAccountAvailableCollateral';
 import { usePositionDebt } from './usePositionDebt';
 
 function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit: () => void }) {
@@ -35,18 +33,16 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: systemToken } = useSystemToken();
 
-  const { data: liquidityPosition, isPending } = useLiquidityPosition({
-    tokenAddress: collateralType?.tokenAddress,
+  const { data: liquidityPosition, isPending: isPendingLiquidityPosition } = useLiquidityPosition({
     accountId: params.accountId,
-    poolId: params.poolId,
+    collateralType,
   });
   liquidityPosition?.debt;
   liquidityPosition?.collateralAmount;
   const collateralSymbol = collateralType?.displaySymbol;
 
   const { network } = useNetwork();
-  const isBase = isBaseAndromeda(network?.id, network?.preset);
-  const debtSymbol = isBase ? 'USDC' : systemToken?.symbol;
+  const debtSymbol = network?.preset === 'andromeda' ? 'USDC' : systemToken?.symbol;
 
   const provider = useProvider();
   const { data: positionDebt, isPending: isPendingPositionDebt } = usePositionDebt({
@@ -58,12 +54,6 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
   const { data: systemTokenBalance, isPending: isPendingSystemTokenBalance } = useTokenBalance(
     systemToken?.address
   );
-  const { data: accountAvailableCollateral, isPending: isPendingAccountAvailableCollateral } =
-    useAccountAvailableCollateral({
-      provider,
-      accountId: params.accountId,
-      collateralTypeTokenAddress: systemToken?.address,
-    });
 
   const debtPrice = useTokenPrice(debtSymbol);
   const collateralPrice = useTokenPrice(collateralSymbol);
@@ -80,7 +70,7 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
       <Divider my={5} bg="gray.900" />
 
       <Text color="gray.50" fontSize="sm" fontWeight="700" mb={2}>
-        {!isPending && liquidityPosition ? (
+        {!isPendingLiquidityPosition && liquidityPosition ? (
           <>{liquidityPosition.debt.gt(0) ? 'Repay Debt' : 'Claim Profit'}</>
         ) : (
           <>&nbsp;</>
@@ -96,7 +86,8 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
               </Text>
             </BorderBox>
             <Text fontSize="12px" whiteSpace="nowrap" data-cy="debt amount">
-              {!isPending && liquidityPosition ? (
+              {isPendingLiquidityPosition ? '~' : null}
+              {!isPendingLiquidityPosition && liquidityPosition ? (
                 <>
                   <Amount
                     prefix={liquidityPosition.debt.gt(0) ? 'Debt: ' : 'Max Claim: '}
@@ -106,14 +97,16 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
                     Max
                   </Text>
                 </>
-              ) : (
-                '~'
-              )}
+              ) : null}
             </Text>
           </Flex>
           <Flex flexGrow={1} flexDir="column">
             <NumberInput
-              value={!isPending && liquidityPosition ? liquidityPosition.debt.abs() : ZEROWEI}
+              value={
+                !isPendingLiquidityPosition && liquidityPosition
+                  ? liquidityPosition.debt.abs()
+                  : ZEROWEI
+              }
               disabled
             />
             <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
@@ -121,7 +114,7 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
                 <Amount
                   prefix="$"
                   value={
-                    !isPending && liquidityPosition
+                    !isPendingLiquidityPosition && liquidityPosition
                       ? liquidityPosition.debt.abs().mul(debtPrice)
                       : ZEROWEI
                   }
@@ -145,21 +138,24 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
               </Text>
             </BorderBox>
             <Text fontSize="12px" whiteSpace="nowrap" data-cy="locked collateral amount">
-              {!isPending && liquidityPosition ? (
+              {isPendingLiquidityPosition ? 'Locked: ~' : null}
+              {!isPendingLiquidityPosition && liquidityPosition ? (
                 <>
                   <Amount prefix="Locked: " value={liquidityPosition.collateralAmount} />{' '}
                   <Text as="span" color="gray.600" fontWeight={700}>
                     Max
                   </Text>
                 </>
-              ) : (
-                '~'
-              )}
+              ) : null}
             </Text>
           </Flex>
           <Flex flexGrow={1} flexDir="column">
             <NumberInput
-              value={!isPending && liquidityPosition ? liquidityPosition.collateralAmount : ZEROWEI}
+              value={
+                !isPendingLiquidityPosition && liquidityPosition
+                  ? liquidityPosition.collateralAmount
+                  : ZEROWEI
+              }
               disabled
             />
             <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
@@ -167,7 +163,7 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
                 <Amount
                   prefix="$"
                   value={
-                    !isPending && liquidityPosition
+                    !isPendingLiquidityPosition && liquidityPosition
                       ? liquidityPosition.collateralAmount.abs().mul(collateralPrice)
                       : ZEROWEI
                   }
@@ -184,8 +180,8 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
           ClosePositionDeployment &&
           systemTokenBalance &&
           positionDebt &&
-          accountAvailableCollateral &&
-          !systemTokenBalance.add(accountAvailableCollateral).gte(positionDebt)
+          liquidityPosition &&
+          !systemTokenBalance.add(liquidityPosition.availableSystemToken).gte(positionDebt)
         }
         animateOpacity
       >
@@ -198,8 +194,8 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
                 prefix="Available: "
                 value={
                   systemTokenBalance &&
-                  accountAvailableCollateral &&
-                  systemTokenBalance.add(accountAvailableCollateral)
+                  liquidityPosition &&
+                  systemTokenBalance.add(liquidityPosition.availableSystemToken)
                 }
                 suffix={` ${systemToken?.symbol}`}
               />
@@ -218,11 +214,11 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
           !(
             !isPendingPositionDebt &&
             !isPendingSystemTokenBalance &&
-            !isPendingAccountAvailableCollateral &&
+            !isPendingLiquidityPosition &&
             systemTokenBalance &&
-            accountAvailableCollateral &&
+            liquidityPosition &&
             positionDebt &&
-            systemTokenBalance.add(accountAvailableCollateral).gte(positionDebt)
+            systemTokenBalance.add(liquidityPosition.availableSystemToken).gte(positionDebt)
           )
         }
       >
@@ -240,9 +236,8 @@ export const ClosePosition = ({ onClose }: { onClose: () => void }) => {
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const { data: liquidityPosition } = useLiquidityPosition({
-    tokenAddress: collateralType?.tokenAddress,
     accountId: params.accountId,
-    poolId: params.poolId,
+    collateralType,
   });
 
   React.useEffect(() => {
@@ -269,12 +264,7 @@ export const ClosePosition = ({ onClose }: { onClose: () => void }) => {
         <ClosePositionUi onClose={onClose} onSubmit={() => setTransactions(true)} />
       ) : null}
       {transactionStep && !ClosePositionDeployment ? (
-        <ClosePositionTransactions
-          onBack={() => setTransactions(false)}
-          onClose={onClose}
-          collateralType={collateralType}
-          liquidityPosition={liquidityPosition}
-        />
+        <ClosePositionTransactions onBack={() => setTransactions(false)} onClose={onClose} />
       ) : null}
       {transactionStep && ClosePositionDeployment ? (
         <ClosePositionOneStep onBack={() => setTransactions(false)} onClose={onClose} />
