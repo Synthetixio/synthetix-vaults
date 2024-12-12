@@ -108,6 +108,7 @@ export const useDeposit = ({
         }
 
         const { multicallTxn: erc7412Tx, gasLimit } = await withERC7412(
+          provider,
           network,
           calls,
           'useDeposit',
@@ -124,7 +125,7 @@ export const useDeposit = ({
         log('txn', txn);
         dispatch({ type: 'pending', payload: { txnHash: txn.hash } });
 
-        const receipt = await txn.wait();
+        const receipt = await provider.waitForTransaction(txn.hash);
         log('receipt', receipt);
         dispatch({ type: 'success' });
       } catch (error: any) {
