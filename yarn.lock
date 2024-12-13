@@ -6646,9 +6646,9 @@ __metadata:
   linkType: soft
 
 "@synthetixio/v3-contracts@npm:^7.1.0":
-  version: 7.13.0
-  resolution: "@synthetixio/v3-contracts@npm:7.13.0"
-  checksum: 10/5a28ebf3b8ea961d52f7506fbcca6ea994de12a81d3029a2bf0f263d46c575b9eb9e506cf06b499218d4050f338a0c512caef64dfa10d69d21c08eed4b355e18
+  version: 7.14.0
+  resolution: "@synthetixio/v3-contracts@npm:7.14.0"
+  checksum: 10/27747eb816d7a65bf2933416b31feb58997001fbd0c71a87387260894e08b78725267d82250ee28a88cd1d20be073b511af55a14684317a529ccffc9eeb168bc
   languageName: node
   linkType: hard
 
@@ -10101,9 +10101,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:1":
-  version: 1.0.30001673
-  resolution: "caniuse-lite@npm:1.0.30001673"
-  checksum: 10/e2e053faa5d424a57204a8631b015ef51415c12bcb85622643ea41aff4d5127114017d27df7391d46737e1bbcd9bd8ed004cf370920c9f264f63fca60303a81d
+  version: 1.0.30001688
+  resolution: "caniuse-lite@npm:1.0.30001688"
+  checksum: 10/2125e900af866ee211c66beca01220c98e72c8a91d25c87b8ab456d3916f56fb1be5feef72556bca746da7aa852fc0118a04669f5ec2e6511eb77c960479e1c0
   languageName: node
   linkType: hard
 
