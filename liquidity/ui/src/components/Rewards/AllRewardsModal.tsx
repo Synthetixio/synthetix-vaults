@@ -50,12 +50,6 @@ export function AllRewardsModal({
     if (txnStatus === 'error') {
       setIsOpen(false);
     }
-    // Disable auto-close
-    // if (txnStatus === 'success') {
-    //   setTimeout(() => {
-    //     setIsOpen(false);
-    //   }, 1200);
-    // }
   }, [txnStatus]);
 
   const groupedRewards = React.useMemo(() => {
@@ -65,9 +59,9 @@ export function AllRewardsModal({
     const map = new Map();
     rewards.forEach(({ distributor, claimableAmount }) => {
       const synthToken = synthTokens?.find(
-        (synth) => synth.address.toUpperCase() === distributor.payoutToken.address.toUpperCase()
+        (synth) => synth.address.toLowerCase() === distributor.payoutToken.address.toLowerCase()
       );
-      const token = synthToken ? synthToken.token : distributor.payoutToken;
+      const token = synthToken && synthToken.token ? synthToken.token : distributor.payoutToken;
       const displaySymbol = tokenOverrides[token.address] ?? token.symbol;
       if (map.has(displaySymbol)) {
         map.set(displaySymbol, map.get(displaySymbol).add(claimableAmount));
@@ -75,9 +69,7 @@ export function AllRewardsModal({
         map.set(displaySymbol, claimableAmount);
       }
     });
-    return map
-      .entries()
-      .toArray()
+    return Array.from(map.entries())
       .map(([displaySymbol, claimableAmount]) => ({
         displaySymbol,
         claimableAmount,
@@ -149,30 +141,31 @@ export function AllRewardsModal({
               ml={2}
               data-cy="claim rewards info"
             >
-              {cachedRewards
-                ? cachedRewards.map(({ displaySymbol, claimableAmount }) => (
-                    <Text
-                      key={displaySymbol}
-                      fontSize="14px"
-                      fontWeight={700}
-                      lineHeight="20px"
-                      color="white"
-                    >
-                      <Amount
-                        value={claimableAmount}
-                        prefix="Claiming "
-                        suffix={` ${displaySymbol}`}
-                      />
-                    </Text>
-                  ))
-                : null}
-              <Text fontSize="12px" lineHeight="16px" color="gray.500">
-                Claim your rewards
-              </Text>
+              {cachedRewards ? (
+                cachedRewards.map(({ displaySymbol, claimableAmount }) => (
+                  <Text
+                    key={displaySymbol}
+                    fontSize="14px"
+                    fontWeight={700}
+                    lineHeight="20px"
+                    color="white"
+                  >
+                    <Amount
+                      prefix={txnStatus === 'success' ? 'Claimed ' : 'Claiming '}
+                      value={claimableAmount}
+                      suffix={` ${displaySymbol}`}
+                    />
+                  </Text>
+                ))
+              ) : (
+                <Text fontSize="12px" lineHeight="16px" color="gray.500">
+                  Claim your rewards
+                </Text>
+              )}
             </Flex>
           </Flex>
           <WithdrawIncrease />
-          {txnStatus === 'success' && (
+          {txnStatus === 'success' ? (
             <Button
               mt={5}
               variant="solid"
@@ -181,10 +174,11 @@ export function AllRewardsModal({
               py={3}
               width="100%"
               textAlign="center"
+              onClick={() => setIsOpen(false)}
             >
               Done
             </Button>
-          )}
+          ) : null}
           {txnHash && (
             <Flex
               justifyContent="center"

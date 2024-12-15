@@ -12,6 +12,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
+import { tokenOverrides } from '@snx-v3/constants';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { useClaimAllRewards } from '@snx-v3/useClaimAllRewards';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -22,7 +23,6 @@ import React from 'react';
 import { AllRewardsModal } from './AllRewardsModal';
 import { RewardsLoading } from './RewardsLoading';
 import { RewardsRow } from './RewardsRow';
-import { tokenOverrides } from '@snx-v3/constants';
 
 export function Rewards() {
   const [params] = useParams<PositionPageSchemaType>();
@@ -46,9 +46,9 @@ export function Rewards() {
     const map = new Map();
     rewards.forEach(({ distributor, claimableAmount }) => {
       const synthToken = synthTokens?.find(
-        (synth) => synth.address.toUpperCase() === distributor.payoutToken.address.toUpperCase()
+        (synth) => synth.address.toLowerCase() === distributor.payoutToken.address.toLowerCase()
       );
-      const token = synthToken ? synthToken.token : distributor.payoutToken;
+      const token = synthToken && synthToken.token ? synthToken.token : distributor.payoutToken;
       const displaySymbol = tokenOverrides[token.address] ?? token.symbol;
       if (map.has(displaySymbol)) {
         map.set(displaySymbol, map.get(displaySymbol).add(claimableAmount));
@@ -56,9 +56,7 @@ export function Rewards() {
         map.set(displaySymbol, claimableAmount);
       }
     });
-    return map
-      .entries()
-      .toArray()
+    return Array.from(map.entries())
       .map(([displaySymbol, claimableAmount]) => ({
         displaySymbol,
         claimableAmount,
@@ -78,7 +76,7 @@ export function Rewards() {
         <Button
           size="sm"
           variant="solid"
-          isDisabled={!(rewards && rewards.length > 0)}
+          isDisabled={!(groupedRewards && groupedRewards.length > 0)}
           _disabled={{
             bg: 'gray.900',
             backgroundImage: 'none',
@@ -94,7 +92,7 @@ export function Rewards() {
       </Flex>
 
       <TableContainer width="100%" mb="8px">
-        <Table>
+        <Table data-cy="rewards table">
           <Thead>
             <Tr borderBottom="1px solid #2D2D38">
               <Th
@@ -143,7 +141,7 @@ export function Rewards() {
 
             {params.accountId && isPendingRewards ? <RewardsLoading /> : null}
 
-            {params.accountId && !isPendingRewards && rewards && rewards.length === 0 ? (
+            {groupedRewards && groupedRewards.length === 0 ? (
               <Tr>
                 <Td display="flex" alignItems="left" px={4} border="none" w="100%">
                   <Text color="gray.500" fontFamily="heading" fontSize="xs">
@@ -153,7 +151,7 @@ export function Rewards() {
               </Tr>
             ) : null}
 
-            {groupedRewards
+            {groupedRewards && groupedRewards.length
               ? groupedRewards.map(({ displaySymbol, claimableAmount }) => (
                   <RewardsRow
                     key={displaySymbol}

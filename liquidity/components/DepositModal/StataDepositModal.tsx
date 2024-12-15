@@ -7,7 +7,6 @@ import { currency } from '@snx-v3/format';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { Multistep } from '@snx-v3/Multistep';
 import { useApprove } from '@snx-v3/useApprove';
-import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useConvertStataUSDC } from '@snx-v3/useConvertStataUSDC';
@@ -18,11 +17,10 @@ import { usePool } from '@snx-v3/usePools';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { useStaticAaveUSDC } from '@snx-v3/useStaticAaveUSDC';
 import { useStaticAaveUSDCRate } from '@snx-v3/useStaticAaveUSDCRate';
-import { useSynthTokens } from '@snx-v3/useSynthTokens';
+import { useSynthToken } from '@snx-v3/useSynthToken';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useUSDC } from '@snx-v3/useUSDC';
 import { Wei, wei } from '@synthetixio/wei';
-import { useQueryClient } from '@tanstack/react-query';
 import { useMachine } from '@xstate/react';
 import { ethers } from 'ethers';
 import React from 'react';
@@ -41,8 +39,6 @@ export function StataDepositModal({
   title?: string;
 }) {
   const [params, setParams] = useParams<PositionPageSchemaType>();
-  const queryClient = useQueryClient();
-  const { network } = useNetwork();
   const { collateralChange, setCollateralChange } = React.useContext(ManagePositionContext);
   const { data: SpotMarketProxy } = useSpotMarketProxy();
 
@@ -57,12 +53,7 @@ export function StataDepositModal({
   const { data: staticAaveUSDCRate } = useStaticAaveUSDCRate();
   // log('staticAaveUSDCRate', staticAaveUSDCRate, `${staticAaveUSDCRate}`);
 
-  const { data: synthTokens } = useSynthTokens();
-  const synth = synthTokens?.find(
-    (synth) =>
-      collateralType?.tokenAddress?.toLowerCase() === synth?.address?.toLowerCase() ||
-      collateralType?.tokenAddress?.toLowerCase() === synth?.token?.address.toLowerCase()
-  );
+  const { data: synthToken } = useSynthToken(collateralType);
 
   const { data: stataUSDCTokenBalanceRaw } = useTokenBalance(StaticAaveUSDC?.address);
   // log(
@@ -130,17 +121,18 @@ export function StataDepositModal({
       ? collateralChange.sub(liquidityPosition.availableCollateral)
       : wei(0);
   const { approve: approveStata, requireApproval: requireApprovalStata } = useApprove({
-    contractAddress: synth?.token?.address,
-    amount: synth
-      ? stataApprovalNeeded
-          .toBN()
-          .mul(ethers.utils.parseUnits('1', synth.token.decimals))
-          .div(D18)
+    contractAddress: synthToken?.token?.address,
+    amount:
+      synthToken && synthToken.token
+        ? stataApprovalNeeded
+            .toBN()
+            .mul(ethers.utils.parseUnits('1', synthToken.token.decimals))
+            .div(D18)
 
-          // extra 1% approval
-          .mul(101)
-          .div(100)
-      : undefined,
+            // extra 1% approval
+            .mul(101)
+            .div(100)
+        : undefined,
     spender: SpotMarketProxy?.address,
   });
   // log('requireApprovalStata', requireApprovalStata);
@@ -152,7 +144,7 @@ export function StataDepositModal({
     accountId: params.accountId,
     newAccountId,
     poolId: params.poolId,
-    collateralTypeAddress: synth?.token.address,
+    collateralTypeAddress: synthToken?.token?.address,
     collateralChange,
     currentCollateral: liquidityPosition?.collateralAmount,
     availableCollateral: liquidityPosition?.availableCollateral,
@@ -196,6 +188,7 @@ export function StataDepositModal({
             ),
             status: 'error',
             variant: 'left-accent',
+            duration: 3_600_000,
           });
           throw Error('Approve failed', { cause: error });
         }
@@ -224,6 +217,7 @@ export function StataDepositModal({
             ),
             status: 'error',
             variant: 'left-accent',
+            duration: 3_600_000,
           });
           throw Error('Wrap USDC failed', { cause: error });
         }
@@ -236,7 +230,7 @@ export function StataDepositModal({
           }
           toast({
             title: `Approve collateral for transfer`,
-            description: `Approve ${synth?.token?.address} transfer`,
+            description: `Approve ${synthToken?.token?.address} transfer`,
             status: 'info',
             variant: 'left-accent',
           });
@@ -286,24 +280,6 @@ export function StataDepositModal({
 
           await depositBaseAndromeda();
 
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'TransferableSynthetix'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'Allowance'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'Accounts'],
-          });
           setCollateralChange(ZEROWEI);
 
           toast.closeAll();

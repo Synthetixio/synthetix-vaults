@@ -17,10 +17,9 @@ import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { usePool } from '@snx-v3/usePools';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
-import { useSynthTokens } from '@snx-v3/useSynthTokens';
+import { useSynthToken } from '@snx-v3/useSynthToken';
 import { useWrapEth } from '@snx-v3/useWrapEth';
 import { Wei, wei } from '@synthetixio/wei';
-import { useQueryClient } from '@tanstack/react-query';
 import { useMachine } from '@xstate/react';
 import { ethers } from 'ethers';
 import React from 'react';
@@ -38,7 +37,6 @@ export function DepositModal({
   title?: string;
 }) {
   const [params, setParams] = useParams<PositionPageSchemaType>();
-  const queryClient = useQueryClient();
   const { network } = useNetwork();
   const { collateralChange, setCollateralChange } = React.useContext(ManagePositionContext);
   const { data: CoreProxy } = useCoreProxy();
@@ -50,12 +48,7 @@ export function DepositModal({
     collateralType,
   });
 
-  const { data: synthTokens } = useSynthTokens();
-  const synth = synthTokens?.find(
-    (synth) =>
-      collateralType?.tokenAddress?.toLowerCase() === synth?.address?.toLowerCase() ||
-      collateralType?.tokenAddress?.toLowerCase() === synth?.token?.address.toLowerCase()
-  );
+  const { data: synthToken } = useSynthToken(collateralType);
 
   const currentCollateral = liquidityPosition?.collateralAmount ?? ZEROWEI;
   const availableCollateral = liquidityPosition?.availableCollateral ?? ZEROWEI;
@@ -87,16 +80,16 @@ export function DepositModal({
   //Collateral Approval
   const { approve, requireApproval } = useApprove({
     contractAddress:
-      network?.preset === 'andromeda' ? synth?.token?.address : collateralType?.tokenAddress,
+      network?.preset === 'andromeda' ? synthToken?.token?.address : collateralType?.tokenAddress,
 
     amount: collateralChange.lte(availableCollateral)
       ? wei(0).toBN()
-      : network?.preset === 'andromeda' && synth
+      : network?.preset === 'andromeda' && synthToken && synthToken.token
         ? collateralChange
             .sub(availableCollateral)
             .toBN()
             // Reduce precision for approval of USDC on Andromeda
-            .mul(ethers.utils.parseUnits('1', synth.token.decimals))
+            .mul(ethers.utils.parseUnits('1', synthToken.token.decimals))
             .div(D18)
         : collateralChange.sub(availableCollateral).toBN(),
     spender: network?.preset === 'andromeda' ? SpotMarketProxy?.address : CoreProxy?.address,
@@ -118,7 +111,7 @@ export function DepositModal({
     accountId: params.accountId,
     newAccountId,
     poolId: params.poolId,
-    collateralTypeAddress: synth?.token.address,
+    collateralTypeAddress: synthToken?.token?.address,
     collateralChange,
     currentCollateral,
     availableCollateral,
@@ -169,7 +162,9 @@ export function DepositModal({
           toast({
             title: `Approve collateral for transfer`,
             description: `Approve ${
-              network?.preset === 'andromeda' ? synth?.token?.address : collateralType?.tokenAddress
+              network?.preset === 'andromeda'
+                ? synthToken?.token?.address
+                : collateralType?.tokenAddress
             } transfer`,
             status: 'info',
             variant: 'left-accent',
@@ -220,27 +215,6 @@ export function DepositModal({
             await execDeposit();
           }
 
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'TokenBalance'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'EthBalance'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPosition'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'TransferableSynthetix'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'Allowance'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'LiquidityPositions'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [`${network?.id}-${network?.preset}`, 'Accounts'],
-          });
           setCollateralChange(ZEROWEI);
 
           toast.closeAll();
@@ -256,7 +230,6 @@ export function DepositModal({
           if (contractError) {
             console.error(new Error(contractError.name), contractError);
           }
-
           toast.closeAll();
           toast({
             title: 'Could not complete locking collateral',
