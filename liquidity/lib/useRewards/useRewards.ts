@@ -139,6 +139,7 @@ export function useRewards({ accountId }: { accountId?: string }) {
 
       const poolDistributors = rewardsDistributors
         .filter((distributor) => !distributor.collateralType)
+        .filter((distributor) => !distributor.name.includes('Liquidation Rewards'))
         .flatMap((distributor) => ({
           method: 'getAvailablePoolRewards',
           claimMethod: 'claimPoolRewards',
@@ -152,6 +153,25 @@ export function useRewards({ accountId }: { accountId?: string }) {
           collateralType: undefined,
         }));
       log('poolDistributors', poolDistributors);
+
+      const poolDistributorsPerCollateral = rewardsDistributors
+        .filter((distributor) => !distributor.collateralType)
+        .filter((distributor) => !distributor.name.includes('Liquidation Rewards'))
+        .flatMap((distributor) =>
+          collateralTypes.map((collateralType) => ({
+            method: 'getAvailablePoolRewards',
+            claimMethod: 'claimPoolRewards',
+            args: [
+              ethers.BigNumber.from(accountId),
+              ethers.BigNumber.from(POOL_ID),
+              collateralType.address,
+              distributor.address,
+            ],
+            distributor,
+            collateralType,
+          }))
+        );
+      log('poolDistributorsPerCollateral', poolDistributorsPerCollateral);
 
       const liquidationRewardsDistributors = rewardsDistributors
         .filter((distributor) => !distributor.collateralType)
@@ -175,6 +195,7 @@ export function useRewards({ accountId }: { accountId?: string }) {
       const multicall = [
         ...vaultDistributors,
         ...poolDistributors,
+        ...poolDistributorsPerCollateral,
         ...liquidationRewardsDistributors,
       ];
       log('multicall', multicall);
