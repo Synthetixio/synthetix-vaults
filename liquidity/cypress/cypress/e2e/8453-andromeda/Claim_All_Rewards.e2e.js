@@ -1,16 +1,16 @@
 import { makeSearch } from '@snx-v3/useParams';
 
 describe(__filename, () => {
-  Cypress.env('chainId', '42161');
-  Cypress.env('preset', 'main');
-  Cypress.env('walletAddress', '0xeEBb1b80e75b44180EbF7893DA00034d30BDfF7C');
-  Cypress.env('accountId', '170141183460469231731687303715884106023');
+  Cypress.env('chainId', '8453');
+  Cypress.env('preset', 'andromeda');
+  Cypress.env('walletAddress', '0x1a245Fa866932731631E1ec8EDcDbB0C6A402559');
+  Cypress.env('accountId', '1640332659');
 
   beforeEach(() => {
     cy.task('startAnvil', {
       chainId: Cypress.env('chainId'),
-      forkUrl: `https://arbitrum-mainnet.infura.io/v3/${Cypress.env('INFURA_KEY')}`,
-      block: '281318272',
+      forkUrl: `https://base-mainnet.infura.io/v3/${Cypress.env('INFURA_KEY')}`,
+      block: '22544990',
     }).then(() => cy.log('Anvil started'));
 
     cy.on('window:before:load', (win) => {
@@ -28,10 +28,7 @@ describe(__filename, () => {
 
     cy.visit(
       `?${makeSearch({
-        page: 'position',
-        collateralSymbol: 'ARB',
-        poolId: 1,
-        manageAction: 'deposit',
+        page: 'dashboard',
         accountId: Cypress.env('accountId'),
       })}`
     );
@@ -39,25 +36,27 @@ describe(__filename, () => {
     cy.get('[data-cy="claim rewards submit"]', { timeout: 180_000 }).should('be.enabled');
     cy.get('[data-cy="claim rewards submit"]').click();
 
+    cy.get('[data-cy="claim rewards dialog"]').should('exist');
+
     cy.get('[data-cy="claim rewards info"]')
       .should('exist')
-      .and('include.text', 'Claiming 53.87 ARB')
-      .and('include.text', 'Claiming 0.55 USDe')
-      .and('include.text', 'Claiming 0.0078 WETH')
-      .and('include.text', 'Claiming 0.0000004 tBTC');
+      .and('include.text', 'Claiming 640.24 USDC')
+      .and('include.text', 'Claiming 449.22 SNX');
 
-    cy.get('[data-cy="claim rewards info"]', { timeout: 180_000 })
-      .should('exist')
-      .and('include.text', 'Claimed 53.87 ARB')
-      .and('include.text', 'Claimed 0.55 USDe')
-      .and('include.text', 'Claimed 0.0078 WETH')
-      .and('include.text', 'Claimed 0.0000004 tBTC');
-
-    cy.contains('[data-status="success"]', 'Your rewards have been claimed').should('exist');
+    cy.contains('[data-status="success"]', 'Your rewards have been claimed', {
+      timeout: 180_000,
+    }).should('exist');
     cy.get('[data-cy="transaction hash"]').should('exist');
 
+    cy.get('[data-cy="claim rewards info"]')
+      .should('include.text', 'Claimed 640.24 USDC')
+      .and('include.text', 'Claimed 449.22 SNX');
+
     cy.contains('[data-cy="claim rewards dialog"] button', 'Done').click();
-    cy.get('[data-cy="rewards table"]').should('include.text', 'No Rewards Available');
+    cy.get('[data-cy="rewards table"]', { timeout: 180_000 }).should(
+      'include.text',
+      'No Rewards Available'
+    );
     cy.get('[data-cy="claim rewards submit"]').should('be.disabled');
   });
 });

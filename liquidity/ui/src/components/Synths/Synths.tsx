@@ -2,6 +2,7 @@ import { InfoIcon } from '@chakra-ui/icons';
 import {
   Button,
   Flex,
+  Heading,
   Table,
   TableContainer,
   Tbody,
@@ -41,24 +42,12 @@ export function Synths() {
   }, [synthBalances]);
 
   return (
-    <TableContainer
-      maxW="100%"
-      mt={4}
-      borderColor="gray.900"
-      borderWidth="1px"
-      borderRadius="5px"
-      p={6}
-      sx={{
-        borderCollapse: 'separate !important',
-        borderSpacing: 0,
-      }}
-      bg="navy.700"
-    >
+    <TableContainer>
       <SynthsUnwrapModal txnStatus={txnState.txnStatus} txnHash={txnState.txnHash} />
       <Flex alignItems="center" justifyContent="space-between">
-        <Text color="gray.500" fontFamily="heading" lineHeight="4" fontSize="xs" mb="8px">
-          &nbsp;
-        </Text>
+        <Heading fontSize="18px" fontWeight={700} lineHeight="28px" color="gray.50">
+          Synths
+        </Heading>
         <Button
           size="sm"
           variant="solid"
