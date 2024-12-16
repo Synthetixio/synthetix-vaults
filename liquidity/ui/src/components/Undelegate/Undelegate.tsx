@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
+import { ChangeStat } from '@snx-v3/ChangeStat';
 import { ZEROWEI } from '@snx-v3/constants';
 import { currency } from '@snx-v3/format';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
@@ -24,7 +25,6 @@ import { useWithdrawTimer } from '@snx-v3/useWithdrawTimer';
 import { validatePosition } from '@snx-v3/validatePosition';
 import Wei, { wei } from '@synthetixio/wei';
 import React from 'react';
-import { ChangeStat } from '../ChangeStat/ChangeStat';
 import { CRatioChangeStat } from '../CRatioBar/CRatioChangeStat';
 import { TokenIcon } from '../TokenIcon/TokenIcon';
 import { TransactionSummary } from '../TransactionSummary/TransactionSummary';
@@ -111,8 +111,12 @@ export function Undelegate() {
         <Flex alignItems="flex-start" flexDir="column" gap="1">
           <BorderBox display="flex" py={1.5} px={2.5}>
             <Text display="flex" gap={2} alignItems="center" fontWeight="600">
-              <TokenIcon symbol={collateralType?.symbol} width={16} height={16} />
-              {collateralType?.displaySymbol}
+              <TokenIcon
+                symbol={collateralType?.symbol ?? params.collateralSymbol}
+                width={16}
+                height={16}
+              />
+              {collateralType?.displaySymbol ?? params.collateralSymbol}
             </Text>
           </BorderBox>
           <Text fontSize="12px" whiteSpace="nowrap" data-cy="locked amount">
@@ -184,7 +188,7 @@ export function Undelegate() {
                 The minimal locked amount is{' '}
                 <Amount
                   value={collateralType.minDelegationD18}
-                  suffix={` ${collateralType?.symbol}`}
+                  suffix={` ${collateralType?.displaySymbol ?? params.collateralSymbol}`}
                 />
               </AlertTitle>
               <AlertDescription>
@@ -289,12 +293,12 @@ export function Undelegate() {
             mb={6}
             items={[
               {
-                label: `Locked ${collateralType?.symbol}`,
+                label: `Locked ${collateralType?.displaySymbol ?? params.collateralSymbol}`,
                 value: (
                   <ChangeStat
                     value={liquidityPosition.collateralAmount || ZEROWEI}
                     newValue={leftoverCollateral}
-                    formatFn={(val: Wei) => currency(val)}
+                    formatFn={(val?: Wei) => currency(val ?? ZEROWEI)}
                     hasChanges={collateralChange.abs().gt(0)}
                     size="sm"
                   />

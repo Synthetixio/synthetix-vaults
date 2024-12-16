@@ -1,9 +1,10 @@
 import { ArrowUpIcon, CheckIcon } from '@chakra-ui/icons';
 import { Alert, Button, Flex, Text, VStack } from '@chakra-ui/react';
+import { ChangeStat } from '@snx-v3/ChangeStat';
+import { ZEROWEI } from '@snx-v3/constants';
 import { currency } from '@snx-v3/format';
 import Wei from '@synthetixio/wei';
 import React from 'react';
-import { ChangeStat } from '../ChangeStat/ChangeStat';
 import { TransactionSummary } from '../TransactionSummary/TransactionSummary';
 
 export const StepSuccess = ({
@@ -41,7 +42,7 @@ export const StepSuccess = ({
               <ChangeStat
                 value={v2Balance}
                 newValue={v2Balance.sub(amount)}
-                formatFn={(val: Wei) => currency(val)}
+                formatFn={(val?: Wei) => currency(val ?? ZEROWEI)}
                 hasChanges
                 size="sm"
               />
@@ -53,7 +54,7 @@ export const StepSuccess = ({
               <ChangeStat
                 value={v3Balance}
                 newValue={v3Balance.add(amount)}
-                formatFn={(val: Wei) => currency(val)}
+                formatFn={(val?: Wei) => currency(val ?? ZEROWEI)}
                 hasChanges
                 size="sm"
               />

@@ -1,6 +1,7 @@
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Button, Divider, Link, Text, useToast } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
+import { ChangeStat } from '@snx-v3/ChangeStat';
 import { D18, D27, D6, ZEROWEI } from '@snx-v3/constants';
 import { ContractError } from '@snx-v3/ContractError';
 import { currency } from '@snx-v3/format';
@@ -23,7 +24,6 @@ import { Wei, wei } from '@synthetixio/wei';
 import { useMachine } from '@xstate/react';
 import { ethers } from 'ethers';
 import React from 'react';
-import { ChangeStat } from '../../ui/src/components/ChangeStat/ChangeStat';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
 import { TransactionSummary } from '../../ui/src/components/TransactionSummary/TransactionSummary';
 import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
@@ -395,12 +395,12 @@ export function StataDepositModal({
           <TransactionSummary
             items={[
               {
-                label: `Locked ${collateralType?.symbol}`,
+                label: `Locked ${collateralType?.displaySymbol ?? params.collateralSymbol}`,
                 value: (
                   <ChangeStat
                     value={txSummary.currentCollateral}
                     newValue={txSummary.currentCollateral.add(txSummary.collateralChange)}
-                    formatFn={(val: Wei) => currency(val)}
+                    formatFn={(val?: Wei) => currency(val ?? ZEROWEI)}
                     hasChanges={txSummary.collateralChange.abs().gt(0)}
                     size="sm"
                   />
