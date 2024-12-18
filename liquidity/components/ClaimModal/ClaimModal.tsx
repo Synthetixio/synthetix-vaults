@@ -13,13 +13,15 @@ import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { wei } from '@synthetixio/wei';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { LiquidityPositionUpdated } from '../../ui/src/components/Manage/LiquidityPositionUpdated';
+import { ClaimSuccessBanner } from './ClaimSuccessBanner';
 
 export function ClaimModal({ onClose }: { onClose: () => void }) {
   const [params] = useParams<PositionPageSchemaType>();
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
+  const [showClaimBanner, setShowClaimBanner] = useState(false);
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: liquidityPosition } = useLiquidityPosition({
     accountId: params.accountId,
@@ -81,32 +83,47 @@ export function ClaimModal({ onClose }: { onClose: () => void }) {
     network?.preset === 'andromeda' ? collateralType?.displaySymbol : systemToken?.symbol;
 
   if (txnState.txnStatus === 'success') {
-    return (
-      <LiquidityPositionUpdated
-        onClose={() => {
-          settleBorrow();
-          onClose();
-        }}
-        title="Debt successfully Updated"
-        subline={
-          <>
-            Your <b>Debt</b> has been updated, read more about it in the{' '}
-            <Link
-              href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
-              target="_blank"
-              color="cyan.500"
-            >
-              Synthetix V3 Documentation
-            </Link>
-          </>
-        }
-        alertText={
-          <>
-            <b>Debt</b> successfully Updated
-          </>
-        }
-      />
-    );
+    if (showClaimBanner) {
+      return (
+        <ClaimSuccessBanner
+          onClose={() => {
+            settleBorrow();
+            onClose();
+          }}
+        />
+      );
+    } else {
+      return (
+        <LiquidityPositionUpdated
+          onClose={() => {
+            if (network?.id === 1 && network?.preset === 'main') {
+              setShowClaimBanner(true);
+            } else {
+              settleBorrow();
+              onClose();
+            }
+          }}
+          title="Debt successfully Updated"
+          subline={
+            <>
+              Your <b>Debt</b> has been updated, read more about it in the{' '}
+              <Link
+                href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
+                target="_blank"
+                color="cyan.500"
+              >
+                Synthetix V3 Documentation
+              </Link>
+            </>
+          }
+          alertText={
+            <>
+              <b>Debt</b> successfully Updated
+            </>
+          }
+        />
+      );
+    }
   }
 
   return (
