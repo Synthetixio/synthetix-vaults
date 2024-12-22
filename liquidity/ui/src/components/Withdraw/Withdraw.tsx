@@ -5,6 +5,7 @@ import { ZEROWEI } from '@snx-v3/constants';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { TokenIcon } from '@snx-v3/TokenIcon';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
@@ -39,12 +40,28 @@ export function Withdraw({ isDebtWithdrawal = false }: { isDebtWithdrawal?: bool
   const { minutes, hours, isRunning } = useWithdrawTimer(params.accountId);
   const unlockDate = !isLoadingDate ? accountCollateralUnlockDate : null;
 
-  const maxWithdrawable =
-    network?.preset === 'andromeda' && liquidityPosition
-      ? liquidityPosition.availableCollateral.add(liquidityPosition.availableSystemToken)
-      : isDebtWithdrawal
-        ? liquidityPosition?.availableSystemToken
-        : liquidityPosition?.availableCollateral;
+  const { data: accountCollateral } = useAccountCollateral({
+    accountId: params.accountId,
+    tokenAddress: collateralType?.address,
+  });
+
+  const maxWithdrawable = React.useMemo(() => {
+    if (isDebtWithdrawal && liquidityPosition) {
+      return liquidityPosition.availableSystemToken;
+    }
+    if (!isDebtWithdrawal && liquidityPosition && accountCollateral) {
+      const unlockedCollateral = liquidityPosition.availableCollateral.sub(
+        accountCollateral.totalLocked
+      );
+      if (unlockedCollateral.lte(0)) {
+        // should not be possible but just in case
+        return ZEROWEI;
+      }
+      return network?.preset === 'andromeda'
+        ? unlockedCollateral.add(liquidityPosition.availableSystemToken)
+        : unlockedCollateral;
+    }
+  }, [accountCollateral, isDebtWithdrawal, liquidityPosition, network]);
 
   return (
     <Flex flexDirection="column" data-cy="withdraw form">
@@ -69,17 +86,15 @@ export function Withdraw({ isDebtWithdrawal = false }: { isDebtWithdrawal?: bool
                   value={maxWithdrawable}
                 />
                 &nbsp;
-                {maxWithdrawable.gt(0) && (
-                  <Text
-                    as="span"
-                    cursor="pointer"
-                    onClick={() => setWithdrawAmount(maxWithdrawable)}
-                    color="cyan.500"
-                    fontWeight={700}
-                  >
-                    Max
-                  </Text>
-                )}
+                <Text
+                  as="span"
+                  cursor="pointer"
+                  onClick={() => setWithdrawAmount(maxWithdrawable)}
+                  color="cyan.500"
+                  fontWeight={700}
+                >
+                  Max
+                </Text>
               </>
             ) : null}
           </Text>

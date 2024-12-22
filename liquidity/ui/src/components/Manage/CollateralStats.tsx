@@ -1,8 +1,10 @@
 import { Flex, Text } from '@chakra-ui/react';
+import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { ChangeStat } from '@snx-v3/ChangeStat';
 import { ZEROWEI } from '@snx-v3/constants';
 import { currency } from '@snx-v3/format';
+import { useAccountCollateral } from '@snx-v3/useAccountCollateral';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
@@ -20,6 +22,10 @@ export function CollateralStats({
   const { data: liquidityPosition, isPending: isPendingLiquidityPosition } = useLiquidityPosition({
     accountId: params.accountId,
     collateralType,
+  });
+  const { data: accountCollateral } = useAccountCollateral({
+    accountId: params.accountId,
+    tokenAddress: collateralType?.address,
   });
 
   return (
@@ -67,6 +73,27 @@ export function CollateralStats({
             ) : null}
           </Flex>
         </Flex>
+
+        {accountCollateral?.totalLocked.gt(0) && (
+          <Flex mt={4} alignItems="center" gap={3}>
+            <Text color="gray.500" fontSize="sm" fontFamily="heading" lineHeight="16px">
+              Escrowed
+            </Text>
+            <Text
+              color="white"
+              fontSize="sm"
+              fontFamily="heading"
+              lineHeight="16px"
+              fontWeight={700}
+            >
+              <Amount
+                value={accountCollateral.totalLocked}
+                suffix={` ${collateralType?.displaySymbol}`}
+                showTooltip
+              />
+            </Text>
+          </Flex>
+        )}
       </Flex>
     </BorderBox>
   );

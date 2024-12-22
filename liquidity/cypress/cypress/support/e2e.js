@@ -5,6 +5,7 @@ import { approveCollateral } from './commands/approveCollateral';
 import { borrowUsd } from './commands/borrowUsd';
 import { clearDebt } from './commands/clearDebt';
 import { delegateCollateral } from './commands/delegateCollateral';
+import { delegateCollateralAndromeda } from './commands/delegateCollateralAndromeda';
 import { depositCollateral } from './commands/depositCollateral';
 import { getSNX } from './commands/getSNX';
 import { getUSDC } from './commands/getUSDC';
@@ -14,6 +15,7 @@ import { wrapEth } from './commands/wrapEth';
 import { setWithdrawTimeout } from './commands/setWithdrawTimeout';
 import { getSUSD } from './commands/getSUSD';
 import { getSystemToken } from './commands/getSystemToken';
+import { pythBypass } from './commands/pythBypass';
 
 installLogsCollector({
   enableExtendedCollector: true,
@@ -35,6 +37,7 @@ addTxnCommand('approveCollateral', approveCollateral, { timeout: 30_000 });
 addTxnCommand('borrowUsd', borrowUsd, { timeout: 180_000 });
 addTxnCommand('clearDebt', clearDebt, { timeout: 180_000 });
 addTxnCommand('delegateCollateral', delegateCollateral, { timeout: 180_000 });
+addTxnCommand('delegateCollateralAndromeda', delegateCollateralAndromeda, { timeout: 180_000 });
 addTxnCommand('depositCollateral', depositCollateral, { timeout: 60_000 });
 addTxnCommand('getSNX', getSNX, { timeout: 60_000 });
 addTxnCommand('getSUSD', getSUSD, { timeout: 60_000 });
@@ -44,6 +47,7 @@ addTxnCommand('setEthBalance', setEthBalance, { timeout: 30_000 });
 addTxnCommand('setWithdrawTimeout', setWithdrawTimeout, { timeout: 60_000 });
 addTxnCommand('wrapCollateral', wrapCollateral, { timeout: 120_000 });
 addTxnCommand('wrapEth', wrapEth, { timeout: 60_000 });
+addTxnCommand('pythBypass', pythBypass);
 
 function subgraph(req) {
   const body = JSON.parse(req.body);

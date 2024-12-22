@@ -59,6 +59,20 @@ declare global {
         poolId: number;
       }) => Promise<void>;
 
+      delegateCollateralAndromeda: ({
+        address,
+        accountId,
+        symbol,
+        amount,
+        poolId,
+      }: {
+        address?: string;
+        accountId?: string;
+        symbol: string;
+        amount: number;
+        poolId: number;
+      }) => Promise<void>;
+
       depositCollateral: ({
         address,
         accountId,
@@ -94,6 +108,8 @@ declare global {
       getSUSD: ({ address, amount }: { address?: string; amount: number }) => Promise<void>;
 
       getSystemToken: ({ address, amount }: { address?: string; amount: number }) => Promise<void>;
+
+      pythBypass: () => Promise<void>;
     }
   }
 }
