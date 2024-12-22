@@ -52,14 +52,38 @@ export function Repay() {
             </Text>
           </BorderBox>
           <Flex fontSize="12px" gap="1">
-            <Flex gap="1" mr="3" cursor="pointer">
-              <Text display="flex" alignItems="center" data-cy="current debt amount">
-                {isPendingLiquidityPosition ? '~' : null}
-                {!isPendingLiquidityPosition && liquidityPosition ? (
-                  <>
-                    <Amount prefix="Debt: $" value={liquidityPosition.debt} />
-                    &nbsp;
-                    {liquidityPosition.debt.gt(0) ? (
+            <Flex
+              gap="1"
+              mr="3"
+              alignItems="center"
+              data-cy="current debt amount"
+              whiteSpace="nowrap"
+            >
+              {isPendingLiquidityPosition ? '~' : null}
+              {!isPendingLiquidityPosition && liquidityPosition && availableCollateral ? (
+                <>
+                  {liquidityPosition.debt.abs().gt(availableCollateral) ? (
+                    <>
+                      <Amount prefix="Available: $" value={availableCollateral} />
+                      &nbsp;
+                      <Text
+                        as="span"
+                        cursor="pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setDebtChange(availableCollateral.mul(-1));
+                        }}
+                        color="cyan.500"
+                        fontWeight={700}
+                      >
+                        Max
+                      </Text>
+                    </>
+                  ) : null}
+                  {availableCollateral.gt(liquidityPosition.debt.abs()) ? (
+                    <>
+                      <Amount prefix="Debt: $" value={liquidityPosition.debt.abs()} />
+                      &nbsp;
                       <Text
                         as="span"
                         cursor="pointer"
@@ -72,10 +96,10 @@ export function Repay() {
                       >
                         Max
                       </Text>
-                    ) : null}
-                  </>
-                ) : null}
-              </Text>
+                    </>
+                  ) : null}
+                </>
+              ) : null}
             </Flex>
           </Flex>
         </Flex>
