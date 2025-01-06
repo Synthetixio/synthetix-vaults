@@ -69,12 +69,13 @@ export function CollateralStats({
           </Flex>
         </Flex>
 
-        {liquidityPosition ? (
-          <Flex mt={4} alignItems="center" gap={2} alignContent="center">
+        {liquidityPosition && liquidityPosition.totalLocked.gt(0) ? (
+          <Flex data-cy="locked amount" mt={4} alignItems="center" gap={2} alignContent="center">
             <Text color="gray.500" fontSize="sm" fontFamily="heading" lineHeight="16px">
               Escrowed
-            </Text>
+            </Text>{' '}
             <Link
+              data-cy="locked amount link"
               color="white"
               fontSize="sm"
               fontFamily="heading"
