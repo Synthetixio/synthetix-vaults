@@ -22,7 +22,6 @@ import { useSystemToken } from '@snx-v3/useSystemToken';
 import { useUndelegate } from '@snx-v3/useUndelegate';
 import { useUndelegateBaseAndromeda } from '@snx-v3/useUndelegateBaseAndromeda';
 import { useUSDC } from '@snx-v3/useUSDC';
-import { wei } from '@synthetixio/wei';
 import { ethers } from 'ethers';
 import React from 'react';
 import { LiquidityPositionUpdated } from '../Manage/LiquidityPositionUpdated';
@@ -86,10 +85,9 @@ export function ClosePositionTransactions({
   });
   const { exec: execRepay } = useRepay({ repayAmount: liquidityPosition?.debt });
   const { exec: undelegate } = useUndelegate({
-    accountId: params.accountId,
-    collateralTypeAddress: collateralType?.tokenAddress,
-    collateralChange: liquidityPosition?.collateralAmount.mul(-1) || ZEROWEI,
-    currentCollateral: liquidityPosition?.collateralAmount || ZEROWEI,
+    undelegateAmount: liquidityPosition?.collateralAmount.gt(0)
+      ? liquidityPosition?.collateralAmount
+      : undefined,
   });
 
   const { data: DebtRepayer } = useDebtRepayer();
@@ -111,7 +109,7 @@ export function ClosePositionTransactions({
   });
 
   const { exec: undelegateBaseAndromeda } = useUndelegateBaseAndromeda({
-    collateralChange: liquidityPosition?.collateralAmount.mul(-1) || wei(0),
+    undelegateAmount: liquidityPosition?.collateralAmount,
   });
 
   //claim
