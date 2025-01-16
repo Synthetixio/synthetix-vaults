@@ -178,22 +178,18 @@ export function RepayModal({ onClose }: { onClose: () => void }) {
     return (
       <LiquidityPositionUpdated
         onClose={onSubmit}
-        title="Debt successfully Updated"
+        title="Debt successfully updated"
         subline={
           <>
-            Your <b>Debt</b> has been updated, read more about it in the{' '}
-            <Link
-              href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
-              target="_blank"
-              color="cyan.500"
-            >
+            Your <b>debt</b> has been updated. To learn more, visit the{' '}
+            <Link href="https://docs.synthetix.io/" target="_blank" color="cyan.500">
               Synthetix V3 Documentation
             </Link>
           </>
         }
         alertText={
           <>
-            <b>Debt</b> successfully Updated
+            <b>Debt</b> successfully updated
           </>
         }
       />

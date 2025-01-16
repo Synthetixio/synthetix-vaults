@@ -355,22 +355,18 @@ export function DepositModal({
     return (
       <LiquidityPositionUpdated
         onClose={onSubmit}
-        title="Collateral successfully Updated"
+        title="Collateral successfully updated"
         subline={
           <>
-            Your <b>Collateral</b> has been updated, read more about it in the{' '}
-            <Link
-              href="https://docs.synthetix.io/v/synthetix-v3-user-documentation"
-              target="_blank"
-              color="cyan.500"
-            >
+            Your <b>collateral</b> has been updated. To learn more, visit the{' '}
+            <Link href="https://docs.synthetix.io/" target="_blank" color="cyan.500">
               Synthetix V3 Documentation
             </Link>
           </>
         }
         alertText={
           <>
-            <b>Collateral</b> successfully Updated
+            <b>Collateral</b> successfully updated
           </>
         }
         summary={<TransactionSummary items={txSummaryItems} />}
