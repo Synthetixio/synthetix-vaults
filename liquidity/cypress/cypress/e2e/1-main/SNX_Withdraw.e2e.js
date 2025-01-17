@@ -29,6 +29,7 @@ describe(__filename, () => {
     cy.setEthBalance({ balance: 100 });
     cy.approveCollateral({ symbol: 'SNX', spender: 'CoreProxy' });
     cy.delegateCollateral({ symbol: 'SNX', amount: 100, poolId: 1 });
+    cy.setWithdrawTimeout({ timeout: '0' });
 
     cy.visit(
       `?${makeSearch({
@@ -46,31 +47,25 @@ describe(__filename, () => {
 
     cy.get('[data-cy="withdraw amount input"]').should('exist');
     cy.get('[data-cy="withdraw amount input"]').type('10');
+
     cy.get('[data-cy="withdraw submit"]').should('be.enabled');
     cy.get('[data-cy="withdraw submit"]').click();
 
-    cy.get('[data-cy="withdraw multistep"]')
+    cy.get('[data-cy="withdraw dialog"]')
       .should('exist')
-      .and('include.text', 'Manage Collateral')
-      .and('include.text', 'Withdraw')
-      .and('include.text', '10 SNX will be withdrawn');
+      .and('include.text', 'Withdrawing Collateral')
+      .and('include.text', 'Withdrawing 10 SNX');
 
-    cy.get('[data-cy="withdraw confirm button"]').should('include.text', 'Execute Transaction');
-    cy.get('[data-cy="withdraw confirm button"]').click();
-
-    cy.contains('[data-status="error"]', 'Withdraw failed', {
-      timeout: 120_000,
+    cy.contains('[data-status="success"]', 'Withdrawal was successful', {
+      timeout: 180_000,
     }).should('exist');
-    cy.contains('[data-status="error"]', 'AccountActivityTimeoutPending').should('exist');
-    cy.get('[data-status="error"] [aria-label="Close"]').click();
+    cy.get('[data-cy="transaction hash"]').should('exist');
 
-    cy.setWithdrawTimeout({ timeout: '0' });
+    cy.get('[data-cy="withdraw dialog"]')
+      .should('exist')
+      .and('include.text', 'Withdrawing')
+      .and('include.text', 'Withdrew 10 SNX');
 
-    cy.get('[data-cy="withdraw confirm button"]').should('include.text', 'Retry');
-    cy.get('[data-cy="withdraw confirm button"]').click();
-
-    cy.contains('[data-status="success"]', 'Collateral successfully Withdrawn', {
-      timeout: 120_000,
-    }).should('exist');
+    cy.contains('[data-cy="withdraw dialog"] button', 'Done').click();
   });
 });

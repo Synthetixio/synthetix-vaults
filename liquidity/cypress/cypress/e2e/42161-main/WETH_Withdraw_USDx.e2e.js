@@ -33,6 +33,7 @@ describe(__filename, () => {
     cy.depositCollateral({ symbol: 'WETH', amount: 10 });
     cy.delegateCollateral({ symbol: 'WETH', amount: 10, poolId: 1 });
     cy.borrowUsd({ symbol: 'WETH', amount: 100, poolId: 1 });
+    cy.setWithdrawTimeout({ timeout: '0' });
 
     cy.visit(
       `?${makeSearch({
@@ -50,29 +51,25 @@ describe(__filename, () => {
 
     cy.get('[data-cy="withdraw amount input"]').should('exist');
     cy.get('[data-cy="withdraw amount input"]').type('50');
+
     cy.get('[data-cy="withdraw submit"]').should('be.enabled');
     cy.get('[data-cy="withdraw submit"]').click();
 
-    cy.get('[data-cy="withdraw multistep"]')
+    cy.get('[data-cy="withdraw dialog"]')
       .should('exist')
-      .and('include.text', 'Manage Debt')
-      .and('include.text', 'Withdraw')
-      .and('include.text', '50 USDx will be withdrawn');
+      .and('include.text', 'Withdrawing')
+      .and('include.text', 'Withdrawing 50 USDx');
 
-    cy.get('[data-cy="withdraw confirm button"]').should('include.text', 'Execute Transaction');
-    cy.get('[data-cy="withdraw confirm button"]').click();
-
-    cy.contains('[data-status="error"]', 'Withdraw failed').should('exist');
-    cy.contains('[data-status="error"]', 'AccountActivityTimeoutPending').should('exist');
-    cy.get('[data-status="error"] [aria-label="Close"]').click();
-
-    cy.setWithdrawTimeout({ timeout: '0' });
-
-    cy.get('[data-cy="withdraw confirm button"]').should('include.text', 'Retry');
-    cy.get('[data-cy="withdraw confirm button"]').click();
-
-    cy.contains('[data-status="success"]', 'Debt successfully Withdrawn', {
+    cy.contains('[data-status="success"]', 'Withdrawal was successful', {
       timeout: 180_000,
     }).should('exist');
+    cy.get('[data-cy="transaction hash"]').should('exist');
+
+    cy.get('[data-cy="withdraw dialog"]')
+      .should('exist')
+      .and('include.text', 'Withdrawing')
+      .and('include.text', 'Withdrew 50 USDx');
+
+    cy.contains('[data-cy="withdraw dialog"] button', 'Done').click();
   });
 });
