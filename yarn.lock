@@ -4743,27 +4743,47 @@ __metadata:
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
-    "@snx-v3/useConvertStataUSDC": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
     "@snx-v3/useDeposit": "workspace:*"
-    "@snx-v3/useDepositBaseAndromeda": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
-    "@snx-v3/useSpotMarketProxy": "workspace:*"
-    "@snx-v3/useStaticAaveUSDC": "workspace:*"
-    "@snx-v3/useStaticAaveUSDCRate": "workspace:*"
-    "@snx-v3/useSynthToken": "workspace:*"
-    "@snx-v3/useTokenBalance": "workspace:*"
-    "@snx-v3/useUSDC": "workspace:*"
     "@snx-v3/useWrapEth": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@xstate/react": "npm:^3.2.2"
-    ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
     xstate: "npm:^4.38.3"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/DepositModalAndromeda@workspace:*, @snx-v3/DepositModalAndromeda@workspace:liquidity/components/DepositModalAndromeda":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/DepositModalAndromeda@workspace:liquidity/components/DepositModalAndromeda"
+  dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
+    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/Amount": "workspace:*"
+    "@snx-v3/ContractError": "workspace:*"
+    "@snx-v3/ManagePositionContext": "workspace:*"
+    "@snx-v3/Multistep": "workspace:*"
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/txnReducer": "workspace:*"
+    "@snx-v3/useAccountProxy": "workspace:*"
+    "@snx-v3/useApprove": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useContractErrorParser": "workspace:*"
+    "@snx-v3/useParams": "workspace:*"
+    "@snx-v3/usePositionManagerForCollateral": "workspace:*"
+    "@snx-v3/useUSDC": "workspace:*"
+    "@snx-v3/withERC7412": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    debug: "npm:^4.3.7"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -4816,7 +4836,6 @@ __metadata:
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/constants": "workspace:*"
-    "@snx-v3/format": "workspace:*"
     "@snx-v3/useApprove": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
@@ -4888,6 +4907,7 @@ __metadata:
     "@snx-v3/useUndelegateBaseAndromeda": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@xstate/react": "npm:^3.2.2"
+    ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
     xstate: "npm:^4.38.3"
   languageName: unknown
@@ -4918,7 +4938,7 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useContractErrorParser": "workspace:*"
-    "@snx-v3/useIsSynthStataUSDC": "workspace:*"
+    "@snx-v3/useIsAndromedaStataUSDC": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/useStaticAaveUSDC": "workspace:*"
     "@snx-v3/useSystemToken": "workspace:*"
@@ -5062,6 +5082,7 @@ __metadata:
     "@snx-v3/ContractError": "workspace:*"
     "@snx-v3/DebtAmount": "workspace:*"
     "@snx-v3/DepositModal": "workspace:*"
+    "@snx-v3/DepositModalAndromeda": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
     "@snx-v3/Multistep": "workspace:*"
     "@snx-v3/NumberInput": "workspace:*"
@@ -5098,7 +5119,7 @@ __metadata:
     "@snx-v3/useCreateAccount": "workspace:*"
     "@snx-v3/useDebtRepayer": "workspace:*"
     "@snx-v3/useEthBalance": "workspace:*"
-    "@snx-v3/useIsSynthStataUSDC": "workspace:*"
+    "@snx-v3/useIsAndromedaStataUSDC": "workspace:*"
     "@snx-v3/useLegacyMarket": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
@@ -5117,10 +5138,8 @@ __metadata:
     "@snx-v3/useRates": "workspace:*"
     "@snx-v3/useRepay": "workspace:*"
     "@snx-v3/useRewards": "workspace:*"
-    "@snx-v3/useStaticAaveUSDC": "workspace:*"
     "@snx-v3/useStaticAaveUSDCRate": "workspace:*"
     "@snx-v3/useSynthBalances": "workspace:*"
-    "@snx-v3/useSynthToken": "workspace:*"
     "@snx-v3/useSynthTokens": "workspace:*"
     "@snx-v3/useSystemToken": "workspace:*"
     "@snx-v3/useTokenBalance": "workspace:*"
@@ -5561,7 +5580,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useConvertStataUSDC@workspace:*, @snx-v3/useConvertStataUSDC@workspace:liquidity/lib/useConvertStataUSDC":
+"@snx-v3/useConvertStataUSDC@workspace:liquidity/lib/useConvertStataUSDC":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useConvertStataUSDC@workspace:liquidity/lib/useConvertStataUSDC"
   dependencies:
@@ -5628,29 +5647,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useDepositBaseAndromeda@workspace:*, @snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useDepositBaseAndromeda@workspace:liquidity/lib/useDepositBaseAndromeda"
-  dependencies:
-    "@snx-v3/constants": "workspace:*"
-    "@snx-v3/tsHelpers": "workspace:*"
-    "@snx-v3/txnReducer": "workspace:*"
-    "@snx-v3/useApprove": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
-    "@snx-v3/useCollateralTypes": "workspace:*"
-    "@snx-v3/useCoreProxy": "workspace:*"
-    "@snx-v3/useSpotMarketProxy": "workspace:*"
-    "@snx-v3/useSynthToken": "workspace:*"
-    "@snx-v3/withERC7412": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    "@tanstack/react-query": "npm:^5.8.3"
-    debug: "npm:^4.3.7"
-    ethers: "npm:^5.7.2"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/useEthBalance@workspace:*, @snx-v3/useEthBalance@workspace:liquidity/lib/useEthBalance":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useEthBalance@workspace:liquidity/lib/useEthBalance"
@@ -5677,9 +5673,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useIsSynthStataUSDC@workspace:*, @snx-v3/useIsSynthStataUSDC@workspace:liquidity/lib/useIsSynthStataUSDC":
+"@snx-v3/useIsAndromedaStataUSDC@workspace:*, @snx-v3/useIsAndromedaStataUSDC@workspace:liquidity/lib/useIsAndromedaStataUSDC":
   version: 0.0.0-use.local
-  resolution: "@snx-v3/useIsSynthStataUSDC@workspace:liquidity/lib/useIsSynthStataUSDC"
+  resolution: "@snx-v3/useIsAndromedaStataUSDC@workspace:liquidity/lib/useIsAndromedaStataUSDC"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useSynthTokens": "workspace:*"
@@ -5941,6 +5937,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/usePositionManagerForCollateral@workspace:*, @snx-v3/usePositionManagerForCollateral@workspace:liquidity/lib/contracts/usePositionManagerForCollateral":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/usePositionManagerForCollateral@workspace:liquidity/lib/contracts/usePositionManagerForCollateral"
+  dependencies:
+    "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useSynthTokens": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/usePythFeeds@workspace:*, @snx-v3/usePythFeeds@workspace:liquidity/lib/contracts/usePythFeeds":
   version: 0.0.0-use.local
   resolution: "@snx-v3/usePythFeeds@workspace:liquidity/lib/contracts/usePythFeeds"
@@ -6129,7 +6138,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useSynthToken@workspace:*, @snx-v3/useSynthToken@workspace:liquidity/lib/useSynthToken":
+"@snx-v3/useSynthToken@workspace:liquidity/lib/useSynthToken":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useSynthToken@workspace:liquidity/lib/useSynthToken"
   dependencies:
@@ -6183,7 +6192,6 @@ __metadata:
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
-    "@snx-v3/useOraclePrice": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     react: "npm:^18.2.0"
   languageName: unknown
