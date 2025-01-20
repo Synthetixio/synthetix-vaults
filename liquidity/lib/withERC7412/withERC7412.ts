@@ -3,16 +3,18 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { offchainMainnetEndpoint, offchainTestnetEndpoint } from '@snx-v3/constants';
 import {
   importAccountProxy,
-  importAllErrors,
   importClosePosition,
   importCoreProxy,
+  importPositionManager,
+  importPositionManagerAndromedaStataUSDC,
+  importPositionManagerAndromedaUSDC,
   importPythERC7412Wrapper,
   importPythVerifier,
   importSpotMarketProxy,
   importTrustedMulticallForwarder,
   importUSDProxy,
 } from '@snx-v3/contracts';
-import { extractErrorData, PYTH_ERRORS } from '@snx-v3/parseContractError';
+import { extractErrorData } from '@snx-v3/parseContractError';
 import { notNil } from '@snx-v3/tsHelpers';
 import { deploymentHasERC7412, Network } from '@snx-v3/useBlockchain';
 import debug from 'debug';
@@ -30,41 +32,6 @@ async function fetchOffchainData({
   );
   const signedOffchainData = await priceService.getPriceFeedsUpdateData(priceIds);
   return signedOffchainData;
-}
-
-function parseError(
-  errorData: any,
-  AllErrors: { abi: string[] }
-): { name: string; args: any } | undefined {
-  if (`${errorData}`.startsWith('0x08c379a0')) {
-    const content = `0x${errorData.substring(10)}`;
-    // reason: string; for standard revert error string
-    const reason = ethers.utils.defaultAbiCoder.decode(['string'], content);
-    console.error(reason);
-    return {
-      name: `Revert ${reason[0]}`,
-      args: [],
-    };
-  }
-
-  let flatErrorsData = errorData;
-  // let's cleanup nested Errors[]
-  if (`${errorData}`.startsWith('0x0b42fd17')) {
-    const [lastChunk] = errorData.split('0b42fd17').slice(-1);
-    flatErrorsData = `0x0b42fd17${lastChunk}`;
-  }
-  try {
-    const AllErrorsInterface = new ethers.utils.Interface(
-      Array.from(new Set([...AllErrors.abi, ...PYTH_ERRORS]))
-    );
-    return AllErrorsInterface.parseError(flatErrorsData);
-  } catch (error) {
-    console.error(`Error parsing failure: ${error}`);
-    return {
-      name: 'Unknown',
-      args: [],
-    };
-  }
 }
 
 // simulate w/ wETH contract because it will have eth balance
@@ -92,19 +59,21 @@ export const getDefaultFromAddress = (chainName: string) => {
   }
 };
 
-function dedupedAbi(abi: string[]) {
+function dedupedFunctions(abi: string[]) {
   const deduped = new Set();
   const readableAbi: string[] = [];
-  abi.forEach((line: string) => {
-    const fragment = ethers.utils.Fragment.from(line);
-    if (fragment && (fragment.type === 'error' || fragment.type === 'function')) {
-      const minimal = fragment.format(ethers.utils.FormatTypes.sighash);
-      if (!deduped.has(minimal)) {
-        readableAbi.push(fragment.format(ethers.utils.FormatTypes.full));
-        deduped.add(minimal);
+  abi
+    .filter((line: string) => line.startsWith('function '))
+    .forEach((line: string) => {
+      const fragment = ethers.utils.Fragment.from(line);
+      if (fragment) {
+        const minimal = fragment.format(ethers.utils.FormatTypes.sighash);
+        if (!deduped.has(minimal)) {
+          readableAbi.push(fragment.format(ethers.utils.FormatTypes.full));
+          deduped.add(minimal);
+        }
       }
-    }
-  });
+    });
   return readableAbi;
 }
 
@@ -121,27 +90,25 @@ export async function logMulticall({
   if (!log.enabled) {
     return;
   }
-  const CoryProxyContract = await importCoreProxy(network.id, network.preset);
-  const SpotMarketProxy = await importSpotMarketProxy(network.id, network.preset);
-  const AccountProxyContract = await importAccountProxy(network.id, network.preset);
-  const USDProxyContract = await importUSDProxy(network.id, network.preset);
-  const ClosePositionContract = await importClosePosition(network.id, network.preset).catch(
-    () => undefined
-  );
-  const PythERC7412Wrapper = await importPythERC7412Wrapper(network.id, network.preset).catch(
-    () => undefined
-  );
-  const PythVerfier = await importPythVerifier(network.id, network.preset);
   const AllInterface = new ethers.utils.Interface(
-    dedupedAbi([
-      ...CoryProxyContract.abi,
-      ...SpotMarketProxy.abi,
-      ...AccountProxyContract.abi,
-      ...USDProxyContract.abi,
-      ...(ClosePositionContract ? ClosePositionContract.abi : []),
-      ...(PythERC7412Wrapper ? PythERC7412Wrapper.abi : []),
-      ...PythVerfier.abi,
-    ])
+    dedupedFunctions(
+      (
+        await Promise.all([
+          importCoreProxy(network.id, network.preset).catch(() => ({ abi: [] })),
+          importSpotMarketProxy(network.id, network.preset).catch(() => ({ abi: [] })),
+          importAccountProxy(network.id, network.preset).catch(() => ({ abi: [] })),
+          importUSDProxy(network.id, network.preset).catch(() => ({ abi: [] })),
+          importClosePosition(network.id, network.preset).catch(() => ({ abi: [] })),
+          importPythERC7412Wrapper(network.id, network.preset).catch(() => ({ abi: [] })),
+          importPythVerifier(network.id, network.preset).catch(() => ({ abi: [] })),
+          importPositionManager(network.id, network.preset).catch(() => ({ abi: [] })),
+          importPositionManagerAndromedaUSDC(network.id, network.preset).catch(() => ({ abi: [] })),
+          importPositionManagerAndromedaStataUSDC(network.id, network.preset).catch(() => ({
+            abi: [],
+          })),
+        ])
+      ).flatMap((c) => (c ? c.abi : []))
+    )
   );
   log(
     'multicall calls',
@@ -165,19 +132,6 @@ export async function logMulticall({
       }
     })
   );
-}
-
-function extractPriceId(parsedError: { name: string; args: string[] }) {
-  try {
-    const [_oracleAddress, oracleQuery] = parsedError.args;
-    const [_updateType, _stalenessTolerance, [priceId]] = ethers.utils.defaultAbiCoder.decode(
-      ['uint8', 'uint64', 'bytes32[]'],
-      oracleQuery
-    );
-    return priceId;
-  } catch {
-    // whatever
-  }
 }
 
 async function getMulticallTransaction(
@@ -226,13 +180,6 @@ export const withERC7412 = async (
     return await getMulticallTransaction(network, calls, from, provider);
   }
 
-  const AllErrorsContract = await importAllErrors(network.id, network.preset);
-  const ClosePositionContract = await importClosePosition(network.id, network.preset).catch(
-    () => undefined
-  );
-  if (ClosePositionContract) {
-    ClosePositionContract.abi.forEach((line) => AllErrorsContract.abi.push(line));
-  }
   const PythVerfier = await importPythVerifier(network.id, network.preset);
 
   while (true) {
@@ -260,35 +207,23 @@ export const withERC7412 = async (
       }
       log('errorData', errorData);
 
-      const parsedError = parseError(errorData, AllErrorsContract);
-      if (!parsedError) {
-        throw error;
-      }
-      log('parsedError', parsedError);
-
       // Collect all the price IDs that require updates
-      const missingPriceUpdates = [];
-      if (parsedError.name === 'OracleDataRequired') {
-        missingPriceUpdates.push(extractPriceId(parsedError));
-      }
-      if (parsedError.name === 'Errors') {
-        for (const err of parsedError?.args?.[0] ?? []) {
-          try {
-            const parsedErr = parseError(err, AllErrorsContract);
-            if (parsedErr?.name === 'OracleDataRequired') {
-              missingPriceUpdates.push(extractPriceId(parsedErr));
-            }
-          } catch {
-            // whatever
-          }
-        }
-      }
-      const missingPriceUpdatesUnique = Array.from(new Set(missingPriceUpdates));
-      log('missingPriceUpdates', missingPriceUpdatesUnique);
-      if (missingPriceUpdatesUnique.length < 1) {
+      const missingPriceUpdates: string[] = errorData
+        // Signature of OracleDataRequired
+        .split('cf2cabdf')
+        // Skip all the data before the first signature of OracleDataRequired
+        .slice(1)
+        // Full OracleDataRequired without signature is 512 bytes
+        .map((s: string) => s.slice(0, 512))
+        // Price feed is the last and has 64 bytes, prefix with 0x
+        .map((s: string) => `0x${s.slice(-64)}`);
+      if (missingPriceUpdates.length < 1) {
         // some other kind of error that's not related to price
         throw error;
       }
+
+      const missingPriceUpdatesUnique = Array.from(new Set(missingPriceUpdates));
+      log('missingPriceUpdates', missingPriceUpdatesUnique);
 
       const signedOffchainData = await fetchOffchainData({
         priceIds: missingPriceUpdatesUnique,
