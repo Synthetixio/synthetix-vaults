@@ -15,26 +15,18 @@ import { Amount } from '@snx-v3/Amount';
 import { transactionLink } from '@snx-v3/etherscanLink';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { PositionPageSchemaType, useParams } from '@snx-v3/useParams';
-import { useSystemToken } from '@snx-v3/useSystemToken';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { Wei, wei } from '@synthetixio/wei';
 import React from 'react';
 
-export function WithdrawModal({
+export function WithdrawModalAndromeda({
   txnStatus,
   txnHash,
-  isDebtWithdrawal,
 }: {
   txnStatus: string;
   txnHash: string | null;
-  isDebtWithdrawal?: boolean;
 }) {
-  const [params] = useParams<PositionPageSchemaType>();
   const { withdrawAmount, setWithdrawAmount } = React.useContext(ManagePositionContext);
-  const { data: systemToken } = useSystemToken();
-  const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const [isOpen, setIsOpen] = React.useState(false);
   const { network } = useNetwork();
 
@@ -73,7 +65,7 @@ export function WithdrawModal({
       >
         <ModalBody data-cy="withdraw dialog" p={6}>
           <Text color="gray.50" fontSize="20px" fontWeight={700}>
-            {isDebtWithdrawal ? 'Withdrawing' : 'Withdrawing Collateral'}
+            Withdrawing USDC
           </Text>
 
           <Divider my={4} />
@@ -118,9 +110,7 @@ export function WithdrawModal({
                   <Amount
                     prefix={txnStatus === 'success' ? 'Withdrew ' : 'Withdrawing '}
                     value={cachedWithdrawAmount}
-                    suffix={` ${
-                      isDebtWithdrawal ? systemToken?.displaySymbol : collateralType?.displaySymbol
-                    }`}
+                    suffix={` USDC`}
                   />
                 </Text>
               ) : null}

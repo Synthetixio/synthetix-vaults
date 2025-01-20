@@ -3,11 +3,7 @@ import { makeSearch } from '@snx-v3/useParams';
 describe(__filename, () => {
   Cypress.env('chainId', '8453');
   Cypress.env('preset', 'andromeda');
-  //  Cypress.env('walletAddress', '0xc3Cf311e04c1f8C74eCF6a795Ae760dc6312F345');
-  //  Cypress.env('accountId', '522433293696');
-
-  Cypress.env('walletAddress', '0xc77b0cd1B1E73F6De8f606685Fb09Ace95f614c3');
-  Cypress.env('accountId', '170141183460469231731687303715884105949');
+  Cypress.env('walletAddress', '0xaaaa6c341C4Df916d9f0583Ba9Ea953618e5f008');
 
   beforeEach(() => {
     cy.task('startAnvil', {
@@ -15,7 +11,7 @@ describe(__filename, () => {
       forkUrl:
         Cypress.env('RPC_BASE_MAINNET') ??
         `https://base-mainnet.infura.io/v3/${Cypress.env('INFURA_KEY')}`,
-      block: '22991081',
+      block: '25229684',
     }).then(() => cy.log('Anvil started'));
     cy.pythBypass();
 
@@ -32,36 +28,62 @@ describe(__filename, () => {
   it(__filename, () => {
     cy.setEthBalance({ balance: 100 });
     cy.getUSDC({ amount: 1000 });
+    cy.pmSetupPosition({ symbol: 'stataUSDC', amount: 500 });
+    cy.pmDecreasePosition({ symbol: 'stataUSDC', amount: 100 });
+    cy.getSystemToken({ amount: 1000 });
+    cy.depositSystemToken({ amount: 50 });
+    cy.setWithdrawTimeout({ timeout: '0' });
 
     cy.visit(
       `?${makeSearch({
         page: 'position',
         collateralSymbol: 'stataUSDC',
         manageAction: 'withdraw',
-        accountId: Cypress.env('accountId'),
       })}`
     );
 
     cy.get('[data-cy="withdraw form"]').should('exist');
     cy.get('[data-cy="withdraw amount"]', { timeout: 180_000 })
       .should('exist')
-      .and('include.text', 'Max');
+      .and('include.text', 'Unlocked: 150 USDC');
+
+    cy.get('[data-cy="stats collateral"] [data-cy="change stats current"]')
+      .should('exist')
+      .and('include.text', '372.5 Static aUSDC');
+
+    cy.get('[data-cy="stats collateral"] [data-cy="change stats new"]').should('not.exist');
 
     cy.get('[data-cy="withdraw amount input"]').should('exist');
-    cy.get('[data-cy="withdraw amount input"]').type('1');
+    cy.get('[data-cy="withdraw amount input"]').should('have.value', 150);
+
     cy.get('[data-cy="withdraw submit"]').should('be.enabled');
     cy.get('[data-cy="withdraw submit"]').click();
 
-    cy.get('[data-cy="withdraw multistep"]')
+    cy.get('[data-cy="withdraw dialog"]')
       .should('exist')
-      .and('include.text', '1 Static aUSDC will be withdrawn')
-      .and('include.text', 'unwrap Static aUSDC into USDC');
+      .and('include.text', 'Withdrawing USDC')
+      .and('include.text', 'Withdrawing 150 USDC');
 
-    cy.get('[data-cy="withdraw confirm button"]').should('include.text', 'Execute Transaction');
-    cy.get('[data-cy="withdraw confirm button"]').click();
-
-    cy.contains('[data-status="success"]', 'Collateral successfully Withdrawn', {
-      timeout: 60_000,
+    cy.contains('[data-status="success"]', 'Withdrawal was successful', {
+      timeout: 180_000,
     }).should('exist');
+    cy.get('[data-cy="transaction hash"]').should('exist');
+
+    cy.get('[data-cy="withdraw dialog"]')
+      .should('exist')
+      .and('include.text', 'Withdrawing USDC')
+      .and('include.text', 'Withdrew 150 USDC');
+
+    cy.contains('[data-cy="withdraw dialog"] button', 'Done').click();
+
+    cy.get('[data-cy="withdraw amount"]')
+      .should('exist')
+      .and('include.text', 'Unlocked: 0.00 USDC');
+
+    cy.get('[data-cy="stats collateral"] [data-cy="change stats current"]').and(
+      'include.text',
+      '372.5 Static aUSDC'
+    );
+    cy.get('[data-cy="withdraw submit"]').should('be.disabled');
   });
 });
