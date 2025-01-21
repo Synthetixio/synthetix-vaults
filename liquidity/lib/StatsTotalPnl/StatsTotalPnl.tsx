@@ -1,6 +1,6 @@
-import { Flex, Text } from '@chakra-ui/react';
-import { Amount } from '@snx-v3/Amount';
+import { Text } from '@chakra-ui/react';
 import { PnlAmount } from '@snx-v3/DebtAmount';
+import { StatsBox } from '@snx-v3/StatsBox';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
@@ -9,9 +9,8 @@ import { usePythPrice } from '@snx-v3/usePythPrice';
 import { useRewards } from '@snx-v3/useRewards';
 import { wei } from '@synthetixio/wei';
 import React from 'react';
-import { StatBox } from './StatBox';
 
-export const StatsList = () => {
+export function StatsTotalPnl() {
   const [params] = useParams();
   const { network } = useNetwork();
 
@@ -71,82 +70,29 @@ export const StatsList = () => {
     }
   }, [liquidityPositions]);
 
-  const totalAssets = React.useMemo(
-    () =>
-      liquidityPositions
-        ? liquidityPositions.reduce(
-            (result, liquidityPosition) =>
-              result.add(
-                liquidityPosition.availableCollateral.mul(liquidityPosition.collateralPrice)
-              ),
-            wei(0)
-          )
-        : wei(0),
-    [liquidityPositions]
-  );
-
-  const totalLocked = React.useMemo(
-    () =>
-      liquidityPositions
-        ? liquidityPositions.reduce(
-            (result, liquidityPosition) =>
-              result.add(liquidityPosition.collateralAmount.mul(liquidityPosition.collateralPrice)),
-            wei(0)
-          )
-        : wei(0),
-    [liquidityPositions]
-  );
-
   return (
-    <Flex flexWrap="wrap" w="100%" gap="4">
-      <StatBox
-        title="Available to Lock"
-        isLoading={!(params.accountId && !isPendingLiquidityPositions)}
-        value={<Amount prefix="$" value={wei(totalAssets || '0')} />}
-        label={
-          <>
-            <Text textAlign="left">
-              Total assets that can be Locked, including:
-              <br /> - Unlocked assets not yet withdrawn
-              <br /> - Available assets in your wallet
-            </Text>
-          </>
-        }
-      />
-
-      <StatBox
-        title="Total Locked"
-        isLoading={!(params.accountId && !isPendingLiquidityPositions)}
-        value={<Amount prefix="$" value={wei(totalLocked || '0')} />}
-        label={
-          <>
-            <Text textAlign="left">All assets locked in Positions </Text>
-          </>
-        }
-      />
-
-      <StatBox
-        title="Total PNL"
-        isLoading={
-          !(
-            params.accountId &&
+    <StatsBox
+      title="Total PNL"
+      isLoading={
+        !(
+          !params.accountId ||
+          (params.accountId &&
             !isPendingLiquidityPositions &&
             !isPendingRewards &&
             !isPendingSnxPrice &&
-            !isPendingRewardsPrices
-          )
-        }
-        value={
-          totalDebt && totalRewardsValue ? (
-            <PnlAmount debt={totalDebt.sub(totalRewardsValue)} />
-          ) : null
-        }
-        label={
-          <Text textAlign="left">
-            Aggregated PNL of all your open Positions and combined value of all your Rewards
-          </Text>
-        }
-      />
-    </Flex>
+            !isPendingRewardsPrices)
+        )
+      }
+      value={
+        totalDebt && totalRewardsValue ? (
+          <PnlAmount debt={totalDebt.sub(totalRewardsValue)} />
+        ) : null
+      }
+      label={
+        <Text textAlign="left">
+          Aggregated PNL of all your open Positions and combined value of all your Rewards
+        </Text>
+      }
+    />
   );
-};
+}
