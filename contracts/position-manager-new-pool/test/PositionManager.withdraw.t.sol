@@ -4,7 +4,7 @@ import "./lib/PositionManagerTest.sol";
 
 contract PositionManager_withdraw_Test is PositionManagerTest {
     constructor() {
-        forkBlockNumber = 21684537;
+        forkBlockNumber = 21787552;
     }
 
     function test_withdraw() public {
@@ -16,7 +16,7 @@ contract PositionManager_withdraw_Test is PositionManagerTest {
         AccountProxy.approve(address(positionManager), accountId);
         positionManager.closePosition(accountId);
 
-        assertEq(0, CoreProxy.getAccountAvailableCollateral(accountId, address($sUSD)));
+        assertEq(0, CoreProxy.getAccountAvailableCollateral(accountId, address($snxUSD)));
         assertEq(200 ether, CoreProxy.getAccountAvailableCollateral(accountId, address($SNX)));
         assertEq(0 ether, $SNX.balanceOf(ALICE));
 
@@ -24,7 +24,7 @@ contract PositionManager_withdraw_Test is PositionManagerTest {
         AccountProxy.approve(address(positionManager), accountId);
         positionManager.withdraw(accountId);
 
-        assertEq(0 ether, CoreProxy.getAccountAvailableCollateral(accountId, address($sUSD)));
+        assertEq(0 ether, CoreProxy.getAccountAvailableCollateral(accountId, address($snxUSD)));
         assertEq(0 ether, CoreProxy.getAccountAvailableCollateral(accountId, address($SNX)));
         assertEq(200 ether, $SNX.balanceOf(ALICE));
     }
