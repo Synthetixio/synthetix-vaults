@@ -209,14 +209,14 @@ jobs:
           paths:
             - '~/.foundry/cache'
 
+      - run: exit $(cat /tmp/cypress_exit_code)
+
       - run:
           name: 'Upload coverage report to Codecov'
           command: |-
             curl -Os https://uploader.codecov.io/latest/linux/codecov
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN} --file liquidity/cypress/.nyc_output/out.json
-
-      - run: exit $(cat /tmp/cypress_exit_code)
 
       - store_test_results:
           path: 'liquidity/cypress/cypress/reports'
@@ -241,6 +241,8 @@ jobs:
     steps:
       - checkout
       - yarn-install
+      - run: sudo apt update
+      - run: sudo apt install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb lcov
 
       - run:
           working_directory: liquidity/cypress
@@ -349,7 +351,7 @@ workflows:
           name: pm-jubilee-pool
           working_directory: 'contracts/position-manager-new-pool'
 
-      #- cy
+      - cy
       - e2e:
           name: e2e-base
           dir: '8453-andromeda'
@@ -367,7 +369,7 @@ workflows:
           requires:
             - checks
             - tests
-            #- cy
+            - cy
             - e2e-base
             - e2e-arbitrum
             - e2e-mainnet
