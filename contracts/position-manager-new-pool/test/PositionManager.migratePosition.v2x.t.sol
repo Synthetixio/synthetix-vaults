@@ -1,19 +1,18 @@
 pragma solidity ^0.8.21;
 
 import "./lib/PositionManagerTest.sol";
-import "src/ICoreProxyWithMigration.sol";
 import "@synthetixio/v3-contracts/1-main/ICoreProxy.sol";
 
 contract PositionManager_migratePosition_v2x_Test is PositionManagerTest {
     constructor() {
-        forkBlockNumber = 21787552;
+        forkBlockNumber = 21864281;
     }
 
     function test_migratePosition_v2x() public {
         address ALICE = 0xa5758de121079D2FA868C64b02Ef35C909635f16;
         vm.label(ALICE, "0xA11CE");
 
-        uint256 snxPrice = _getSNXPrice();
+        uint256 snxPrice = CoreProxy.getCollateralPrice(address($SNX));
 
         uint256 collateral = V2x.collateral(ALICE);
         uint256 cratio = V2x.collateralisationRatio(ALICE);
