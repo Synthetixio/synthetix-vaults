@@ -11,7 +11,7 @@ describe(__filename, () => {
       forkUrl:
         Cypress.env('RPC_BASE_MAINNET') ??
         `https://base-mainnet.infura.io/v3/${Cypress.env('INFURA_KEY')}`,
-      block: '25229684',
+      block: '26590448',
     }).then(() => cy.log('Anvil started'));
     cy.pythBypass();
     cy.on('window:before:load', (win) => {
@@ -44,7 +44,7 @@ describe(__filename, () => {
     cy.get('[data-cy="withdraw form"]').should('exist');
     cy.get('[data-cy="withdraw amount"]', { timeout: 180_000 })
       .should('exist')
-      .and('include.text', 'Unlocked: 150 USDC');
+      .and('include.text', 'Unlocked: 150.000000096 USDC');
 
     cy.get('[data-cy="stats collateral"] [data-cy="change stats current"]')
       .should('exist')
@@ -59,7 +59,7 @@ describe(__filename, () => {
     cy.get('[data-cy="withdraw dialog"]')
       .should('exist')
       .and('include.text', 'Withdrawing USDC')
-      .and('include.text', 'Withdrawing 150 USDC');
+      .and('include.text', 'Withdrawing 150.000000096 USDC');
 
     cy.contains('[data-status="success"]', 'Withdrawal was successful', {
       timeout: 180_000,
@@ -69,7 +69,7 @@ describe(__filename, () => {
     cy.get('[data-cy="withdraw dialog"]')
       .should('exist')
       .and('include.text', 'Withdrawing USDC')
-      .and('include.text', 'Withdrew 150 USDC');
+      .and('include.text', 'Withdrew 150.000000096 USDC');
 
     cy.contains('[data-cy="withdraw dialog"] button', 'Done').click();
 
