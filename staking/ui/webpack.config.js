@@ -25,10 +25,12 @@ const htmlPlugin = new HtmlWebpackPlugin({
 const babelRule = {
   test: /\.(ts|tsx|js|jsx)$/,
   include: [
-    /liquidity\/lib/,
-    /liquidity\/components/,
-    /liquidity\/cypress/,
     /liquidity\/ui/,
+    /liquidity\/lib/,
+    /liquidity\/cypress/,
+
+    /staking\/ui/,
+    /staking\/lib/,
 
     // fixes for borked 3rd party bundles
     /@safe-global/,
