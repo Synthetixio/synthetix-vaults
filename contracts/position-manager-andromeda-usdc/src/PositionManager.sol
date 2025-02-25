@@ -86,7 +86,7 @@ contract PositionManagerAndromedaUSDC {
         }
         uint128 accountId = IAccountModule(CoreProxy).createAccount();
         _increasePosition(accountId, usdcAmount);
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             address(this),
             msgSender,
@@ -101,14 +101,14 @@ contract PositionManagerAndromedaUSDC {
      */
     function increasePosition(uint128 accountId, uint256 usdcAmount) public {
         address msgSender = ERC2771Context._msgSender();
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             msgSender,
             address(this),
             uint256(accountId)
         );
         _increasePosition(accountId, usdcAmount);
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             address(this),
             msgSender,
@@ -125,7 +125,7 @@ contract PositionManagerAndromedaUSDC {
         address msgSender = ERC2771Context._msgSender();
 
         // 1. Transfer Account NFT from the wallet
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             msgSender,
             address(this),
@@ -156,7 +156,7 @@ contract PositionManagerAndromedaUSDC {
         );
 
         // 5. Transfer Account NFT back to the owner
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             address(this),
             msgSender,
@@ -172,7 +172,7 @@ contract PositionManagerAndromedaUSDC {
         address msgSender = ERC2771Context._msgSender();
 
         // 1. Transfer Account NFT from the wallet
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             msgSender,
             address(this),
@@ -227,22 +227,24 @@ contract PositionManagerAndromedaUSDC {
         }
         // 8. Unwrap ALL synthUSDC back to USDC token
         uint256 usdcAmount = (usdcSynthAvailable + usdcSynthBought) * (10 ** IERC20($USDC).decimals()) / (10 ** 18);
-        IWrapperModule(SpotMarketProxy).unwrap(
-            //
-            synthIdUSDC,
-            usdcSynthAvailable + usdcSynthBought,
-            usdcAmount
-        );
+        if (usdcAmount > 0) {
+            IWrapperModule(SpotMarketProxy).unwrap(
+                //
+                synthIdUSDC,
+                usdcSynthAvailable + usdcSynthBought,
+                usdcAmount
+            );
 
-        // 9. Send all the USDC to the wallet
-        IERC20($USDC).transfer(
-            //
-            msgSender,
-            usdcAmount
-        );
+            // 9. Send all the USDC to the wallet
+            IERC20($USDC).transfer(
+                //
+                msgSender,
+                usdcAmount
+            );
+        }
 
         // 10. Transfer Account NFT back to the owner
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             address(this),
             msgSender,
@@ -256,7 +258,7 @@ contract PositionManagerAndromedaUSDC {
      */
     function closePosition(uint128 accountId) public {
         address msgSender = ERC2771Context._msgSender();
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             msgSender,
             address(this),
@@ -271,7 +273,7 @@ contract PositionManagerAndromedaUSDC {
             0,
             1e18
         );
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             address(this),
             msgSender,
@@ -286,14 +288,14 @@ contract PositionManagerAndromedaUSDC {
      */
     function repay(uint128 accountId, uint256 debtAmount) public {
         address msgSender = ERC2771Context._msgSender();
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             msgSender,
             address(this),
             uint256(accountId)
         );
         _repay(accountId, debtAmount);
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             address(this),
             msgSender,
@@ -307,14 +309,14 @@ contract PositionManagerAndromedaUSDC {
      */
     function clearDebt(uint128 accountId) public {
         address msgSender = ERC2771Context._msgSender();
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             msgSender,
             address(this),
             uint256(accountId)
         );
         _clearDebt(accountId);
-        IERC721(AccountProxy).safeTransferFrom(
+        IERC721(AccountProxy).transferFrom(
             //
             address(this),
             msgSender,
@@ -416,11 +418,13 @@ contract PositionManagerAndromedaUSDC {
         if (wrappedAmount > synthAmount) {
             address msgSender = ERC2771Context._msgSender();
             uint256 dustAmount = wrappedAmount - synthAmount;
-            IERC20($synthUSDC).transfer(
-                //
-                msgSender,
-                dustAmount
-            );
+            if (dustAmount > 0) {
+                IERC20($synthUSDC).transfer(
+                    //
+                    msgSender,
+                    dustAmount
+                );
+            }
         }
     }
 
