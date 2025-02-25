@@ -3,16 +3,16 @@ pragma solidity ^0.8.21;
 import "../lib/PositionManagerTest.sol";
 import "@synthetixio/v3-contracts/1-main/ICoreProxy.sol";
 
-contract PositionManager_migratePosition_v2x_Test is PositionManagerTest {
+contract Optimism_PositionManager_migratePosition_v2x_Test is PositionManagerTest {
     constructor() {
-        deployment = "1-main";
-        forkUrl = vm.envString("RPC_MAINNET");
-        forkBlockNumber = 21864281;
+        deployment = "10-main";
+        forkUrl = vm.envString("RPC_OPTIMISM_MAINNET");
+        forkBlockNumber = 132386388;
         initialize();
     }
 
     function test_migratePosition_v2x() public {
-        address ALICE = 0xa5758de121079D2FA868C64b02Ef35C909635f16;
+        address ALICE = 0xa5f7a39E55D7878bC5bd754eE5d6BD7a7662355b;
         vm.label(ALICE, "0xA11CE");
 
         uint256 snxPrice = CoreProxy.getCollateralPrice(address($SNX));
@@ -46,8 +46,7 @@ contract PositionManager_migratePosition_v2x_Test is PositionManagerTest {
             "Loan amount for SNX position should be equal to v2x debt"
         );
 
-        uint256 targetCratio = TreasuryMarketProxy.targetCratio();
-        uint256 positionDebt = collateralValue * 1 ether / targetCratio;
+        uint256 positionDebt = collateralValue / 2; // at c-ratio 200%
         assertApproxEqAbs(
             positionDebt,
             uint256(CoreProxy.getPositionDebt(accountId, TreasuryMarketProxy.poolId(), address($SNX))),

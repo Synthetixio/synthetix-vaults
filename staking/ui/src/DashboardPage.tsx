@@ -1,14 +1,15 @@
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
-import {
-  NewPoolMigration,
-  NewPoolPosition,
-  usePositionCollateral as useNewPoolPositionCollateral,
-} from '@snx-v3/NewPool';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { NewPoolEmptyPosition } from './Staking/NewPoolEmptyPosition';
+import { NewPoolMigration } from './Staking/NewPoolMigration';
+import { NewPoolMigrationV2x } from './Staking/NewPoolMigrationV2x';
+import { NewPoolPosition } from './Staking/NewPoolPosition';
+import { usePositionCollateral as useNewPoolPositionCollateral } from './Staking/usePositionCollateral';
+import { useV2xPosition } from './Staking/useV2xPosition';
 
 export function DashboardPage() {
   const [params] = useParams<PositionPageSchemaType>();
@@ -18,6 +19,11 @@ export function DashboardPage() {
     collateralType,
   });
   const { data: newPoolPositionCollateral } = useNewPoolPositionCollateral();
+  const { data: v2xPosition } = useV2xPosition();
+
+  const hasV2xPosition = v2xPosition && v2xPosition.debt.gt(0);
+  const hasV3Position = liquidityPosition && liquidityPosition.debt.gt(0);
+  const hasStakingPosition = newPoolPositionCollateral && newPoolPositionCollateral.gt(0);
 
   return (
     <>
@@ -42,18 +48,17 @@ export function DashboardPage() {
             </Text>
           </Flex>
         </Flex>
-
-        {newPoolPositionCollateral && newPoolPositionCollateral.gt(0) ? (
-          <Box mt={12}>
-            <NewPoolPosition />
-          </Box>
-        ) : null}
-
-        {liquidityPosition && liquidityPosition.debt.gt(0) ? (
-          <Box mt={12}>
-            <NewPoolMigration />
-          </Box>
-        ) : null}
+        <Box mt={12}>
+          {hasV2xPosition || hasV3Position || hasStakingPosition ? (
+            <>
+              {hasV2xPosition ? <NewPoolMigrationV2x /> : null}
+              {hasV3Position ? <NewPoolMigration /> : null}
+              {hasStakingPosition ? <NewPoolPosition /> : null}
+            </>
+          ) : (
+            <NewPoolEmptyPosition />
+          )}
+        </Box>
       </Flex>
     </>
   );
