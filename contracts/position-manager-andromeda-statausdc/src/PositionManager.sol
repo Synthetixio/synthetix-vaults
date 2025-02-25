@@ -233,7 +233,6 @@ contract PositionManagerAndromedaStataUSDC {
             address(usdToken)
         );
 
-        uint256 usdcSynthBought = 0;
         if (usdTokenAvailable > 0) {
             // 3. Withdraw all the available snxUSD
             ICollateralModule(CoreProxy).withdraw(
@@ -250,12 +249,28 @@ contract PositionManagerAndromedaStataUSDC {
 
             // 5. Sell all the snxUSD for synthUSDC
             usdToken.approve(SpotMarketProxy, usdTokenAvailable);
-            (usdcSynthBought,) = IAtomicOrderModule(SpotMarketProxy).buyExactIn(
+            (uint256 usdcSynthBought,) = IAtomicOrderModule(SpotMarketProxy).buyExactIn(
                 synthIdUSDC, usdTokenAvailable, usdSynthQuoted, address(0)
+            );
+
+            // 6. Unwrap synth USDC back to USDC token
+            uint256 usdcSynthUnwrapped = (usdcSynthBought) * (10 ** IERC20($USDC).decimals()) / (10 ** 18);
+            IWrapperModule(SpotMarketProxy).unwrap(
+                //
+                synthIdUSDC,
+                usdcSynthBought,
+                usdcSynthUnwrapped
+            );
+
+            // 7. Send all the USDC to the wallet
+            IERC20($USDC).transfer(
+                //
+                msgSender,
+                usdcSynthUnwrapped
             );
         }
 
-        // 6. Get amount of available synth stataUSDC
+        // 8. Get amount of available synth stataUSDC
         uint256 statausdcSynthAvailable = ICollateralModule(CoreProxy).getAccountAvailableCollateral(
             //
             accountId,
@@ -263,7 +278,7 @@ contract PositionManagerAndromedaStataUSDC {
         );
 
         if (statausdcSynthAvailable > 0) {
-            // 7. Withdraw all the available synth stataUSDC
+            // 9. Withdraw all the available synth stataUSDC
             ICollateralModule(CoreProxy).withdraw(
                 //
                 accountId,
@@ -271,7 +286,7 @@ contract PositionManagerAndromedaStataUSDC {
                 statausdcSynthAvailable
             );
 
-            // 8. Unwrap synth stataUSDC back to stataUSDC token
+            // 10. Unwrap synth stataUSDC back to stataUSDC token
             uint256 stataAmount = statausdcSynthAvailable * (10 ** IERC20($stataUSDC).decimals()) / (10 ** 18);
             IWrapperModule(SpotMarketProxy).unwrap(
                 //
@@ -279,20 +294,16 @@ contract PositionManagerAndromedaStataUSDC {
                 statausdcSynthAvailable,
                 stataAmount
             );
-        }
 
-        // 9. Withdraw everything from AAVE
-        uint256 usdcAmount = IStaticAaveToken($stataUSDC).maxWithdraw(address(this));
-
-        if (usdcAmount > 0) {
+            // 11. Withdraw everything from AAVE
+            uint256 usdcAmount = IStaticAaveToken($stataUSDC).maxWithdraw(address(this));
             IStaticAaveToken($stataUSDC).withdraw(
                 //
                 usdcAmount,
                 address(this),
                 address(this)
             );
-
-            // 10. Send all the USDC to the wallet
+            // 12. Send all the USDC to the wallet
             IERC20($USDC).transfer(
                 //
                 msgSender,
@@ -300,7 +311,7 @@ contract PositionManagerAndromedaStataUSDC {
             );
         }
 
-        // 11. Transfer Account NFT back to the owner
+        // 13. Transfer Account NFT back to the owner
         IERC721(AccountProxy).transferFrom(
             //
             address(this),

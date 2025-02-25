@@ -52,6 +52,9 @@ contract PositionManager_withdraw_Test is PositionManagerTest {
         uint256 expected$USDCAmount = (currentAvailable * stataRate / 10 ** 27) * $USDCPrecision / $synthUSDCPrecision;
 
         uint256 newBalance = IERC20($USDC).balanceOf(ALICE);
-        assertEq(currentBalance + expected$USDCAmount, newBalance); // 355.853114 USDC
+        assertEq(1000 * $USDCPrecision + currentBalance + expected$USDCAmount, newBalance); // 355.853114 USDC plus 1000 of earlier deposited snxUSD
+
+        assertEq(0, IERC20($USDC).balanceOf(address(positionManager)));
+        assertEq(0, IERC20($snxUSD).balanceOf(address(positionManager)));
     }
 }
