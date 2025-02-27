@@ -31,7 +31,7 @@ export function DashboardPage() {
     activeWallet &&
     (isPendingCollateralType ||
       (params.accountId && isPendingLiquidityPosition) ||
-      isPendingNewPoolPositionCollateral ||
+      (params.accountId && isPendingNewPoolPositionCollateral) ||
       isPendingV2xPosition);
 
   const hasV2xPosition = v2xPosition && v2xPosition.debt.gt(0);
