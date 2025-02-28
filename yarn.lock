@@ -5759,7 +5759,6 @@ __metadata:
     "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/format": "workspace:*"
-    "@snx-v3/getStatsUrl": "workspace:*"
     "@snx-v3/icons": "workspace:*"
     "@snx-v3/theme": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"

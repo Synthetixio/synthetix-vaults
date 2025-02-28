@@ -3,7 +3,6 @@ import React from 'react';
 import burn from './burn.webp';
 import { ButtonConnect } from './ButtonConnect';
 import { ButtonDocs } from './ButtonDocs';
-import { ButtonGetSnx } from './ButtonGetSnx';
 import { LayoutWithImage } from './LayoutWithImage';
 import { SubheaderMigrateAndEarn } from './SubheaderMigrateAndEarn';
 
@@ -17,7 +16,6 @@ export function ConnectYourWallet() {
           <ButtonConnect />
 
           <Flex gap={4} justifyContent="space-between">
-            <ButtonGetSnx />
             <ButtonDocs />
           </Flex>
         </>

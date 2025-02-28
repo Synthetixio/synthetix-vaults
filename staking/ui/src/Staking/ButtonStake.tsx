@@ -4,6 +4,7 @@ import React from 'react';
 export function ButtonStake({ ...props }) {
   return (
     <Button
+      width="100%"
       display="flex"
       alignItems="center"
       textDecoration="none"
