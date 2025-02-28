@@ -66,7 +66,7 @@ export function StakingPosition() {
             >
               <Flex minWidth="120px" direction="column" gap={3}>
                 <Heading fontSize="20px" lineHeight="1.75rem" color="gray.50" fontWeight={700}>
-                  Debt burned
+                  Debt Burned
                 </Heading>
 
                 {isPendingLoanedAmount || isPendingLoan || isPendingSnxPrice ? (

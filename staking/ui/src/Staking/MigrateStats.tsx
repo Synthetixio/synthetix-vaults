@@ -19,7 +19,7 @@ export function MigrateStats({
 
   return (
     <Flex direction="column" gap={6}>
-      <Text>Unmigrated Staked Balance</Text>
+      <Text>Current Position</Text>
       <Flex gap={6} justifyContent="space-between">
         <Flex direction="column" gap={3} flex={1}>
           <Text color="gray.600" fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>

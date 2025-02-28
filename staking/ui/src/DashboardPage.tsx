@@ -88,7 +88,11 @@ export function DashboardPage() {
             </Heading>
           ) : null}
           {params.showAll ||
-          (!isPending && !hasV2xPosition && !hasV3Position && !hasStakingPosition) ? (
+          (activeWallet &&
+            !isPending &&
+            !hasV2xPosition &&
+            !hasV3Position &&
+            !hasStakingPosition) ? (
             <EmptyPosition />
           ) : null}
 
@@ -97,28 +101,36 @@ export function DashboardPage() {
               State {step++}. v3 position without debt
             </Heading>
           ) : null}
-          {params.showAll || (!isPending && hasV3Position && !hasV3Debt) ? <EmptyV3Debt /> : null}
+          {params.showAll || (activeWallet && !isPending && hasV3Position && !hasV3Debt) ? (
+            <EmptyV3Debt />
+          ) : null}
 
           {params.showAll ? (
             <Heading mt={12} color="red.500">
               State {step++}. Migrate v2x position
             </Heading>
           ) : null}
-          {params.showAll || (!isPending && hasV2xPosition) ? <MigrateFromV2x /> : null}
+          {params.showAll || (activeWallet && !isPending && hasV2xPosition) ? (
+            <MigrateFromV2x />
+          ) : null}
 
           {params.showAll ? (
             <Heading mt={12} color="red.500">
               State {step++}. Migrate v3 position
             </Heading>
           ) : null}
-          {params.showAll || (!isPending && hasV3Position && hasV3Debt) ? <MigrateFromV3 /> : null}
+          {params.showAll || (activeWallet && !isPending && hasV3Position && hasV3Debt) ? (
+            <MigrateFromV3 />
+          ) : null}
 
           {params.showAll ? (
             <Heading mt={12} color="red.500">
               State {step++}. Pool 420 existing position
             </Heading>
           ) : null}
-          {params.showAll || (!isPending && hasStakingPosition) ? <StakingPosition /> : null}
+          {params.showAll || (activeWallet && !isPending && hasStakingPosition) ? (
+            <StakingPosition />
+          ) : null}
         </Flex>
       </Flex>
     </>
