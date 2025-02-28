@@ -47,15 +47,9 @@ export function DashboardPage() {
         <title>Synthetix Staking</title>
         <meta name="description" content="Synthetix Staking" />
       </Helmet>
-      <Flex pt={{ base: 2, sm: 10 }} direction="column" mb={16} width="100%">
+      <Flex pt={2} direction="column" mb={16} width="100%">
         <Flex direction="column" minWidth={400} gap={3}>
-          <Heading
-            mt={[6, 10]}
-            color="gray.50"
-            maxWidth="40rem"
-            fontSize={['2rem', '3rem']}
-            lineHeight="120%"
-          >
+          <Heading color="gray.50" maxWidth="40rem" fontSize={['2rem', '3rem']} lineHeight="120%">
             Stake
           </Heading>
 
@@ -67,7 +61,7 @@ export function DashboardPage() {
             <PoolStats />
           </Flex>
         </Flex>
-        <Flex direction="column" mt={12} gap={6}>
+        <Flex direction="column" mt={6} gap={6}>
           {params.showAll ? (
             <Heading mt={12} color="red.500">
               State {step++}. Loading
