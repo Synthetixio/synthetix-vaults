@@ -41,7 +41,7 @@ export const onboard = init({
         coinbaseModule(),
         injectedModule({ displayUnavailable: [ProviderLabel.MetaMask, ProviderLabel.Trust] }),
         trezorModule({
-          appUrl: 'https://liquidity.synthetix.io',
+          appUrl: 'https://vaults.synthetix.io',
           email: 'info@synthetix.io',
         }),
         ledgerModule({
@@ -51,14 +51,14 @@ export const onboard = init({
         walletConnectModule({
           version: 2,
           projectId: 'd6eac005846a1c3be1f8eea3a294eed9',
-          dappUrl: 'liquidity.synthetix.io',
+          dappUrl: 'vaults.synthetix.io',
         }),
         gnosisModule(),
       ],
   chains,
   appMetadata: {
     ...appMetadata,
-    name: 'Synthetix Liquidity',
+    name: 'Synthetix Vaults',
   },
   accountCenter: {
     desktop: {

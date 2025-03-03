@@ -1,8 +1,8 @@
 import { getSubgraphUrl, POOL_ID } from '@snx-v3/constants';
-import { ARBITRUM, BASE_ANDROMEDA, MAINNET, NETWORKS } from '@snx-v3/useBlockchain';
+import { BASE_ANDROMEDA, MAINNET, NETWORKS } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
 
-const supportedNetworks = [MAINNET.id, BASE_ANDROMEDA.id, ARBITRUM.id];
+const supportedNetworks = [MAINNET.id, BASE_ANDROMEDA.id];
 
 export const networksOffline = NETWORKS.filter(
   (n) => supportedNetworks.includes(n.id) && n.isSupported
