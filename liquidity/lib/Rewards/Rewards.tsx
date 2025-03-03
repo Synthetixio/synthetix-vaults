@@ -105,7 +105,7 @@ export function Rewards() {
         <Tbody>
           {!params.accountId ? (
             <Tr>
-              <Td display="flex" alignItems="left" px={4} border="none" w="100%">
+              <Td display="table-cell" alignItems="left" px={4} border="none" w="100%" colSpan={2}>
                 <Text color="gray.500" fontFamily="heading" fontSize="xs">
                   Create a Position to see your earnings
                 </Text>
@@ -117,7 +117,7 @@ export function Rewards() {
 
           {groupedRewards && groupedRewards.length === 0 ? (
             <Tr>
-              <Td display="flex" alignItems="left" px={4} border="none" w="100%">
+              <Td display="table-cell" alignItems="left" px={4} border="none" w="100%" colSpan={2}>
                 <Text color="gray.500" fontFamily="heading" fontSize="xs">
                   No Rewards Available
                 </Text>
