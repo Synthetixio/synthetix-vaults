@@ -3364,7 +3364,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/providers@npm:5.7.2, @ethersproject/providers@npm:^5.5.0, @ethersproject/providers@npm:^5.7.2":
+"@ethersproject/providers@npm:5.7.2, @ethersproject/providers@npm:^5.5.0":
   version: 5.7.2
   resolution: "@ethersproject/providers@npm:5.7.2"
   dependencies:
@@ -4680,18 +4680,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/Balance@workspace:liquidity/lib/Balance":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/Balance@workspace:liquidity/lib/Balance"
-  dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
-    "@snx-v3/Amount": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/BorderBox@workspace:*, @snx-v3/BorderBox@workspace:liquidity/lib/BorderBox":
   version: 0.0.0-use.local
   resolution: "@snx-v3/BorderBox@workspace:liquidity/lib/BorderBox"
@@ -4864,15 +4852,6 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/parseContractError": "workspace:*"
     date-fns: "npm:^2.30.0"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/CustomTable@workspace:liquidity/lib/CustomTable":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/CustomTable@workspace:liquidity/lib/CustomTable"
-  dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
@@ -5066,15 +5045,6 @@ __metadata:
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
     "@synthetixio/wei": "npm:^2.74.4"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/PercentBadges@workspace:liquidity/lib/PercentBadges":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/PercentBadges@workspace:liquidity/lib/PercentBadges"
-  dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
@@ -5471,12 +5441,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/assertAddressType@workspace:liquidity/lib/assertAddressType":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/assertAddressType@workspace:liquidity/lib/assertAddressType"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/calculations@workspace:*, @snx-v3/calculations@workspace:liquidity/lib/calculations":
   version: 0.0.0-use.local
   resolution: "@snx-v3/calculations@workspace:liquidity/lib/calculations"
@@ -5514,17 +5478,6 @@ __metadata:
 "@snx-v3/etherscanLink@workspace:*, @snx-v3/etherscanLink@workspace:liquidity/lib/etherscanLink":
   version: 0.0.0-use.local
   resolution: "@snx-v3/etherscanLink@workspace:liquidity/lib/etherscanLink"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/fetchPythPrices@workspace:liquidity/lib/fetchPythPrices":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/fetchPythPrices@workspace:liquidity/lib/fetchPythPrices"
-  dependencies:
-    "@pythnetwork/pyth-evm-js": "npm:^1.42.0"
-    "@snx-v3/constants": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    ethers: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -5708,19 +5661,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/position-manager-new-pool@workspace:contracts/position-manager-new-pool":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/position-manager-new-pool@workspace:contracts/position-manager-new-pool"
-  dependencies:
-    "@synthetixio/core-contracts": "npm:^3.10.1"
-    "@synthetixio/core-modules": "npm:^3.10.1"
-    "@synthetixio/main": "npm:^3.10.1"
-    "@synthetixio/oracle-manager": "npm:^3.10.1"
-    "@synthetixio/pyth-erc7412-wrapper": "npm:^3.10.1"
-    forge-std: "github:foundry-rs/forge-std"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/position-manager@workspace:contracts/position-manager":
   version: 0.0.0-use.local
   resolution: "@snx-v3/position-manager@workspace:contracts/position-manager"
@@ -5890,16 +5830,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useBlockNumber@workspace:liquidity/lib/useBlockNumber"
-  dependencies:
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/useBlockchain@workspace:*, @snx-v3/useBlockchain@workspace:liquidity/lib/useBlockchain":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useBlockchain@workspace:liquidity/lib/useBlockchain"
@@ -5955,6 +5885,16 @@ __metadata:
     debug: "npm:^4.4.0"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useClaimedRewards@workspace:liquidity/lib/useClaimedRewards":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useClaimedRewards@workspace:liquidity/lib/useClaimedRewards"
+  dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 
@@ -6143,17 +6083,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useLegacyMarket@workspace:liquidity/lib/contracts/useLegacyMarket":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useLegacyMarket@workspace:liquidity/lib/contracts/useLegacyMarket"
-  dependencies:
-    "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/useLiquidityPosition@workspace:*, @snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLiquidityPosition@workspace:liquidity/lib/useLiquidityPosition"
@@ -6228,17 +6157,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useOracleManagerProxy@workspace:liquidity/lib/contracts/useOracleManagerProxy":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useOracleManagerProxy@workspace:liquidity/lib/contracts/useOracleManagerProxy"
-  dependencies:
-    "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/useOraclePrice@workspace:*, @snx-v3/useOraclePrice@workspace:liquidity/lib/useOraclePrice":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useOraclePrice@workspace:liquidity/lib/useOraclePrice"
@@ -6275,19 +6193,6 @@ __metadata:
     "@snx-v3/zod": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"
-    react: "npm:^18.2.0"
-    zod: "npm:^3.22.4"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/usePoolData@workspace:liquidity/lib/usePoolData":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/usePoolData@workspace:liquidity/lib/usePoolData"
-  dependencies:
-    "@snx-v3/constants": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
     zod: "npm:^3.22.4"
   languageName: unknown
@@ -6379,17 +6284,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/usePositionManagerNewPool@workspace:liquidity/lib/contracts/usePositionManagerNewPool":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/usePositionManagerNewPool@workspace:liquidity/lib/contracts/usePositionManagerNewPool"
-  dependencies:
-    "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/usePythFeeds@workspace:*, @snx-v3/usePythFeeds@workspace:liquidity/lib/contracts/usePythFeeds":
   version: 0.0.0-use.local
   resolution: "@snx-v3/usePythFeeds@workspace:liquidity/lib/contracts/usePythFeeds"
@@ -6419,19 +6313,6 @@ __metadata:
     "@snx-v3/contracts": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useRates@workspace:liquidity/lib/useRates":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useRates@workspace:liquidity/lib/useRates"
-  dependencies:
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@synthetixio/contracts": "npm:^1.2.3"
-    "@synthetixio/wei": "npm:^2.74.4"
-    "@tanstack/react-query": "npm:^5.8.3"
-    ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
@@ -6578,20 +6459,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useSynthToken@workspace:liquidity/lib/useSynthToken":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useSynthToken@workspace:liquidity/lib/useSynthToken"
-  dependencies:
-    "@snx-v3/tsHelpers": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useCollateralTypes": "workspace:*"
-    "@snx-v3/useSynthTokens": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    debug: "npm:^4.4.0"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/useSynthTokens@workspace:*, @snx-v3/useSynthTokens@workspace:liquidity/lib/contracts/useSynthTokens":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useSynthTokens@workspace:liquidity/lib/contracts/useSynthTokens"
@@ -6661,17 +6528,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useTreasuryMarketProxy@workspace:liquidity/lib/contracts/useTreasuryMarketProxy":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useTreasuryMarketProxy@workspace:liquidity/lib/contracts/useTreasuryMarketProxy"
-  dependencies:
-    "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/useTrustedMulticallForwarder@workspace:*, @snx-v3/useTrustedMulticallForwarder@workspace:liquidity/lib/contracts/useTrustedMulticallForwarder":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useTrustedMulticallForwarder@workspace:liquidity/lib/contracts/useTrustedMulticallForwarder"
@@ -6691,16 +6547,6 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useUSDProxy@workspace:liquidity/lib/contracts/useUSDProxy":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useUSDProxy@workspace:liquidity/lib/contracts/useUSDProxy"
-  dependencies:
-    "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 
@@ -6772,17 +6618,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useV2xSynthetix@workspace:liquidity/lib/contracts/useV2xSynthetix":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useV2xSynthetix@workspace:liquidity/lib/contracts/useV2xSynthetix"
-  dependencies:
-    "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/useVaultsData@workspace:*, @snx-v3/useVaultsData@workspace:liquidity/lib/useVaultsData":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useVaultsData@workspace:liquidity/lib/useVaultsData"
@@ -6799,17 +6634,6 @@ __metadata:
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
     zod: "npm:^3.22.4"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useWETH@workspace:liquidity/lib/contracts/useWETH":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useWETH@workspace:liquidity/lib/contracts/useWETH"
-  dependencies:
-    "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -7090,16 +6914,6 @@ __metadata:
     "@stablelib/random": "npm:^1.0.2"
     "@stablelib/wipe": "npm:^1.0.1"
   checksum: 10/fb5469e390ee2515d926633e3e179038894ac4f5e8c8cd2c2fc912022e34a051112eab0fe80c4dbc6e59129679844182562a036abff89444e5c4a05dd42ed329
-  languageName: node
-  linkType: hard
-
-"@synthetixio/contracts@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "@synthetixio/contracts@npm:1.2.3"
-  dependencies:
-    "@ethersproject/abi": "npm:^5.7.0"
-    "@ethersproject/providers": "npm:^5.7.2"
-  checksum: 10/db21ac9403c5508aa2760927d7825e95665c2ec1a3cf9dac0fab06835fcb34e9ede61c22d05be57cc34f03213d652ad2c4e0f250d8f879ae272056459a0a45b0
   languageName: node
   linkType: hard
 
