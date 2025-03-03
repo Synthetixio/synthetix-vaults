@@ -1,10 +1,10 @@
 {
-  "name": "@snx-v3/useUSDProxy",
+  "name": "@snx-v3/useClaimedRewards",
   "private": true,
   "main": "index.ts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
-    "@snx-v3/contracts": "workspace:*",
+    "@snx-v3/constants": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
     "@tanstack/react-query": "^5.8.3"
   }
