@@ -230,19 +230,7 @@ export const SNAXTESTNET: Network = {
   isTestnet: true,
 };
 
-export const NETWORKS: Network[] = [
-  BASE_ANDROMEDA,
-  MAINNET,
-  OPTIMISM,
-  SEPOLIA,
-  BASE_SEPOLIA,
-  CANNON,
-  OPTIMISM_SEPOLIA,
-  ARBITRUM_SEPOLIA,
-  ARBITRUM,
-  SNAX,
-  SNAXTESTNET,
-];
+export const NETWORKS: Network[] = [BASE_ANDROMEDA, MAINNET, SEPOLIA, BASE_SEPOLIA, CANNON];
 
 export async function deploymentHasERC7412(chainId: number, preset: string) {
   return importPythERC7412Wrapper(chainId, preset).then(
