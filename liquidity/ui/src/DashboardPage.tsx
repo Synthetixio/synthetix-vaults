@@ -25,10 +25,10 @@ export function DashboardPage() {
               fontSize={['2rem', '3rem']}
               lineHeight="120%"
             >
-              Stake and Earn
+              Vaults
             </Heading>
             <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
-              Deposit SNX to earn a privileged share of protocol performance
+              Deposit USDC to earn a privileged share of protocol performance
             </Text>
           </Flex>
           <Flex mt={10} gap={4} flex={1}>
