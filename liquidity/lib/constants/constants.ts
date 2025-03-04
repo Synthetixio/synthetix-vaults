@@ -1,9 +1,6 @@
 import Wei from '@synthetixio/wei';
 import { ethers } from 'ethers';
 
-export const LOCAL_STORAGE_KEYS = {
-  SHOW_TESTNETS: 'SHOW_TESTNETS',
-};
 export const ZEROWEI = new Wei(0);
 
 export const D6 = ethers.utils.parseUnits('1', 6);

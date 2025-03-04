@@ -24,7 +24,7 @@ export function StatsBox({
       flexDir="column"
       alignItems="center"
       justifyContent="center"
-      minWidth="200px"
+      minWidth="160px"
       flex={1}
       height="160px"
       px={6}

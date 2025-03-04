@@ -14,7 +14,7 @@ export function RewardsRow({
   return (
     <>
       <Tr>
-        <Td display="flex" alignItems="center" px={4} py={3} border="none" w="100%">
+        <Td display="flex" alignItems="center" px={4} py={3} border="none" w="100%" minW={116}>
           <Fade in>
             <TokenIcon height={30} width={30} symbol={displaySymbol} />
           </Fade>

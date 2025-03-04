@@ -1,5 +1,5 @@
 import { getAprUrl } from '@snx-v3/constants';
-import { ARBITRUM, BASE_ANDROMEDA, MAINNET, Network, useNetwork } from '@snx-v3/useBlockchain';
+import { BASE_ANDROMEDA, MAINNET, Network, useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
 
 export type PositionAPR = {
@@ -12,7 +12,7 @@ export type PositionAPR = {
   apr28dIncentiveRewards: number;
 };
 
-const supportedAprNetworks = [BASE_ANDROMEDA.id, ARBITRUM.id, MAINNET.id];
+const supportedAprNetworks = [BASE_ANDROMEDA.id, MAINNET.id];
 
 export async function fetchApr(networkId?: number) {
   try {

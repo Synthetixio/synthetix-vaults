@@ -12,12 +12,12 @@ export function DashboardPage() {
   return (
     <>
       <Helmet>
-        <title>Synthetix Liquidity V3</title>
-        <meta name="description" content="Synthetix Liquidity V3" />
+        <title>Synthetix Vaults</title>
+        <meta name="description" content="Synthetix Vaults" />
       </Helmet>
       <Flex pt={{ base: 2, sm: 10 }} flexDir="column" mb={16}>
         <Flex columnGap={20} flexWrap="wrap" justifyContent="space-between">
-          <Flex flexDirection="column" minWidth={400}>
+          <Flex flexDirection="column" minWidth={360}>
             <Heading
               mt={[6, 10]}
               color="gray.50"

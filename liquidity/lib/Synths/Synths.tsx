@@ -102,7 +102,7 @@ export function Synths() {
         <Tbody>
           {!walletAddress ? (
             <Tr>
-              <Td display="flex" alignItems="left" px={4} border="none" w="100%">
+              <Td display="table-cell" colSpan={2} alignItems="left" px={4} border="none" w="100%">
                 <Text color="gray.500" fontFamily="heading" fontSize="xs">
                   Please connect wallet to view synths
                 </Text>
