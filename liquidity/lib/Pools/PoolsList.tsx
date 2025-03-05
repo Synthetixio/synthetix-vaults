@@ -117,7 +117,7 @@ export function PoolsList() {
         <HeaderText width="240px">TVL</HeaderText>
         <HeaderText width="164px">
           APY/APR
-          <Tooltip label="Claimable rewards from trader collateral liquidations and incentives. Liquidated collateral rewards offset debt accrued during trader liquidations.">
+          <Tooltip label="Displays the annual interest rate or yield, depending on whether it's for a loan (APR) or an investment/savings account (APY).">
             <InfoIcon ml={1} mb="1px" />
           </Tooltip>
         </HeaderText>
