@@ -4845,6 +4845,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/ConnectBox@workspace:*, @snx-v3/ConnectBox@workspace:liquidity/lib/ConnectBox":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/ConnectBox@workspace:liquidity/lib/ConnectBox"
+  dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/useBlockchain": "workspace:*"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/ContractError@workspace:*, @snx-v3/ContractError@workspace:liquidity/lib/ContractError":
   version: 0.0.0-use.local
   resolution: "@snx-v3/ContractError@workspace:liquidity/lib/ContractError"
@@ -5559,6 +5569,7 @@ __metadata:
     "@snx-v3/BorderBox": "workspace:*"
     "@snx-v3/ClosePosition": "workspace:*"
     "@snx-v3/CollateralAlert": "workspace:*"
+    "@snx-v3/ConnectBox": "workspace:*"
     "@snx-v3/Manage": "workspace:*"
     "@snx-v3/ManageAction": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"

@@ -8,6 +8,7 @@ import { StataUSDC, Synths } from '@snx-v3/Synths';
 import { useWallet } from '@snx-v3/useBlockchain';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet';
+import { ConnectBox } from '@snx-v3/ConnectBox';
 
 export function DashboardPage() {
   const { activeWallet } = useWallet();
@@ -43,6 +44,7 @@ export function DashboardPage() {
             <StatsTotalPnl />
           </Flex>
         </Flex>
+        {!activeWallet && <ConnectBox />}
 
         {hasPosition && (
           <>
