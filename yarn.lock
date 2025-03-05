@@ -5081,6 +5081,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/Pools@workspace:liquidity/lib/Pools"
   dependencies:
+    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/TokenIcon": "workspace:*"
     "@snx-v3/Tooltip": "workspace:*"
@@ -5236,6 +5237,7 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/Amount": "workspace:*"
     "@snx-v3/StatsBox": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
