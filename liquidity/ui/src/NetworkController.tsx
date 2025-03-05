@@ -106,9 +106,10 @@ export function NetworkController() {
           <NetworkIcon
             filter={currentNetwork?.isTestnet ? 'grayscale(1)' : ''}
             networkId={notConnected ? 8453 : notSupported ? 0 : currentNetwork?.id}
+            mr={2}
           />
-          <Text variant="nav" ml={2} display={{ base: 'none', md: 'inline-block' }}>
-            {notSupported ? 'Not Supported' : currentNetwork?.label}
+          <Text variant="nav" display={{ base: 'none', md: 'inline-block' }}>
+            {notSupported ? '' : currentNetwork?.label}
           </Text>
         </MenuButton>
         <MenuList border="1px" borderColor="gray.900">

@@ -6,7 +6,7 @@ import { TokenIcon } from '@snx-v3/TokenIcon';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { useApr } from '@snx-v3/useApr';
 import { useStataUSDCApr } from '@snx-v3/useApr/useStataUSDCApr';
-import { Network, NetworkIcon, useNetwork, useWallet } from '@snx-v3/useBlockchain';
+import { Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { useIsAndromedaStataUSDC } from '@snx-v3/useIsAndromedaStataUSDC';
 import { makeSearch, useParams } from '@snx-v3/useParams';
@@ -62,7 +62,6 @@ export function PoolRow({
   const { data: usdcBalance } = useTokenBalance(USDCToken?.address, network);
 
   const { network: currentNetwork, setNetwork } = useNetwork();
-  const { connect } = useWallet();
 
   const isAndromedaStataUSDC = useIsAndromedaStataUSDC({
     tokenAddress: collateralType?.tokenAddress,
@@ -98,7 +97,6 @@ export function PoolRow({
     e.preventDefault();
     try {
       if (!currentNetwork) {
-        await connect();
         return;
       }
       if (currentNetwork.id !== network.id) {
@@ -117,8 +115,7 @@ export function PoolRow({
     }
   };
 
-  const buttonText = !currentNetwork ? 'Connect Wallet' : 'Deposit';
-
+  const btnDisabled = !currentNetwork;
   const order = React.useMemo(
     () =>
       wei(collateralType.collateralDeposited, Number(collateralType.decimals), true)
@@ -296,8 +293,16 @@ export function PoolRow({
             color="black"
             textDecoration="none"
             _hover={{ textDecoration: 'none', color: 'black' }}
+            isDisabled={btnDisabled}
+            _disabled={{
+              bg: 'gray.900',
+              backgroundImage: 'none',
+              color: 'gray.500',
+              opacity: 0.5,
+              cursor: 'not-allowed',
+            }}
           >
-            {buttonText}
+            Deposit
           </Button>
         </Flex>
       </Flex>

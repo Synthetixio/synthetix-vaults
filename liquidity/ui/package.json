@@ -16,6 +16,7 @@
     "@snx-v3/BorderBox": "workspace:*",
     "@snx-v3/ClosePosition": "workspace:*",
     "@snx-v3/CollateralAlert": "workspace:*",
+    "@snx-v3/ConnectBox": "workspace:*",
     "@snx-v3/Manage": "workspace:*",
     "@snx-v3/ManageAction": "workspace:*",
     "@snx-v3/ManagePositionContext": "workspace:*",
