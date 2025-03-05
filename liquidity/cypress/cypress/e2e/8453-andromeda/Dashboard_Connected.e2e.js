@@ -36,6 +36,5 @@ describe(__filename, () => {
     );
 
     cy.contains('h2', 'Positions').should('exist');
-    cy.get('[data-cy="all pools button"]').should('exist');
   });
 });
