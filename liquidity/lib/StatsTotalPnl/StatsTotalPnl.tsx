@@ -1,7 +1,7 @@
 import { Text } from '@chakra-ui/react';
 import { PnlAmount } from '@snx-v3/DebtAmount';
 import { StatsBox } from '@snx-v3/StatsBox';
-import { useNetwork } from '@snx-v3/useBlockchain';
+import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import { useClaimedRewards } from '@snx-v3/useClaimedRewards';
 import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
@@ -14,6 +14,7 @@ import React from 'react';
 export function StatsTotalPnl() {
   const [params] = useParams();
   const { network } = useNetwork();
+  const { activeWallet } = useWallet();
 
   const { data: rewards, isPending: isPendingRewards } = useRewards({
     accountId: params.accountId,
@@ -97,11 +98,11 @@ export function StatsTotalPnl() {
         )
       }
       value={
-        totalDebt && totalRewardsValue && totalClaimedRewards ? (
-          <PnlAmount debt={totalDebt.sub(totalRewardsValue).sub(totalClaimedRewards)} />
-        ) : (
+        !activeWallet ? (
           '-'
-        )
+        ) : totalDebt && totalRewardsValue && totalClaimedRewards ? (
+          <PnlAmount debt={totalDebt.sub(totalRewardsValue).sub(totalClaimedRewards)} />
+        ) : null
       }
       label={
         <Text textAlign="left">
