@@ -1,36 +1,24 @@
 import { getClaimedRewardsURL } from '@snx-v3/constants';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useQuery } from '@tanstack/react-query';
+import debug from 'debug';
 
-export type ClaimedReward = {
-  ts: string;
-  pool_id: number;
-  collateral_type: string;
-  account_id: string;
-  reward_type: string;
-  distributor: string;
-  token_symbol: string;
-  amount: string;
-  price: string;
-  amount_usd: string;
-};
+const log = debug('snx:useClaimedRewards');
 
-export function useClaimedRewards(accountId: string | undefined) {
+export function useClaimedRewards(accountId?: string) {
   const { network } = useNetwork();
 
   return useQuery({
-    queryKey: ['claimed-rewards', network?.id, accountId],
+    queryKey: [`${network?.id}-${network?.preset}`, 'ClaimedRewards', { accountId }],
+    enabled: Boolean(network && accountId),
     queryFn: async () => {
-      try {
-        const response = await fetch(getClaimedRewardsURL(network?.id) + `?accountId=${accountId}`);
-        const data: ClaimedReward[] = await response.json();
-
-        return data;
-      } catch (error) {
-        return;
-      }
+      const response = await fetch(getClaimedRewardsURL(network?.id) + `?accountId=${accountId}`);
+      const claimedRewards = await response.json();
+      log('claimedRewards', claimedRewards);
+      const value = claimedRewards !== null ? parseFloat(claimedRewards) : 0;
+      log('value', value);
+      return value;
     },
-    staleTime: 600000,
-    enabled: Boolean(network?.id && accountId),
+    staleTime: 60_000,
   });
 }
