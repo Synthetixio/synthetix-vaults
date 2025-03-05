@@ -99,7 +99,9 @@ export function StatsTotalPnl() {
       value={
         totalDebt && totalRewardsValue && totalClaimedRewards ? (
           <PnlAmount debt={totalDebt.sub(totalRewardsValue).sub(totalClaimedRewards)} />
-        ) : undefined
+        ) : (
+          '-'
+        )
       }
       label={
         <Text textAlign="left">

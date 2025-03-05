@@ -1,4 +1,6 @@
 import { Flex } from '@chakra-ui/react';
+import { Tooltip } from '@snx-v3/Tooltip';
+import { InfoIcon } from '@chakra-ui/icons';
 import { BASE_ANDROMEDA, MAINNET } from '@snx-v3/useBlockchain';
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
@@ -113,7 +115,12 @@ export function PoolsList() {
         </HeaderText>
         <HeaderText width="240px">Wallet Balance</HeaderText>
         <HeaderText width="240px">TVL</HeaderText>
-        <HeaderText width="164px">APR</HeaderText>
+        <HeaderText width="164px">
+          APY/APR
+          <Tooltip label="Claimable rewards from trader collateral liquidations and incentives. Liquidated collateral rewards offset debt accrued during trader liquidations.">
+            <InfoIcon ml={1} mb="1px" />
+          </Tooltip>
+        </HeaderText>
         <Flex minW="120px" flex="1" />
       </Flex>
 

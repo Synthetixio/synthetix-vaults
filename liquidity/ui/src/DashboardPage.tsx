@@ -5,10 +5,17 @@ import { Rewards } from '@snx-v3/Rewards';
 import { StatsTotalLocked } from '@snx-v3/StatsTotalLocked';
 import { StatsTotalPnl } from '@snx-v3/StatsTotalPnl';
 import { StataUSDC, Synths } from '@snx-v3/Synths';
-import React from 'react';
+import { useWallet } from '@snx-v3/useBlockchain';
+import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 
 export function DashboardPage() {
+  const { activeWallet } = useWallet();
+
+  const hasPosition = useMemo(() => {
+    return !!activeWallet?.address;
+  }, [activeWallet]);
+
   return (
     <>
       <Helmet>
@@ -37,51 +44,57 @@ export function DashboardPage() {
           </Flex>
         </Flex>
 
-        <Flex mt={12} flexDirection="column" gap={4}>
-          <Heading fontSize="1.25rem" fontFamily="heading" lineHeight="1.75rem">
-            Positions
-          </Heading>
-          <PositionsList />
-        </Flex>
-        <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
-          <Flex
-            flex={1}
-            flexDirection="column"
-            borderColor="gray.900"
-            borderWidth="1px"
-            borderRadius="5px"
-            p={6}
-            sx={{
-              borderCollapse: 'separate !important',
-              borderSpacing: 0,
-            }}
-            bg="navy.700"
-          >
-            <Rewards />
-          </Flex>
+        {hasPosition && (
+          <>
+            <Flex mt={12} flexDirection="column" gap={4}>
+              <Heading fontSize="1.25rem" fontFamily="heading" lineHeight="1.75rem">
+                Positions
+              </Heading>
+              <PositionsList />
+            </Flex>
+            <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
+              <Flex
+                flex={1}
+                flexDirection="column"
+                borderColor="gray.900"
+                borderWidth="1px"
+                borderRadius="5px"
+                p={6}
+                sx={{
+                  borderCollapse: 'separate !important',
+                  borderSpacing: 0,
+                }}
+                bg="navy.700"
+              >
+                <Rewards />
+              </Flex>
 
-          <Flex
-            flex={1}
-            flexDirection="column"
-            borderColor="gray.900"
-            borderWidth="1px"
-            borderRadius="5px"
-            p={6}
-            sx={{
-              borderCollapse: 'separate !important',
-              borderSpacing: 0,
-            }}
-            bg="navy.700"
-          >
-            <Synths />
-            <StataUSDC />
-          </Flex>
-        </Flex>
+              <Flex
+                flex={1}
+                flexDirection="column"
+                borderColor="gray.900"
+                borderWidth="1px"
+                borderRadius="5px"
+                p={6}
+                sx={{
+                  borderCollapse: 'separate !important',
+                  borderSpacing: 0,
+                }}
+                bg="navy.700"
+              >
+                <Synths />
+                <StataUSDC />
+              </Flex>
+            </Flex>
+          </>
+        )}
 
         <Flex mt={12} flexDirection="column">
-          <Heading fontSize="1.25rem" fontFamily="heading" lineHeight="1.75rem">
-            Vaults
-          </Heading>
+          {hasPosition && (
+            <Heading fontSize="1.25rem" fontFamily="heading" lineHeight="1.75rem">
+              Vaults
+            </Heading>
+          )}
           <PoolsList />
         </Flex>
       </Flex>
