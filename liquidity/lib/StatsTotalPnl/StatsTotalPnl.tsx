@@ -98,11 +98,11 @@ export function StatsTotalPnl() {
         )
       }
       value={
-        !activeWallet ? (
-          '-'
-        ) : totalDebt && totalRewardsValue && totalClaimedRewards ? (
+        totalDebt && totalRewardsValue && totalClaimedRewards ? (
           <PnlAmount debt={totalDebt.sub(totalRewardsValue).sub(totalClaimedRewards)} />
-        ) : null
+        ) : (
+          '-'
+        )
       }
       label={
         <Text textAlign="left">

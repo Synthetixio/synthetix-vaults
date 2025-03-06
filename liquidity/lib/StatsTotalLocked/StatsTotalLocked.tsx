@@ -24,7 +24,7 @@ export function StatsTotalLocked() {
               result.add(liquidityPosition.collateralAmount.mul(liquidityPosition.collateralPrice)),
             wei(0)
           )
-        : wei(0),
+        : undefined,
     [liquidityPositions]
   );
 
@@ -32,7 +32,7 @@ export function StatsTotalLocked() {
     <StatsBox
       title="Total Locked"
       isLoading={!(!params.accountId || (params.accountId && !isPendingLiquidityPositions))}
-      value={activeWallet ? <Amount prefix="$" value={wei(totalLocked || '0')} /> : '-'}
+      value={activeWallet && totalLocked ? <Amount prefix="$" value={totalLocked} /> : '-'}
       label={
         <>
           <Text textAlign="left">All assets locked in Positions </Text>
