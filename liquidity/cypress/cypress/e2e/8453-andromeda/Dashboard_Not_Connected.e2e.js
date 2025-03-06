@@ -18,7 +18,7 @@ describe(__filename, () => {
 
     cy.contains('[data-cy="connect wallet button"]', 'Connect Wallet').should('exist');
 
-    cy.contains('h2', 'Positions').should('exist');
-    cy.contains('p', 'Please connect wallet to view active positions').should('exist');
+    cy.contains('h2', 'Vaults').should('exist');
+    cy.contains('h2', 'Connect your wallet to get started').should('exist');
   });
 });
