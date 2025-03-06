@@ -5,17 +5,53 @@ import { Rewards } from '@snx-v3/Rewards';
 import { StatsTotalLocked } from '@snx-v3/StatsTotalLocked';
 import { StatsTotalPnl } from '@snx-v3/StatsTotalPnl';
 import { StataUSDC, Synths } from '@snx-v3/Synths';
-import { useWallet } from '@snx-v3/useBlockchain';
+import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { ConnectBox } from '@snx-v3/ConnectBox';
+import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
+import { useParams } from '@snx-v3/useParams';
 
 export function DashboardPage() {
   const { activeWallet } = useWallet();
 
+  const [params] = useParams();
+  const { network } = useNetwork();
+
+  const { data: liquidityPositions } = useLiquidityPositions({ accountId: params.accountId });
+
+  const filteredLiquidityPositions = React.useMemo(
+    () =>
+      liquidityPositions
+        ? liquidityPositions.filter((liquidityPosition) => {
+            if (liquidityPosition.collateralAmount.gt(0)) {
+              // there is some amount delegated
+              return true;
+            }
+
+            if (liquidityPosition.availableCollateral.gt(0)) {
+              // there is some amount deposited and available to withdraw
+              return true;
+            }
+
+            if (
+              network?.preset === 'andromeda' &&
+              liquidityPosition.collateralType.displaySymbol === 'USDC' &&
+              liquidityPosition.availableSystemToken.gt(0)
+            ) {
+              // special case for USDC on Andromeda to allow withdrawals of snxUSD
+              return true;
+            }
+
+            return false;
+          })
+        : [],
+    [liquidityPositions, network?.preset]
+  );
+
   const hasPosition = useMemo(() => {
-    return !!activeWallet?.address;
-  }, [activeWallet]);
+    return !!activeWallet?.address && filteredLiquidityPositions.length > 0;
+  }, [activeWallet, filteredLiquidityPositions]);
 
   return (
     <>
@@ -52,7 +88,7 @@ export function DashboardPage() {
               <Heading fontSize="1.25rem" fontFamily="heading" lineHeight="1.75rem">
                 Positions
               </Heading>
-              <PositionsList />
+              <PositionsList positions={filteredLiquidityPositions} />
             </Flex>
             <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
               <Flex
