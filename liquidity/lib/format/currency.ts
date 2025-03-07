@@ -1,7 +1,7 @@
 import { Wei } from '@synthetixio/wei';
 import numbro from 'numbro';
 
-export function currency(value?: Wei) {
+export function currency(value?: Wei, format?: numbro.Format): string {
   try {
     if (!value) {
       return '-';
@@ -14,22 +14,28 @@ export function currency(value?: Wei) {
     }
     const number = value.toNumber();
     const m2 = numbro(number).format({
+      ...format,
       thousandSeparated: false,
       mantissa: 2,
     });
     const m0 = numbro(number).format({
       thousandSeparated: false,
       mantissa: 0,
+      ...format,
     });
     // Strip unnecessary .00
     return parseFloat(m2) === parseFloat(m0)
       ? numbro(number).format({
+          ...format,
           thousandSeparated: true,
           mantissa: 0,
+          average: true,
         })
       : numbro(number).format({
+          ...format,
           thousandSeparated: true,
           mantissa: 2,
+          average: true,
         });
   } catch {
     return `${value}`;

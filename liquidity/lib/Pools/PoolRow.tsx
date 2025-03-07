@@ -1,6 +1,6 @@
 import { Button, Fade, Flex, Link, Text } from '@chakra-ui/react';
 import { ZEROWEI } from '@snx-v3/constants';
-import { formatNumber, formatNumberToUsd } from '@snx-v3/formatters';
+import { formatNumber, formatNumberToUsd, formatNumberToUsdShort } from '@snx-v3/formatters';
 import { Sparkles } from '@snx-v3/icons';
 import { TokenIcon } from '@snx-v3/TokenIcon';
 import { Tooltip } from '@snx-v3/Tooltip';
@@ -14,8 +14,7 @@ import { useStaticAaveUSDCRate } from '@snx-v3/useStaticAaveUSDCRate';
 import { useSynthTokens } from '@snx-v3/useSynthTokens';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useUSDC } from '@snx-v3/useUSDC';
-import { wei } from '@synthetixio/wei';
-import { ethers } from 'ethers';
+import { Wei, wei } from '@synthetixio/wei';
 import React from 'react';
 
 interface CollateralTypeWithDeposited extends CollateralType {
@@ -26,7 +25,8 @@ export function PoolRow({
   pool: _pool,
   network,
   collateralType,
-  collateralPrices,
+  tvl,
+  price,
 }: {
   collateralType: CollateralTypeWithDeposited;
   pool: {
@@ -34,10 +34,8 @@ export function PoolRow({
     id: string;
   };
   network: Network;
-  collateralPrices?: {
-    symbol: string;
-    price: ethers.BigNumber;
-  }[];
+  tvl: number;
+  price: Wei;
 }) {
   const [params, setParams] = useParams();
 
@@ -77,12 +75,6 @@ export function PoolRow({
       tokenBalance || ZEROWEI
     );
   }, [isAndromedaStataUSDC, stataUSDCRate, tokenBalance, usdcBalance]);
-
-  const price = wei(
-    collateralPrices?.find(
-      (price) => price.symbol.toUpperCase() === collateralType.symbol.toUpperCase()
-    )?.price ?? 0
-  );
 
   const { data: apr, isPending: isPendingApr } = useApr(network);
   const positionApr = React.useMemo(() => {
@@ -209,17 +201,10 @@ export function PoolRow({
             color="white"
             textAlign="right"
           >
-            {price
-              ? formatNumberToUsd(
-                  wei(collateralType.collateralDeposited, Number(collateralType.decimals), true)
-                    .mul(price)
-                    .toNumber(),
-                  {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  }
-                )
-              : 0}
+            {formatNumberToUsdShort(tvl, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </Text>
         </Flex>
 

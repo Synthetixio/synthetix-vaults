@@ -9,15 +9,17 @@ export function Amount({
   prefix = '',
   suffix = '',
   'data-cy': testId,
+  average,
   ...props
 }: {
   prefix?: string;
   value?: Wei;
   suffix?: string;
   'data-cy'?: string;
+  average?: boolean;
 } & TextProps) {
   const isMaxUint = value && wei(constants.MaxInt256).lte(value);
-  const formattedValue = React.useMemo(() => currency(value), [value]);
+  const formattedValue = React.useMemo(() => currency(value, { average }), [value, average]);
 
   return (
     <Text as="span" data-cy={testId} {...props}>

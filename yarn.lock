@@ -5089,10 +5089,8 @@ __metadata:
     "@snx-v3/icons": "workspace:*"
     "@snx-v3/useApr": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useIsAndromedaStataUSDC": "workspace:*"
-    "@snx-v3/useOraclePrice": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolsList": "workspace:*"
     "@snx-v3/useStaticAaveUSDCRate": "workspace:*"
@@ -5100,7 +5098,6 @@ __metadata:
     "@snx-v3/useTokenBalance": "workspace:*"
     "@snx-v3/useUSDC": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
-    ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
@@ -5223,40 +5220,6 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/SynthSkeleton": "workspace:*"
     "@snx-v3/Tooltip": "workspace:*"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/StatsTotalLocked@workspace:*, @snx-v3/StatsTotalLocked@workspace:liquidity/lib/StatsTotalLocked":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/StatsTotalLocked@workspace:liquidity/lib/StatsTotalLocked"
-  dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
-    "@snx-v3/Amount": "workspace:*"
-    "@snx-v3/StatsBox": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useLiquidityPositions": "workspace:*"
-    "@snx-v3/useParams": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/StatsTotalPnl@workspace:*, @snx-v3/StatsTotalPnl@workspace:liquidity/lib/StatsTotalPnl":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/StatsTotalPnl@workspace:liquidity/lib/StatsTotalPnl"
-  dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
-    "@snx-v3/DebtAmount": "workspace:*"
-    "@snx-v3/StatsBox": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useClaimedRewards": "workspace:*"
-    "@snx-v3/useCollateralPrices": "workspace:*"
-    "@snx-v3/useLiquidityPositions": "workspace:*"
-    "@snx-v3/useParams": "workspace:*"
-    "@snx-v3/usePythPrice": "workspace:*"
-    "@snx-v3/useRewards": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
@@ -5565,10 +5528,12 @@ __metadata:
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.11"
     "@safe-global/safe-apps-provider": "npm:^0.18.3"
     "@safe-global/safe-apps-sdk": "npm:^8.0.0"
+    "@snx-v3/Amount": "workspace:*"
     "@snx-v3/BorderBox": "workspace:*"
     "@snx-v3/ClosePosition": "workspace:*"
     "@snx-v3/CollateralAlert": "workspace:*"
     "@snx-v3/ConnectBox": "workspace:*"
+    "@snx-v3/DebtAmount": "workspace:*"
     "@snx-v3/Manage": "workspace:*"
     "@snx-v3/ManageAction": "workspace:*"
     "@snx-v3/ManagePositionContext": "workspace:*"
@@ -5576,8 +5541,7 @@ __metadata:
     "@snx-v3/Pools": "workspace:*"
     "@snx-v3/Positions": "workspace:*"
     "@snx-v3/Rewards": "workspace:*"
-    "@snx-v3/StatsTotalLocked": "workspace:*"
-    "@snx-v3/StatsTotalPnl": "workspace:*"
+    "@snx-v3/StatsBox": "workspace:*"
     "@snx-v3/Synths": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/Tooltip": "workspace:*"
@@ -5588,15 +5552,21 @@ __metadata:
     "@snx-v3/useAccounts": "workspace:*"
     "@snx-v3/useApr": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useClaimedRewards": "workspace:*"
+    "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCreateAccount": "workspace:*"
     "@snx-v3/useIsAndromedaStataUSDC": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
+    "@snx-v3/usePoolsList": "workspace:*"
+    "@snx-v3/usePythPrice": "workspace:*"
+    "@snx-v3/useRewards": "workspace:*"
     "@synthetixio/devtools-formatters": "workspace:*"
     "@synthetixio/magic-wallet": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     "@tanstack/react-query-devtools": "npm:^5.8.3"
     "@web3-onboard/coinbase": "npm:^2.4.1"
@@ -6230,7 +6200,12 @@ __metadata:
   dependencies:
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPriceUpdates": "workspace:*"
+    "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useOraclePrice": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 

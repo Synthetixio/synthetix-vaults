@@ -2,8 +2,6 @@ import { Flex, Heading, Text } from '@chakra-ui/react';
 import { PoolsList } from '@snx-v3/Pools';
 import { PositionsList } from '@snx-v3/Positions';
 import { Rewards } from '@snx-v3/Rewards';
-import { StatsTotalLocked } from '@snx-v3/StatsTotalLocked';
-import { StatsTotalPnl } from '@snx-v3/StatsTotalPnl';
 import { Synths } from '@snx-v3/Synths';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import React, { useMemo } from 'react';
@@ -12,6 +10,8 @@ import { ConnectBox } from '@snx-v3/ConnectBox';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { useParams } from '@snx-v3/useParams';
 import { StakingSection } from './StakingSection';
+import { MyDeposits, StatsTotalPnl } from './components';
+import { TotalValueLocked } from './components/TotalValueLocked';
 
 export function DashboardPage() {
   const { activeWallet } = useWallet();
@@ -61,7 +61,7 @@ export function DashboardPage() {
         <meta name="description" content="Synthetix Vaults" />
       </Helmet>
       <Flex pt={{ base: 2, sm: 10 }} flexDir="column" mb={16}>
-        <Flex columnGap={20} flexWrap="wrap" justifyContent="space-between">
+        <Flex flexDirection="column" columnGap={20} justifyContent="space-between">
           <Flex flexDirection="column" minWidth={360}>
             <Heading
               mt={[6, 10]}
@@ -77,7 +77,8 @@ export function DashboardPage() {
             </Text>
           </Flex>
           <Flex mt={10} gap={4} flex={1}>
-            <StatsTotalLocked />
+            <TotalValueLocked />
+            <MyDeposits />
             <StatsTotalPnl />
           </Flex>
         </Flex>
