@@ -29,13 +29,11 @@ export function currency(value?: Wei, format?: numbro.Format): string {
           ...format,
           thousandSeparated: true,
           mantissa: 0,
-          average: true,
         })
       : numbro(number).format({
           ...format,
           thousandSeparated: true,
           mantissa: 2,
-          average: true,
         });
   } catch {
     return `${value}`;
