@@ -1,18 +1,4 @@
-import { InfoIcon } from '@chakra-ui/icons';
-import {
-  Button,
-  Flex,
-  Heading,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-} from '@chakra-ui/react';
-import { Tooltip } from '@snx-v3/Tooltip';
+import { Button, Divider, Flex, Heading, Table, TableContainer, Tbody } from '@chakra-ui/react';
 import { useWallet } from '@snx-v3/useBlockchain';
 import { useSynthBalances } from '@snx-v3/useSynthBalances';
 import { useUnwrapAllSynths } from '@snx-v3/useUnwrapAllSynths';
@@ -21,6 +7,24 @@ import React from 'react';
 import { SynthRow } from './SynthRow';
 import { SynthsLoading } from './SynthsLoading';
 import { SynthsUnwrapModal } from './SynthsUnwrapModal';
+import { StataUSDC } from './StataUSDC';
+import { useStataUSDCBalance } from '@snx-v3/useStataUSDCBalance';
+
+function HeaderText({ ...props }) {
+  return (
+    <Flex
+      color="gray.600"
+      fontFamily="heading"
+      fontSize="12px"
+      lineHeight="16px"
+      letterSpacing={0.6}
+      fontWeight={700}
+      alignItems="center"
+      justifyContent="right"
+      {...props}
+    />
+  );
+}
 
 export function Synths() {
   const { activeWallet } = useWallet();
@@ -28,6 +32,8 @@ export function Synths() {
 
   const { data: synthBalances, isPending: isPendingSynthBalances } = useSynthBalances();
   const { exec: unwrapAll, txnState } = useUnwrapAllSynths();
+
+  const { data: stataBalance } = useStataUSDCBalance();
 
   const filteredSynths = React.useMemo(() => {
     if (!synthBalances || !synthBalances.length) {
@@ -39,99 +45,61 @@ export function Synths() {
       .sort((a, b) => b.balance.toNumber() - a.balance.toNumber());
   }, [synthBalances]);
 
-  return (
-    <TableContainer>
-      <SynthsUnwrapModal txnStatus={txnState.txnStatus} txnHash={txnState.txnHash} />
-      <Flex alignItems="center" justifyContent="space-between">
-        <Heading fontSize="18px" fontWeight={700} lineHeight="28px" color="gray.50" mb={3}>
-          Synths
-        </Heading>
-        <Button
-          size="sm"
-          variant="solid"
-          isDisabled={!(synthBalances && synthBalances.some(({ balance }) => balance.gt(0)))}
-          _disabled={{
-            bg: 'gray.900',
-            backgroundImage: 'none',
-            color: 'gray.500',
-            opacity: 0.5,
-            cursor: 'not-allowed',
-          }}
-          data-cy="unwrap synths submit"
-          onClick={() => unwrapAll()}
-        >
-          Unwrap
-        </Button>
-      </Flex>
-      <Table variant="simple" data-cy="synths table">
-        <Thead>
-          <Tr borderBottom="1px solid #2D2D38">
-            <Th
-              textTransform="unset"
-              color="gray.600"
-              border="none"
-              fontFamily="heading"
-              fontSize="12px"
-              lineHeight="16px"
-              letterSpacing={0.6}
-              fontWeight={700}
-              px={4}
-              py={3}
-            >
-              Token
-            </Th>
-            <Th
-              textTransform="unset"
-              color="gray.600"
-              border="none"
-              fontFamily="heading"
-              fontSize="12px"
-              lineHeight="16px"
-              letterSpacing={0.6}
-              fontWeight={700}
-              px={4}
-              py={3}
-            >
-              Synth balance
-              <Tooltip label="Total synth balance in your wallet">
-                <InfoIcon ml={1} mb="1px" />
-              </Tooltip>
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {!walletAddress ? (
-            <Tr>
-              <Td display="table-cell" colSpan={2} alignItems="left" px={4} border="none" w="100%">
-                <Text color="gray.500" fontFamily="heading" fontSize="xs">
-                  Please connect wallet to view synths
-                </Text>
-              </Td>
-            </Tr>
-          ) : null}
-          {walletAddress && isPendingSynthBalances ? <SynthsLoading /> : null}
-          {!isPendingSynthBalances && filteredSynths && filteredSynths.length === 0 ? (
-            <Tr>
-              <Td display="flex" alignItems="left" px={4} border="none" w="100%">
-                <Text color="gray.500" fontFamily="heading" fontSize="xs">
-                  You do not have any synths
-                </Text>
-              </Td>
-            </Tr>
-          ) : null}
+  const hasSynths = React.useMemo(() => {
+    return filteredSynths && filteredSynths.length > 0;
+  }, [filteredSynths]);
 
-          {filteredSynths
-            ? filteredSynths.map(({ synth, balance }, i) => (
-                <Tr
-                  key={synth.symbol}
-                  borderBottomWidth={i === filteredSynths.length - 1 ? 'none' : '1px'}
+  const hasStata = React.useMemo(() => {
+    return stataBalance && stataBalance.maxRedeem.gt(0);
+  }, [stataBalance]);
+
+  if (!walletAddress || (!hasSynths && !hasStata)) {
+    return null;
+  }
+  return (
+    <Flex mt={12} flexDirection="column" overflowX="auto">
+      <TableContainer minW={550}>
+        <SynthsUnwrapModal txnStatus={txnState.txnStatus} txnHash={txnState.txnHash} />
+        <Flex alignItems="center" justifyContent="space-between">
+          <Heading fontSize="1.25rem" fontWeight={700} lineHeight="28px" color="gray.50" mb={3}>
+            Synths
+          </Heading>
+        </Flex>
+        <Flex maxW="100%" direction="column" gap={4}>
+          <Flex flexDir="row" gap={4} py={3} px={4} whiteSpace="nowrap">
+            <HeaderText flex="1" justifyContent="left">
+              Token
+            </HeaderText>
+            <HeaderText width={['100px', '100px', '160px']}>Balance</HeaderText>
+            <Flex width={['100px', '100px', '160px']} justifyContent="flex-end">
+              {hasSynths && (
+                <Button
+                  size="sm"
+                  variant="solid"
+                  data-cy="unwrap synths submit"
+                  onClick={() => unwrapAll()}
                 >
-                  <SynthRow synth={synth} balance={balance} />
-                </Tr>
-              ))
-            : null}
-        </Tbody>
-      </Table>
-    </TableContainer>
+                  Unwrap All
+                </Button>
+              )}
+            </Flex>
+          </Flex>
+        </Flex>
+        <Table variant="simple" data-cy="synths table">
+          <Tbody>
+            {walletAddress && isPendingSynthBalances ? <SynthsLoading /> : null}
+            <Flex direction="column" gap={4}>
+              {filteredSynths
+                ? filteredSynths.map(({ synth, balance }) => (
+                    <SynthRow key={synth.symbol} synth={synth} balance={balance} />
+                  ))
+                : null}
+              {hasSynths && hasStata && <Divider bg="gray.900" />}
+              <StataUSDC />
+            </Flex>
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </Flex>
   );
 }

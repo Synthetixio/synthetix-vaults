@@ -4,7 +4,7 @@ import { PositionsList } from '@snx-v3/Positions';
 import { Rewards } from '@snx-v3/Rewards';
 import { StatsTotalLocked } from '@snx-v3/StatsTotalLocked';
 import { StatsTotalPnl } from '@snx-v3/StatsTotalPnl';
-import { StataUSDC, Synths } from '@snx-v3/Synths';
+import { Synths } from '@snx-v3/Synths';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet';
@@ -90,7 +90,7 @@ export function DashboardPage() {
               </Heading>
               <PositionsList positions={filteredLiquidityPositions} />
             </Flex>
-            <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
+            <Flex mt={12} flexDirection={['column', 'column', 'row']} gap={4}>
               <Flex
                 flex={1}
                 flexDirection="column"
@@ -106,23 +106,6 @@ export function DashboardPage() {
               >
                 <Rewards />
               </Flex>
-
-              <Flex
-                flex={1}
-                flexDirection="column"
-                borderColor="gray.900"
-                borderWidth="1px"
-                borderRadius="5px"
-                p={6}
-                sx={{
-                  borderCollapse: 'separate !important',
-                  borderSpacing: 0,
-                }}
-                bg="navy.700"
-              >
-                <Synths />
-                <StataUSDC />
-              </Flex>
             </Flex>
           </>
         )}
@@ -135,6 +118,8 @@ export function DashboardPage() {
           )}
           <PoolsList />
         </Flex>
+
+        <Synths />
       </Flex>
     </>
   );
