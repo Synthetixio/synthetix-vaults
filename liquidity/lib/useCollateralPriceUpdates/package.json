@@ -9,7 +9,6 @@
     "@snx-v3/contracts": "workspace:*",
     "@snx-v3/format": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
-    "@snx-v3/usePoolsList": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "@tanstack/react-query": "^5.8.3",
     "ethers": "^5.7.2",

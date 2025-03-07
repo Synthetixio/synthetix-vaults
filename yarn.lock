@@ -5921,7 +5921,6 @@ __metadata:
     "@snx-v3/contracts": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/usePoolsList": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     "@tanstack/react-query": "npm:^5.8.3"
     ethers: "npm:^5.7.2"

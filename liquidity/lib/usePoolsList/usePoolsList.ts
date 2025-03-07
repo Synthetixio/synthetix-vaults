@@ -1,12 +1,6 @@
 import { getSubgraphUrl, POOL_ID } from '@snx-v3/constants';
-import { BASE_ANDROMEDA, MAINNET, NETWORKS } from '@snx-v3/useBlockchain';
+import { networksOffline } from '@snx-v3/useCollateralPriceUpdates';
 import { useQuery } from '@tanstack/react-query';
-
-const supportedNetworks = [MAINNET.id, BASE_ANDROMEDA.id];
-
-export const networksOffline = NETWORKS.filter(
-  (n) => supportedNetworks.includes(n.id) && n.isSupported
-).map((n) => n);
 
 async function fetchPoolsList() {
   const urls = networksOffline.map((network) => getSubgraphUrl(network.name));
