@@ -9,7 +9,7 @@ export function Amount({
   prefix = '',
   suffix = '',
   'data-cy': testId,
-  average,
+  average = false,
   ...props
 }: {
   prefix?: string;
