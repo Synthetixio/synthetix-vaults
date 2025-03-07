@@ -1,5 +1,4 @@
-import { Flex, Heading, Text, Image, Button, Link } from '@chakra-ui/react';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { Flex, Heading, Text, Button } from '@chakra-ui/react';
 import { TokenIcon } from '@snx-v3/TokenIcon';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 
