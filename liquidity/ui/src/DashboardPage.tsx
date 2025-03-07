@@ -4,7 +4,7 @@ import { PositionsList } from '@snx-v3/Positions';
 import { Rewards } from '@snx-v3/Rewards';
 import { StatsTotalLocked } from '@snx-v3/StatsTotalLocked';
 import { StatsTotalPnl } from '@snx-v3/StatsTotalPnl';
-import { StataUSDC, Synths } from '@snx-v3/Synths';
+import { Synths } from '@snx-v3/Synths';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet';
