@@ -61,7 +61,7 @@ export function Synths() {
       <TableContainer minW={550}>
         <SynthsUnwrapModal txnStatus={txnState.txnStatus} txnHash={txnState.txnHash} />
         <Flex alignItems="center" justifyContent="space-between">
-          <Heading fontSize="1.25rem" fontWeight={700} lineHeight="28px" color="gray.50" mb={3}>
+          <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
             Synths
           </Heading>
         </Flex>
