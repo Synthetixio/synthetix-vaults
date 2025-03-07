@@ -8,11 +8,23 @@ import {
   importTrustedMulticallForwarder,
 } from '@snx-v3/contracts';
 import { parseUnits } from '@snx-v3/format';
-import { Network, useNetwork, useProvider, useWallet } from '@snx-v3/useBlockchain';
-import { networksOffline } from '@snx-v3/usePoolsList';
+import {
+  Network,
+  useNetwork,
+  useProvider,
+  useWallet,
+  BASE_ANDROMEDA,
+  NETWORKS,
+} from '@snx-v3/useBlockchain';
 import { wei } from '@synthetixio/wei';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
+
+const supportedNetworks = [BASE_ANDROMEDA.id];
+
+export const networksOffline = NETWORKS.filter(
+  (n) => supportedNetworks.includes(n.id) && n.isSupported
+).map((n) => n);
 
 const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint);
 

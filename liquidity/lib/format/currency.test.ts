@@ -26,4 +26,14 @@ describe('currency', () => {
     const value = wei('-123456789123456789123456789', 18, true);
     expect(currency(value)).toBe('-123,456,789.12');
   });
+
+  it('should format large positive Wei value with average option', () => {
+    const value = wei('123456789123456789123456789', 18, true);
+    expect(currency(value, { average: true })).toBe('123.46m');
+  });
+
+  it('should format large negative Wei value with average option', () => {
+    const value = wei('-123456789123456789123456789', 18, true);
+    expect(currency(value, { average: true })).toBe('-123.46m');
+  });
 });

@@ -29,3 +29,25 @@ export const formatPercent = (value: number, options?: Intl.NumberFormatOptions)
     ...options,
   }).format(Number(value));
 };
+
+export const formatNumberShort = (value: number, options?: Intl.NumberFormatOptions) => {
+  return new Intl.NumberFormat('en-EN', {
+    notation: 'compact',
+    compactDisplay: 'short',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    ...options,
+  }).format(value);
+};
+
+export const formatNumberToUsdShort = (value: number, options?: Intl.NumberFormatOptions) => {
+  return new Intl.NumberFormat('en-EN', {
+    style: 'currency',
+    currency: 'USD',
+    notation: 'compact',
+    compactDisplay: 'short',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    ...options,
+  }).format(value);
+};

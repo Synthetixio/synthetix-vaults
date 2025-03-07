@@ -7,7 +7,7 @@ import { useParams } from '@snx-v3/useParams';
 import { wei } from '@synthetixio/wei';
 import React from 'react';
 
-export function StatsTotalLocked() {
+export function MyDeposits() {
   const [params] = useParams();
   const { activeWallet } = useWallet();
 
@@ -30,7 +30,7 @@ export function StatsTotalLocked() {
 
   return (
     <StatsBox
-      title="Total Locked"
+      title="My Deposits"
       isLoading={!(!params.accountId || (params.accountId && !isPendingLiquidityPositions))}
       value={activeWallet && totalLocked ? <Amount prefix="$" value={totalLocked} /> : '-'}
       label={
