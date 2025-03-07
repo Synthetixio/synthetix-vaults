@@ -11,6 +11,7 @@ import { Helmet } from 'react-helmet';
 import { ConnectBox } from '@snx-v3/ConnectBox';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
 import { useParams } from '@snx-v3/useParams';
+import { StakingSection } from './StakingSection';
 
 export function DashboardPage() {
   const { activeWallet } = useWallet();
@@ -111,14 +112,13 @@ export function DashboardPage() {
         )}
 
         <Flex mt={12} flexDirection="column">
-          {hasPosition && (
-            <Heading fontSize="1.25rem" fontFamily="heading" lineHeight="1.75rem">
-              Vaults
-            </Heading>
-          )}
+          <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
+            Liquidity
+          </Heading>
           <PoolsList />
         </Flex>
 
+        <StakingSection />
         <Synths />
       </Flex>
     </>
