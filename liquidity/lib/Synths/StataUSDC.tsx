@@ -1,12 +1,13 @@
-import { Box, Button, Flex, Text, useToast } from '@chakra-ui/react';
+import { Button, Flex, Text, useToast } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { ContractError } from '@snx-v3/ContractError';
 import { TokenIcon } from '@snx-v3/TokenIcon';
 import { useNetwork, useProvider, useSigner, useWallet } from '@snx-v3/useBlockchain';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useStaticAaveUSDC } from '@snx-v3/useStaticAaveUSDC';
+import { useStataUSDCBalance } from '@snx-v3/useStataUSDCBalance';
 import { wei } from '@synthetixio/wei';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import debug from 'debug';
 import { ethers } from 'ethers';
 import React from 'react';
@@ -22,26 +23,7 @@ export function StataUSDC() {
 
   const { data: StaticAaveUSDC } = useStaticAaveUSDC();
 
-  const { data: stataBalance } = useQuery({
-    queryKey: [`${network?.id}-${network?.preset}`, 'StaticAaveUSDC Redeem'],
-    enabled: Boolean(network && provider && walletAddress && StaticAaveUSDC),
-    queryFn: async function () {
-      if (!(network && provider && walletAddress && StaticAaveUSDC)) {
-        throw new Error('OMFG');
-      }
-      const StaticAaveUSDCContract = new ethers.Contract(
-        StaticAaveUSDC.address,
-        StaticAaveUSDC.abi,
-        provider
-      );
-      const maxRedeem = await StaticAaveUSDCContract.maxRedeem(walletAddress);
-      const previewRedeem = await StaticAaveUSDCContract.previewRedeem(maxRedeem);
-      return {
-        maxRedeem,
-        previewRedeem,
-      };
-    },
-  });
+  const { data: stataBalance } = useStataUSDCBalance();
 
   const toast = useToast({ isClosable: true, duration: 9000 });
   const queryClient = useQueryClient();
@@ -134,33 +116,38 @@ export function StataUSDC() {
   }
 
   return (
-    <Box mt={6}>
-      <Flex alignItems="center" justifyContent="space-between">
-        <Flex alignItems="center" textDecoration="none" _hover={{ textDecoration: 'none' }}>
-          <TokenIcon height={30} width={30} symbol="stataUSDC" />
-          <Flex flexDirection="column" ml={3}>
-            <Text
-              color="white"
-              fontWeight={700}
-              lineHeight="1.25rem"
-              fontFamily="heading"
-              fontSize="sm"
-            >
-              Static aUSDC
-            </Text>
-          </Flex>
-        </Flex>
-        <Flex direction="column" alignItems="flex-end">
+    <Flex
+      flexDir="row"
+      w="100%"
+      border="1px solid"
+      borderColor="gray.900"
+      rounded="base"
+      bg="navy.700"
+      py={4}
+      px={4}
+      gap={4}
+      alignItems="center"
+    >
+      <Flex alignItems="center" flex="1" textDecoration="none" _hover={{ textDecoration: 'none' }}>
+        <TokenIcon height={30} width={30} symbol="stataUSDC" />
+        <Flex flexDirection="column" ml={3}>
           <Text
-            color="green.500"
-            fontSize="14px"
+            color="white"
+            fontWeight={700}
+            lineHeight="1.25rem"
             fontFamily="heading"
-            fontWeight={500}
-            lineHeight="20px"
+            fontSize="sm"
           >
-            <Amount prefix="$" value={wei(stataBalance.previewRedeem, 6)} />
+            Static aUSDC
           </Text>
         </Flex>
+      </Flex>
+      <Flex width={['100px', '100px', '160px']} direction="column" alignItems="flex-end">
+        <Text color="white" fontSize="14px" fontFamily="heading" fontWeight={500} lineHeight="20px">
+          <Amount prefix="$" value={wei(stataBalance.previewRedeem, 6)} />
+        </Text>
+      </Flex>
+      <Flex width={['100px', '100px', '160px']} justifyContent="flex-end">
         <Button
           size="sm"
           variant="solid"
@@ -179,6 +166,6 @@ export function StataUSDC() {
           Unwrap
         </Button>
       </Flex>
-    </Box>
+    </Flex>
   );
 }
