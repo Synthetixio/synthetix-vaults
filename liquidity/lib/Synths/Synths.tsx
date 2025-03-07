@@ -66,7 +66,7 @@ export function Synths() {
           </Heading>
         </Flex>
         <Flex maxW="100%" direction="column" gap={4}>
-          <Flex flexDir="row" gap={4} py={3} px={4} whiteSpace="nowrap">
+          <Flex flexDir="row" gap={4} py={3} pl={4} whiteSpace="nowrap">
             <HeaderText flex="1" justifyContent="left">
               Token
             </HeaderText>

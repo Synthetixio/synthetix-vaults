@@ -12,6 +12,7 @@ import { useParams } from '@snx-v3/useParams';
 import { StakingSection } from './StakingSection';
 import { MyDeposits, StatsTotalPnl } from './components';
 import { TotalValueLocked } from './components/TotalValueLocked';
+import { StrategySection } from './StrategySection';
 
 export function DashboardPage() {
   const { activeWallet } = useWallet();
@@ -118,7 +119,7 @@ export function DashboardPage() {
           </Heading>
           <PoolsList />
         </Flex>
-
+        <StrategySection />
         <StakingSection />
         <Synths />
       </Flex>
