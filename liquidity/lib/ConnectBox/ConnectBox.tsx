@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { Button, Flex, Heading, Text, Image } from '@chakra-ui/react';
 import { useWallet } from '@snx-v3/useBlockchain';
+import BackgroundImage from './background.png';
 
 export const ConnectBox: FC = () => {
   const { connect } = useWallet();
@@ -10,7 +11,6 @@ export const ConnectBox: FC = () => {
       flexWrap="wrap"
       columnGap={10}
       mt={12}
-      p={10}
       justifyContent="space-between"
       border="1px solid"
       borderColor="gray.900"
@@ -18,7 +18,7 @@ export const ConnectBox: FC = () => {
       backgroundColor="navy.700"
       position="relative"
     >
-      <Flex flexDirection="column" gap="24px" justifyContent="center">
+      <Flex p={10} flexDirection="column" gap="24px" justifyContent="center">
         <Flex flexDirection="column">
           <Heading color="gray.50" maxWidth="40rem" fontSize={['24px', '30px']}>
             Connect your wallet to get started
@@ -36,16 +36,23 @@ export const ConnectBox: FC = () => {
           Connect Wallet
         </Button>
       </Flex>
-      <Flex h={['auto', 60]}>
+      <Flex
+        flex={{ base: 0, sm: 0, md: 1 }}
+        h={['auto', 80]}
+        direction="column"
+        display={{ base: 'none', sm: 'none', md: 'flex' }}
+        position="relative"
+        overflow="hidden"
+      >
         <Image
-          display={['none', 'block']}
-          position="absolute"
-          top={0}
-          right={0}
+          rounded="6px"
+          src={BackgroundImage}
+          width="100%"
           height="100%"
-          rounded="8px"
-          src="start-background.png"
-          width={610}
+          objectFit="cover"
+          style={{
+            maskImage: 'linear-gradient(270deg, #000000 50%, rgba(0, 0, 0, 0) 100%)',
+          }}
         />
       </Flex>
     </Flex>
