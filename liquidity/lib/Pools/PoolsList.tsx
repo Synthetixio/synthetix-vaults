@@ -3,6 +3,9 @@ import { useEnrichedPoolsList } from '@snx-v3/usePoolsList';
 import React from 'react';
 import { PoolCardsLoading } from './PoolCardsLoading';
 import { PoolRow } from './PoolRow';
+import { AutoCompoundingRow } from './AutoCompoundingRow';
+import { LiquidityPositionType } from '@snx-v3/useLiquidityPosition';
+import { useShowMyPositionsOnly } from '@snx-v3/useShowMyPositionsOnly';
 
 function HeaderText({ ...props }) {
   return (
@@ -20,8 +23,36 @@ function HeaderText({ ...props }) {
   );
 }
 
-export function PoolsList() {
+export function PoolsList({ positions }: { positions: LiquidityPositionType[] }) {
   const { data: enrichedPools, isPending } = useEnrichedPoolsList();
+  const [myPositionsOnly] = useShowMyPositionsOnly();
+
+  const poolsWithPositions = React.useMemo(() => {
+    if (!enrichedPools) {
+      return;
+    }
+    return enrichedPools.map((pool) => {
+      const position = positions.find(
+        (position) => position.collateralType.tokenAddress === pool.collateral.address
+      );
+      return {
+        ...pool,
+        position,
+      };
+    });
+  }, [enrichedPools, positions]);
+
+  const filteredPools = React.useMemo(() => {
+    if (!poolsWithPositions) {
+      return;
+    }
+    return poolsWithPositions.filter((pool) => {
+      if (myPositionsOnly) {
+        return !!pool.position;
+      }
+      return true;
+    });
+  }, [poolsWithPositions, myPositionsOnly]);
 
   return (
     <Flex mt={6} maxW="100%" overflowX="auto" direction="column" gap={4}>
@@ -29,16 +60,18 @@ export function PoolsList() {
         <HeaderText width="260px" justifyContent="left">
           Collateral / Network
         </HeaderText>
-        <HeaderText width="240px">Wallet Balance</HeaderText>
-        <HeaderText width="240px">TVL</HeaderText>
-        <HeaderText width="164px">APR</HeaderText>
+        <HeaderText width="140px">Vault TVL</HeaderText>
+        <HeaderText width="140px">28d APR</HeaderText>
+        <HeaderText width="140px">Deposited</HeaderText>
+        <HeaderText width="140px">Unlocked</HeaderText>
+        <HeaderText width="140px">Performance</HeaderText>
         <Flex minW="120px" flex="1" />
       </Flex>
 
       {isPending ? <PoolCardsLoading /> : null}
-      {!isPending && enrichedPools ? (
+      {!isPending && filteredPools ? (
         <Flex minW="800px" direction="column-reverse" gap={4}>
-          {enrichedPools?.map(({ network, pool, collateral, totalValue, price }) => (
+          {filteredPools?.map(({ network, pool, collateral, totalValue, price, position }) => (
             <PoolRow
               key={`${network.id}-${collateral.address}`}
               pool={pool}
@@ -46,8 +79,10 @@ export function PoolsList() {
               collateralType={collateral}
               tvl={totalValue}
               price={price}
+              position={position}
             />
           ))}
+          <AutoCompoundingRow />
         </Flex>
       ) : null}
     </Flex>

@@ -112,3 +112,7 @@ export const tokenOverrides: {
 // We only have 1 pool and UI does not support more than one pool
 // Will need to refactor when we add new pools
 export const POOL_ID = '1';
+
+export const LOCAL_STORAGE_KEYS = {
+  SHOW_MY_POSITIONS_ONLY: 'SHOW_MY_POSITIONS_ONLY',
+};

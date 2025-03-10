@@ -1,0 +1,10 @@
+{
+  "name": "@snx-v3/useShowMyPositionsOnly",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@snx-v3/constants": "workspace:*",
+    "@snx-v3/useLocalStorage": "workspace:*"
+  }
+}

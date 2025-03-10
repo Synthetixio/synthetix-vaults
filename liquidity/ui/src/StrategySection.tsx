@@ -34,7 +34,7 @@ export const StrategySection = () => {
               position="absolute"
               right={0}
               bottom={0}
-              networkId={network?.id}
+              networkId={network?.id ?? 8453}
               size="14px"
             />
           </Flex>
