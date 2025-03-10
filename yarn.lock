@@ -5224,26 +5224,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/StatsTotalPnl@workspace:liquidity/lib/StatsTotalPnl":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/StatsTotalPnl@workspace:liquidity/lib/StatsTotalPnl"
-  dependencies:
-    "@chakra-ui/react": "npm:^2.8.2"
-    "@snx-v3/DebtAmount": "workspace:*"
-    "@snx-v3/StatsBox": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@snx-v3/useClaimedRewards": "workspace:*"
-    "@snx-v3/useCollateralPrices": "workspace:*"
-    "@snx-v3/useIssuedDebt": "workspace:*"
-    "@snx-v3/useLiquidityPositions": "workspace:*"
-    "@snx-v3/useParams": "workspace:*"
-    "@snx-v3/usePythPrice": "workspace:*"
-    "@snx-v3/useRewards": "workspace:*"
-    "@synthetixio/wei": "npm:^2.74.4"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/SynthSkeleton@workspace:*, @snx-v3/SynthSkeleton@workspace:liquidity/lib/SynthSkeleton":
   version: 0.0.0-use.local
   resolution: "@snx-v3/SynthSkeleton@workspace:liquidity/lib/SynthSkeleton"
@@ -5578,6 +5558,7 @@ __metadata:
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCreateAccount": "workspace:*"
     "@snx-v3/useIsAndromedaStataUSDC": "workspace:*"
+    "@snx-v3/useIssuedDebt": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useLiquidityPositions": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
