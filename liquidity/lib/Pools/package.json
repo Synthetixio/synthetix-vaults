@@ -7,7 +7,6 @@
     "@chakra-ui/react": "^2.8.2",
     "@snx-v3/TokenIcon": "workspace:*",
     "@snx-v3/Tooltip": "workspace:*",
-    "@snx-v3/constants": "workspace:*",
     "@snx-v3/formatters": "workspace:*",
     "@snx-v3/icons": "workspace:*",
     "@snx-v3/useApr": "workspace:*",
@@ -18,10 +17,6 @@
     "@snx-v3/useParams": "workspace:*",
     "@snx-v3/usePoolsList": "workspace:*",
     "@snx-v3/useShowMyPositionsOnly": "workspace:*",
-    "@snx-v3/useStaticAaveUSDCRate": "workspace:*",
-    "@snx-v3/useSynthTokens": "workspace:*",
-    "@snx-v3/useTokenBalance": "workspace:*",
-    "@snx-v3/useUSDC": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "react": "^18.2.0"
   }
