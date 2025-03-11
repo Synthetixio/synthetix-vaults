@@ -1,3 +1,9 @@
+import React from 'react';
+import { Wei, wei } from '@synthetixio/wei';
+import { useQuery } from '@tanstack/react-query';
+import debug from 'debug';
+import { ethers } from 'ethers';
+
 import { POOL_ID, tokenOverrides } from '@snx-v3/constants';
 import { contractsHash } from '@snx-v3/tsHelpers';
 // import { useAllErrors } from '@snx-v3/useAllErrors';
@@ -7,10 +13,8 @@ import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useRewardsDistributors } from '@snx-v3/useRewardsDistributors';
 import { useSynthTokens } from '@snx-v3/useSynthTokens';
 import { useTrustedMulticallForwarder } from '@snx-v3/useTrustedMulticallForwarder';
-import { Wei, wei } from '@synthetixio/wei';
-import { useQuery } from '@tanstack/react-query';
-import debug from 'debug';
-import { ethers } from 'ethers';
+import { useCollateralPrices } from '@snx-v3/useCollateralPrices';
+import { usePythPrice } from '@snx-v3/usePythPrice';
 
 const log = debug('snx:useRewards');
 
@@ -246,4 +250,74 @@ export function useRewards({ accountId }: { accountId?: string }) {
       return availableRewards;
     },
   });
+}
+
+export function useRewardsByCollateralType({ accountId }: { accountId?: string }) {
+  const { network } = useNetwork();
+  const { data: rewards } = useRewards({ accountId });
+  const { data: collateralTypes } = useCollateralTypes();
+  const { data: synthTokens } = useSynthTokens();
+
+  const rewardsTokens = React.useMemo(() => {
+    const result: Set<string> = new Set();
+    if (rewards) {
+      for (const reward of rewards) {
+        if (reward.claimableAmount.gt(0)) {
+          result.add(reward.distributor.payoutToken.address);
+        }
+      }
+    }
+    return result;
+  }, [rewards]);
+
+  const { data: rewardsTokenPrices, isPending: isPendingRewardsPrices } = useCollateralPrices(
+    rewardsTokens,
+    network
+  );
+  const { data: snxPrice, isPending: isPendingSnxPrice } = usePythPrice('SNX');
+
+  if (
+    !network ||
+    isPendingRewardsPrices ||
+    isPendingSnxPrice ||
+    !rewards ||
+    !collateralTypes ||
+    !synthTokens ||
+    !rewardsTokenPrices ||
+    !snxPrice
+  ) {
+    return { isPending: true, data: undefined };
+  }
+  log('rewardsTokens', rewardsTokens);
+  log('rewardsTokenPrices', rewardsTokenPrices);
+  log('snxPrice', snxPrice);
+
+  const data = collateralTypes.map((collateralType) => {
+    const rewardsForCollateralType = rewards.filter(
+      (reward) => reward.collateralType?.address === collateralType.address
+    );
+    const totalRewardsValue = rewardsForCollateralType.reduce((result, reward) => {
+      // all rewards should have price except SNX as it is not a collateral on Base
+      if (reward.distributor.payoutToken.symbol === 'SNX') {
+        return result.add(reward.claimableAmount.mul(snxPrice));
+      }
+      if (rewardsTokenPrices.has(reward.distributor.payoutToken.address)) {
+        return result.add(
+          reward.claimableAmount.mul(rewardsTokenPrices.get(reward.distributor.payoutToken.address))
+        );
+      }
+      return result;
+    }, wei(0));
+
+    return {
+      collateralType,
+      rewards: groupRewardsBySymbol({
+        network: network,
+        rewards: rewardsForCollateralType,
+        synthTokens,
+      }),
+      totalRewardsValue,
+    };
+  });
+  return { isPending: false, data };
 }

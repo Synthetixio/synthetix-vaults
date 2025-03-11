@@ -5091,12 +5091,11 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useIsAndromedaStataUSDC": "workspace:*"
+    "@snx-v3/useLiquidityPosition": "workspace:*"
     "@snx-v3/useParams": "workspace:*"
     "@snx-v3/usePoolsList": "workspace:*"
-    "@snx-v3/useStaticAaveUSDCRate": "workspace:*"
-    "@snx-v3/useSynthTokens": "workspace:*"
-    "@snx-v3/useTokenBalance": "workspace:*"
-    "@snx-v3/useUSDC": "workspace:*"
+    "@snx-v3/useRewards": "workspace:*"
+    "@snx-v3/useShowMyPositionsOnly": "workspace:*"
     "@synthetixio/wei": "npm:^2.74.4"
     react: "npm:^18.2.0"
   languageName: unknown
@@ -5191,7 +5190,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/Rewards@workspace:*, @snx-v3/Rewards@workspace:liquidity/lib/Rewards":
+"@snx-v3/Rewards@workspace:liquidity/lib/Rewards":
   version: 0.0.0-use.local
   resolution: "@snx-v3/Rewards@workspace:liquidity/lib/Rewards"
   dependencies:
@@ -5540,7 +5539,6 @@ __metadata:
     "@snx-v3/Permissions": "workspace:*"
     "@snx-v3/Pools": "workspace:*"
     "@snx-v3/Positions": "workspace:*"
-    "@snx-v3/Rewards": "workspace:*"
     "@snx-v3/StatsBox": "workspace:*"
     "@snx-v3/Synths": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
@@ -5565,6 +5563,7 @@ __metadata:
     "@snx-v3/usePoolsList": "workspace:*"
     "@snx-v3/usePythPrice": "workspace:*"
     "@snx-v3/useRewards": "workspace:*"
+    "@snx-v3/useShowMyPositionsOnly": "workspace:*"
     "@synthetixio/devtools-formatters": "workspace:*"
     "@synthetixio/magic-wallet": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
@@ -6117,7 +6116,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useLocalStorage@workspace:liquidity/lib/useLocalStorage":
+"@snx-v3/useLocalStorage@workspace:*, @snx-v3/useLocalStorage@workspace:liquidity/lib/useLocalStorage":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useLocalStorage@workspace:liquidity/lib/useLocalStorage"
   dependencies:
@@ -6373,8 +6372,10 @@ __metadata:
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/tsHelpers": "workspace:*"
     "@snx-v3/useBlockchain": "workspace:*"
+    "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
     "@snx-v3/useCoreProxy": "workspace:*"
+    "@snx-v3/usePythPrice": "workspace:*"
     "@snx-v3/useRewardsDistributors": "workspace:*"
     "@snx-v3/useSynthTokens": "workspace:*"
     "@snx-v3/useTrustedMulticallForwarder": "workspace:*"
@@ -6404,6 +6405,15 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
     react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useShowMyPositionsOnly@workspace:*, @snx-v3/useShowMyPositionsOnly@workspace:liquidity/lib/useShowMyPositionsOnly":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useShowMyPositionsOnly@workspace:liquidity/lib/useShowMyPositionsOnly"
+  dependencies:
+    "@snx-v3/constants": "workspace:*"
+    "@snx-v3/useLocalStorage": "workspace:*"
   languageName: unknown
   linkType: soft
 

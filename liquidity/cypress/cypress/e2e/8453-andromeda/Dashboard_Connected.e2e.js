@@ -34,7 +34,5 @@ describe(__filename, () => {
         Cypress.env('walletAddress').length - 4
       )}`
     );
-
-    cy.contains('h2', 'Positions').should('exist');
   });
 });

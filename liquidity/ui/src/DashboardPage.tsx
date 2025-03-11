@@ -1,10 +1,8 @@
+import React from 'react';
 import { Flex, Heading, Text } from '@chakra-ui/react';
 import { PoolsList } from '@snx-v3/Pools';
-import { PositionsList } from '@snx-v3/Positions';
-import { Rewards } from '@snx-v3/Rewards';
 import { Synths } from '@snx-v3/Synths';
 import { useNetwork, useWallet } from '@snx-v3/useBlockchain';
-import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { ConnectBox } from '@snx-v3/ConnectBox';
 import { useLiquidityPositions } from '@snx-v3/useLiquidityPositions';
@@ -13,6 +11,7 @@ import { StakingSection } from './StakingSection';
 import { MyDeposits, StatsTotalPnl } from './components';
 import { TotalValueLocked } from './components/TotalValueLocked';
 import { StrategySection } from './StrategySection';
+import { MyPositionsOnlyToggle } from './components/MyPositionsOnlyToggle';
 
 export function DashboardPage() {
   const { activeWallet } = useWallet();
@@ -51,10 +50,6 @@ export function DashboardPage() {
     [liquidityPositions, network?.preset]
   );
 
-  const hasPosition = useMemo(() => {
-    return !!activeWallet?.address && filteredLiquidityPositions.length > 0;
-  }, [activeWallet, filteredLiquidityPositions]);
-
   return (
     <>
       <Helmet>
@@ -77,47 +72,25 @@ export function DashboardPage() {
               Deposit USDC to earn a privileged share of protocol performance
             </Text>
           </Flex>
-          <Flex mt={10} gap={4} flex={1}>
+          <Flex mt={6} gap={4} flex={1}>
             <TotalValueLocked />
             <MyDeposits />
             <StatsTotalPnl />
           </Flex>
+          {!!activeWallet && (
+            <Flex flexDirection="row-reverse">
+              <MyPositionsOnlyToggle />
+            </Flex>
+          )}
         </Flex>
-        {!activeWallet && <ConnectBox />}
 
-        {hasPosition && (
-          <>
-            <Flex mt={12} flexDirection="column" gap={4}>
-              <Heading fontSize="1.25rem" fontFamily="heading" lineHeight="1.75rem">
-                Positions
-              </Heading>
-              <PositionsList positions={filteredLiquidityPositions} />
-            </Flex>
-            <Flex mt={12} flexDirection={['column', 'column', 'row']} gap={4}>
-              <Flex
-                flex={1}
-                flexDirection="column"
-                borderColor="gray.900"
-                borderWidth="1px"
-                borderRadius="5px"
-                p={6}
-                sx={{
-                  borderCollapse: 'separate !important',
-                  borderSpacing: 0,
-                }}
-                bg="navy.700"
-              >
-                <Rewards />
-              </Flex>
-            </Flex>
-          </>
-        )}
+        {!activeWallet && <ConnectBox />}
 
         <Flex mt={12} flexDirection="column">
           <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
             Liquidity
           </Heading>
-          <PoolsList />
+          <PoolsList positions={filteredLiquidityPositions} />
         </Flex>
         <StrategySection />
         <StakingSection />

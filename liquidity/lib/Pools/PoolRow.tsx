@@ -1,6 +1,5 @@
 import { Button, Fade, Flex, Link, Text } from '@chakra-ui/react';
-import { ZEROWEI } from '@snx-v3/constants';
-import { formatNumber, formatNumberToUsd, formatNumberToUsdShort } from '@snx-v3/formatters';
+import { formatNumberToUsd, formatNumberToUsdShort } from '@snx-v3/formatters';
 import { Sparkles } from '@snx-v3/icons';
 import { TokenIcon } from '@snx-v3/TokenIcon';
 import { Tooltip } from '@snx-v3/Tooltip';
@@ -9,11 +8,8 @@ import { useStataUSDCApr } from '@snx-v3/useApr/useStataUSDCApr';
 import { Network, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { CollateralType } from '@snx-v3/useCollateralTypes';
 import { useIsAndromedaStataUSDC } from '@snx-v3/useIsAndromedaStataUSDC';
+import { LiquidityPositionType } from '@snx-v3/useLiquidityPosition';
 import { makeSearch, useParams } from '@snx-v3/useParams';
-import { useStaticAaveUSDCRate } from '@snx-v3/useStaticAaveUSDCRate';
-import { useSynthTokens } from '@snx-v3/useSynthTokens';
-import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useUSDC } from '@snx-v3/useUSDC';
 import { Wei, wei } from '@synthetixio/wei';
 import React from 'react';
 
@@ -27,6 +23,8 @@ export function PoolRow({
   collateralType,
   tvl,
   price,
+  position,
+  rewardsValue,
 }: {
   collateralType: CollateralTypeWithDeposited;
   pool: {
@@ -36,28 +34,12 @@ export function PoolRow({
   network: Network;
   tvl: number;
   price: Wei;
+  position: LiquidityPositionType | undefined;
+  rewardsValue: Wei;
 }) {
   const [params, setParams] = useParams();
 
-  const { data: synthTokens } = useSynthTokens();
-  const wrapperToken = React.useMemo(() => {
-    if (synthTokens && collateralType) {
-      return synthTokens.find((synth) => synth.address === collateralType.tokenAddress)?.token
-        ?.address;
-    }
-  }, [collateralType, synthTokens]);
-
   const { data: stataUSDCApr } = useStataUSDCApr(network.id, network.preset);
-
-  // TODO: This will need refactoring
-  const balanceAddress =
-    network?.preset === 'andromeda' ? wrapperToken : collateralType?.tokenAddress;
-
-  const { data: stataUSDCRate } = useStaticAaveUSDCRate();
-  const { data: tokenBalance } = useTokenBalance(balanceAddress, network);
-
-  const { data: USDCToken } = useUSDC(network);
-  const { data: usdcBalance } = useTokenBalance(USDCToken?.address, network);
 
   const { network: currentNetwork, setNetwork } = useNetwork();
 
@@ -65,16 +47,6 @@ export function PoolRow({
     tokenAddress: collateralType?.tokenAddress,
     customNetwork: network,
   });
-
-  const balance = React.useMemo(() => {
-    if (!isAndromedaStataUSDC || !stataUSDCRate) {
-      return tokenBalance || ZEROWEI;
-    }
-
-    return ((usdcBalance || ZEROWEI).div(wei(stataUSDCRate, 27)) || ZEROWEI).add(
-      tokenBalance || ZEROWEI
-    );
-  }, [isAndromedaStataUSDC, stataUSDCRate, tokenBalance, usdcBalance]);
 
   const { data: apr, isPending: isPendingApr } = useApr(network);
   const positionApr = React.useMemo(() => {
@@ -84,6 +56,18 @@ export function PoolRow({
       );
     }
   }, [apr, collateralType]);
+
+  const collateralValue = React.useMemo(() => {
+    if (position) {
+      return position.collateralValue.mul(position.collateralPrice);
+    }
+  }, [position]);
+
+  const unlockedCollateralValue = React.useMemo(() => {
+    if (position) {
+      return position.availableCollateral.mul(position.collateralPrice);
+    }
+  }, [position]);
 
   const onClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -116,6 +100,14 @@ export function PoolRow({
         .toFixed(0),
     [collateralType.collateralDeposited, collateralType.decimals, price]
   );
+
+  const totalRewards = React.useMemo(() => {
+    // if debt is negative, it means that the position is in profit, add the profit to the rewards
+    if (position && position.debt.lt(0)) {
+      return rewardsValue.sub(position.debt);
+    }
+    return rewardsValue;
+  }, [rewardsValue, position]);
 
   return (
     <Fade in style={{ order }}>
@@ -177,22 +169,7 @@ export function PoolRow({
           </Flex>
         </Flex>
 
-        <Flex width="240px" direction="column" alignItems="flex-end">
-          <Text
-            fontFamily="heading"
-            fontSize="14px"
-            fontWeight={500}
-            lineHeight="28px"
-            color="white"
-          >
-            {balance ? formatNumberToUsd(balance.mul(price).toNumber()) : '-'}
-          </Text>
-          <Text color="gray.500" fontFamily="heading" fontSize="12px" lineHeight="16px">
-            {balance ? formatNumber(balance.toNumber()) : ''} {collateralType.displaySymbol}
-          </Text>
-        </Flex>
-
-        <Flex width="240px" alignItems="center" justifyContent="flex-end">
+        <Flex width="140px" alignItems="center" justifyContent="flex-end">
           <Text
             fontFamily="heading"
             fontSize="14px"
@@ -208,7 +185,7 @@ export function PoolRow({
           </Text>
         </Flex>
 
-        <Flex width="164px" alignItems="center" justifyContent="flex-end">
+        <Flex width="140px" alignItems="center" justifyContent="flex-end">
           <Text
             fontFamily="heading"
             fontSize="14px"
@@ -255,6 +232,77 @@ export function PoolRow({
             ) : null}
           </Text>
         </Flex>
+
+        <Flex width="140px" direction="column" alignItems="flex-end">
+          <Text
+            fontFamily="heading"
+            fontSize="14px"
+            fontWeight={500}
+            lineHeight="28px"
+            color="white"
+          >
+            {collateralValue ? formatNumberToUsd(collateralValue.toNumber()) : '-'}
+          </Text>
+        </Flex>
+
+        <Flex width="140px" direction="column" alignItems="flex-end">
+          <Text
+            fontFamily="heading"
+            fontSize="14px"
+            fontWeight={500}
+            lineHeight="28px"
+            color="white"
+          >
+            {unlockedCollateralValue ? formatNumberToUsd(unlockedCollateralValue.toNumber()) : '-'}
+          </Text>
+          {position && unlockedCollateralValue?.gt(0) ? (
+            <Link
+              color="cyan.500"
+              fontFamily="heading"
+              fontSize="0.75rem"
+              lineHeight="1rem"
+              href={`?${makeSearch({
+                page: 'position',
+                collateralSymbol: position.collateralType.symbol,
+                manageAction: 'withdraw',
+                accountId: params.accountId,
+              })}`}
+              onClick={(e) => {
+                e.preventDefault();
+                setParams({
+                  page: 'position',
+                  collateralSymbol: position.collateralType.symbol,
+                  manageAction: 'withdraw',
+                  accountId: params.accountId,
+                });
+              }}
+            >
+              Withdraw
+            </Link>
+          ) : null}
+        </Flex>
+
+        <Flex width="140px" direction="column" alignItems="flex-end">
+          <Text
+            fontFamily="heading"
+            fontSize="14px"
+            fontWeight={500}
+            lineHeight="20px"
+            color="gray.500"
+          >
+            Debt{' '}
+            <Text color="white" as="span">
+              {position && position.debt.gt(0) ? formatNumberToUsd(position.debt.toNumber()) : '-'}
+            </Text>
+          </Text>
+          <Text color="gray.500" fontFamily="heading" fontSize="12px" lineHeight="20px">
+            Rewards{' '}
+            <Text color="green.500" as="span">
+              {totalRewards.gt(0) ? formatNumberToUsd(totalRewards.toNumber()) : '-'}
+            </Text>
+          </Text>
+        </Flex>
+
         <Flex minW="120px" flex="1" justifyContent="flex-end">
           <Button
             as={Link}
@@ -287,7 +335,7 @@ export function PoolRow({
               cursor: 'not-allowed',
             }}
           >
-            Deposit
+            {position ? 'Manage' : 'Deposit'}
           </Button>
         </Flex>
       </Flex>

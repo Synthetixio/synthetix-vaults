@@ -19,25 +19,24 @@ export const PoolCardsLoading = () => (
         <Flex alignItems="center" justifyContent="flex-start" width="260px" gap={3}>
           <Skeleton width="40px" height="40px" rounded="full" />
           <Flex flex={1} flexDirection="column" gap={1}>
-            <Skeleton height="26px" width="50px" />
-            <Skeleton height="18px" width="100px" />
+            <Skeleton height="24px" width="64px" />
+            <Skeleton height="12px" width="104px" />
           </Flex>
         </Flex>
-        <Flex
-          justifyContent="flex-end"
-          alignItems="flex-end"
-          width="240px"
-          flexDirection="column"
-          gap={1}
-        >
-          <Skeleton height="26px" width="50px" />
-          <Skeleton height="18px" width="70px" />
+        <Flex justifyContent="flex-end" alignItems="center" width="140px">
+          <Skeleton height={4} width="64px" />
         </Flex>
-        <Flex justifyContent="flex-end" alignItems="center" width="240px">
-          <Skeleton height={6} width="92px" />
+        <Flex justifyContent="flex-end" alignItems="center" width="140px">
+          <Skeleton height={4} width="64px" />
         </Flex>
-        <Flex justifyContent="flex-end" alignItems="center" width="164px">
-          <Skeleton height={6} width="92px" />
+        <Flex justifyContent="flex-end" alignItems="center" width="140px">
+          <Skeleton height={4} width="64px" />
+        </Flex>
+        <Flex justifyContent="flex-end" alignItems="center" width="140px">
+          <Skeleton height={4} width="64px" />
+        </Flex>
+        <Flex justifyContent="flex-end" alignItems="center" width="140px">
+          <Skeleton height={4} width="64px" />
         </Flex>
       </Flex>
     ))}
