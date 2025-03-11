@@ -24,6 +24,7 @@ export function PoolRow({
   tvl,
   price,
   position,
+  rewardsValue,
 }: {
   collateralType: CollateralTypeWithDeposited;
   pool: {
@@ -34,6 +35,7 @@ export function PoolRow({
   tvl: number;
   price: Wei;
   position: LiquidityPositionType | undefined;
+  rewardsValue: Wei;
 }) {
   const [params, setParams] = useParams();
 
@@ -98,6 +100,14 @@ export function PoolRow({
         .toFixed(0),
     [collateralType.collateralDeposited, collateralType.decimals, price]
   );
+
+  const totalRewards = React.useMemo(() => {
+    // if debt is negative, it means that the position is in profit, add the profit to the rewards
+    if (position && position.debt.lt(0)) {
+      return rewardsValue.sub(position.debt);
+    }
+    return rewardsValue;
+  }, [rewardsValue, position]);
 
   return (
     <Fade in style={{ order }}>
@@ -288,7 +298,7 @@ export function PoolRow({
           <Text color="gray.500" fontFamily="heading" fontSize="12px" lineHeight="20px">
             Rewards{' '}
             <Text color="green.500" as="span">
-              -
+              {totalRewards.gt(0) ? formatNumberToUsd(totalRewards.toNumber()) : '-'}
             </Text>
           </Text>
         </Flex>

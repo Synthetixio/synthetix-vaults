@@ -6,6 +6,9 @@ import { PoolRow } from './PoolRow';
 import { AutoCompoundingRow } from './AutoCompoundingRow';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPosition';
 import { useShowMyPositionsOnly } from '@snx-v3/useShowMyPositionsOnly';
+import { useRewardsByCollateralType } from '@snx-v3/useRewards';
+import { useParams } from '@snx-v3/useParams';
+import { ZEROWEI } from '@snx-v3/constants';
 
 function HeaderText({ ...props }) {
   return (
@@ -24,6 +27,12 @@ function HeaderText({ ...props }) {
 }
 
 export function PoolsList({ positions }: { positions: LiquidityPositionType[] }) {
+  const [params] = useParams();
+
+  const { data: rewards, isPending: isPendingRewards } = useRewardsByCollateralType({
+    accountId: params.accountId,
+  });
+
   const { data: enrichedPools, isPending } = useEnrichedPoolsList();
   const [myPositionsOnly] = useShowMyPositionsOnly();
 
@@ -68,8 +77,8 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
         <Flex minW="120px" flex="1" />
       </Flex>
 
-      {isPending ? <PoolCardsLoading /> : null}
-      {!isPending && filteredPools ? (
+      {isPending || isPendingRewards ? <PoolCardsLoading /> : null}
+      {!isPending && !isPendingRewards && filteredPools ? (
         <Flex minW="800px" direction="column-reverse" gap={4}>
           {filteredPools?.map(({ network, pool, collateral, totalValue, price, position }) => (
             <PoolRow
@@ -80,6 +89,10 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
               tvl={totalValue}
               price={price}
               position={position}
+              rewardsValue={
+                rewards?.find((r) => r.collateralType.address === collateral.address)
+                  ?.totalRewardsValue ?? ZEROWEI
+              }
             />
           ))}
           <AutoCompoundingRow />
