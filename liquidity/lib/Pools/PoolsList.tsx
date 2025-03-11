@@ -69,7 +69,7 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
     <Flex mt={6} maxW="100%" overflowX="auto" direction="column" gap={4}>
       <Flex flexDir="row" minW="800px" gap={4} py={3} px={4} whiteSpace="nowrap">
         <HeaderText width="260px" justifyContent="left">
-          Collateral / Network
+          Vault
         </HeaderText>
         <HeaderText width="140px">Vault TVL</HeaderText>
         <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
