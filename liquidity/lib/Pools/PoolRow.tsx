@@ -283,24 +283,31 @@ export function PoolRow({
         </Flex>
 
         <Flex width="140px" direction="column" alignItems="flex-end">
-          <Text
-            fontFamily="heading"
-            fontSize="14px"
-            fontWeight={500}
-            lineHeight="20px"
-            color="gray.500"
-          >
-            Debt{' '}
-            <Text color="white" as="span">
-              {position && position.debt.gt(0) ? formatNumberToUsd(position.debt.toNumber()) : '-'}
-            </Text>
-          </Text>
-          <Text color="gray.500" fontFamily="heading" fontSize="12px" lineHeight="20px">
-            Rewards{' '}
-            <Text color="green.500" as="span">
-              {totalRewards.gt(0) ? formatNumberToUsd(totalRewards.toNumber()) : '-'}
-            </Text>
-          </Text>
+          {(!params.accountId || !position) && '-'}
+          {params.accountId && position && (
+            <>
+              <Text
+                fontFamily="heading"
+                fontSize="14px"
+                fontWeight={500}
+                lineHeight="20px"
+                color="gray.500"
+              >
+                Debt{' '}
+                <Text color="white" as="span">
+                  {position && position.debt.gt(0)
+                    ? formatNumberToUsd(position.debt.toNumber())
+                    : '-'}
+                </Text>
+              </Text>
+              <Text color="gray.500" fontFamily="heading" fontSize="12px" lineHeight="20px">
+                Rewards{' '}
+                <Text color={totalRewards.gt(0) ? 'green.500' : 'gray.500'} as="span">
+                  {totalRewards.gt(0) ? formatNumberToUsd(totalRewards.toNumber()) : '-'}
+                </Text>
+              </Text>
+            </>
+          )}
         </Flex>
 
         <Flex minW="120px" flex="1" justifyContent="flex-end">

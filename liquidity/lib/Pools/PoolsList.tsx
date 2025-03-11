@@ -31,7 +31,7 @@ function HeaderText({ ...props }) {
 export function PoolsList({ positions }: { positions: LiquidityPositionType[] }) {
   const [params] = useParams();
 
-  const { data: rewards, isPending: isPendingRewards } = useRewardsByCollateralType({
+  const { data: rewards } = useRewardsByCollateralType({
     accountId: params.accountId,
   });
 
@@ -120,8 +120,8 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
         <Flex minW="120px" flex="1" />
       </Flex>
 
-      {isPending || isPendingRewards ? <PoolCardsLoading /> : null}
-      {!isPending && !isPendingRewards && filteredPools ? (
+      {isPending ? <PoolCardsLoading /> : null}
+      {!isPending && filteredPools ? (
         <Flex minW="800px" direction="column-reverse" gap={4}>
           {filteredPools?.map(({ network, pool, collateral, totalValue, price, position }) => (
             <PoolRow
