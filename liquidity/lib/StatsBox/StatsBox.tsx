@@ -30,8 +30,8 @@ export function StatsBox({
       px={6}
       py={4}
     >
-      <Flex alignItems="center" mb={1}>
-        <Text fontSize="14px" color="gray.500" mr={1}>
+      <Flex alignItems="center" mb={1} color="gray.500">
+        <Text fontSize="14px" mr={1}>
           {title}
         </Text>
         {label && (

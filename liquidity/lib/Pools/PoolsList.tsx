@@ -1,6 +1,8 @@
-import { Flex } from '@chakra-ui/react';
-import { useEnrichedPoolsList } from '@snx-v3/usePoolsList';
 import React from 'react';
+import { Flex, Text } from '@chakra-ui/react';
+import { useEnrichedPoolsList } from '@snx-v3/usePoolsList';
+import { Tooltip } from '@snx-v3/Tooltip';
+import { InfoIcon } from '@chakra-ui/icons';
 import { PoolCardsLoading } from './PoolCardsLoading';
 import { PoolRow } from './PoolRow';
 import { AutoCompoundingRow } from './AutoCompoundingRow';
@@ -70,9 +72,50 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
           Collateral / Network
         </HeaderText>
         <HeaderText width="140px">Vault TVL</HeaderText>
-        <HeaderText width="140px">28d APR</HeaderText>
-        <HeaderText width="140px">Deposited</HeaderText>
-        <HeaderText width="140px">Unlocked</HeaderText>
+        <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
+          <Text fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+            APR
+          </Text>
+          <Tooltip
+            label={
+              <Text textAlign="left">
+                APY is averaged over the trailing 28 days and is comprised of both performance and
+                rewards
+              </Text>
+            }
+          >
+            <InfoIcon w="10px" h="10px" />
+          </Tooltip>
+        </Flex>
+        <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
+          <Text fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+            Deposited
+          </Text>
+          <Tooltip
+            label={
+              <Text textAlign="left">
+                Deposits can be withdrawn 24h after unlocking or any subsequent account activity
+              </Text>
+            }
+          >
+            <InfoIcon w="10px" h="10px" />
+          </Tooltip>
+        </Flex>
+        <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
+          <Text fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+            Unlocked
+          </Text>
+          <Tooltip
+            label={
+              <Text textAlign="left">
+                Unlocked assets can be locked into a position at any time or withdrawn after 24h
+                since last activity
+              </Text>
+            }
+          >
+            <InfoIcon w="10px" h="10px" />
+          </Tooltip>
+        </Flex>
         <HeaderText width="140px">Performance</HeaderText>
         <Flex minW="120px" flex="1" />
       </Flex>

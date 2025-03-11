@@ -35,7 +35,7 @@ export function MyDeposits() {
       value={activeWallet && totalLocked ? <Amount prefix="$" value={totalLocked} /> : '-'}
       label={
         <>
-          <Text textAlign="left">All assets locked in Positions </Text>
+          <Text textAlign="left">All assets locked in positions</Text>
         </>
       }
     />
