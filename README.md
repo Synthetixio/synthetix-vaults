@@ -62,7 +62,7 @@ and all transactions will be automatically signed, without any popups
     ```sh
     # Mainnets
     anvil --auto-impersonate --chain-id 1 --fork-url https://mainnet.infura.io/v3/$INFURA_KEY --fork-block-number 21233424
-    anvil --auto-impersonate --chain-id 8453 --fork-url https://base-mainnet.infura.io/v3/$INFURA_KEY --fork-block-number 22991081
+    anvil --auto-impersonate --chain-id 8453 --fork-url https://base-mainnet.infura.io/v3/$INFURA_KEY --fork-block-number 27486800
     anvil --auto-impersonate --chain-id 42161 --fork-url https://arbitrum-mainnet.infura.io/v3/$INFURA_KEY --fork-block-number 271813668
 
     # Testnets
@@ -108,15 +108,15 @@ and all transactions will be automatically signed, without any popups
 Run Anvil at the block when the latest PM was deployed
 
 ```sh
-anvil --auto-impersonate --chain-id 8453 --fork-url $RPC_BASE_MAINNET --no-rate-limit --accounts 0 --fork-block-number 25229684 --memory-limit 6442450944
+anvil --auto-impersonate --chain-id 8453 --fork-url $RPC_BASE_MAINNET --no-rate-limit --accounts 0 --fork-block-number 27486800 --memory-limit 6442450944
 ```
 
-Enable debugging and set magic wallet to `0xaaaa6c341C4Df916d9f0583Ba9Ea953618e5f008`
+Enable debugging and set magic wallet to `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`
 
 ```js
 localStorage.DEBUG = 'true';
 localStorage.debug = 'snx:*';
-localStorage.MAGIC_WALLET = '0xaaaa6c341C4Df916d9f0583Ba9Ea953618e5f008';
+localStorage.MAGIC_WALLET = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 ```
 
 Fund the account with `ETH`, `USDC` and `snxUSD`
@@ -124,7 +124,7 @@ Fund the account with `ETH`, `USDC` and `snxUSD`
 ```sh
 export USDC=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
 export AaveUSDCPool=0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB
-export walletAddress=0xaaaa6c341C4Df916d9f0583Ba9Ea953618e5f008
+export walletAddress=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 cast rpc anvil_setCode 0x1234123412341234123412341234123412341234 $(cast from-utf8 FORK)
 cast rpc anvil_setBalance $AaveUSDCPool $(cast to-unit 1ether)
 cast rpc anvil_setBalance $walletAddress $(cast to-unit 1ether)

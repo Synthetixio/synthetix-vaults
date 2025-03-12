@@ -1,6 +1,7 @@
-import { Flex, Heading, Text, Button } from '@chakra-ui/react';
-import { TokenIcon } from '@snx-v3/TokenIcon';
+import { Flex, Heading, Text, Button, Image } from '@chakra-ui/react';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
+
+import DeltaNeutralIcon from './assets/delta-neutral.svg';
 
 export const StrategySection = () => {
   const { network } = useNetwork();
@@ -29,7 +30,11 @@ export const StrategySection = () => {
           _hover={{ textDecoration: 'none' }}
         >
           <Flex position="relative">
-            <TokenIcon w={40} h={40} symbol="USDC" />
+            <Image
+              src={DeltaNeutralIcon}
+              fallbackSrc="https://assets.synthetix.io/collateral/UNKNOWN.svg"
+              style={{ width: 40, height: 40 }}
+            />
             <NetworkIcon
               position="absolute"
               right={0}

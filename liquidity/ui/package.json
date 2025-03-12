@@ -28,7 +28,6 @@
     "@snx-v3/StatsBox": "workspace:*",
     "@snx-v3/Synths": "workspace:*",
     "@snx-v3/TermsModal": "workspace:*",
-    "@snx-v3/TokenIcon": "workspace:*",
     "@snx-v3/Tooltip": "workspace:*",
     "@snx-v3/constants": "workspace:*",
     "@snx-v3/format": "workspace:*",
