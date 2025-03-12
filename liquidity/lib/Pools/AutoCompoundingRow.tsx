@@ -1,6 +1,7 @@
-import { Flex, Text, Button } from '@chakra-ui/react';
-import { TokenIcon } from '@snx-v3/TokenIcon';
+import { Flex, Text, Button, Image } from '@chakra-ui/react';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
+
+import AutoCompoundIcon from './auto-compound.svg';
 
 export const AutoCompoundingRow = () => {
   const { network } = useNetwork();
@@ -20,7 +21,11 @@ export const AutoCompoundingRow = () => {
     >
       <Flex alignItems="center" flex="1" textDecoration="none" _hover={{ textDecoration: 'none' }}>
         <Flex position="relative">
-          <TokenIcon w={40} h={40} symbol="USDC" />
+          <Image
+            src={AutoCompoundIcon}
+            fallbackSrc="https://assets.synthetix.io/collateral/UNKNOWN.svg"
+            style={{ width: 40, height: 40 }}
+          />
           <NetworkIcon
             position="absolute"
             right={0}

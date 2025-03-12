@@ -138,7 +138,7 @@ export function PoolRow({
           _hover={{ textDecoration: 'none' }}
         >
           <Flex position="relative">
-            <TokenIcon w={40} h={40} symbol={collateralType.symbol} />
+            <TokenIcon width={40} height={40} symbol={collateralType.symbol} />
             <NetworkIcon
               position="absolute"
               right={0}
