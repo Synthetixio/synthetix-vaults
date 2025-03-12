@@ -107,7 +107,6 @@ export function Undelegate() {
       collateralChange && collateralChange.lt(0) ? collateralChange.abs() : undefined,
   });
 
-  console.log('collateralChange:', collateralChange);
   const isReady =
     (network?.preset === 'andromeda' &&
       isReadyApproveAndromedaUSDC &&
@@ -226,7 +225,6 @@ export function Undelegate() {
     ]
   );
 
-  console.log('txnState:', txnState);
   return (
     <Flex flexDirection="column" data-cy="undelegate collateral form">
       <UndelegateModal
