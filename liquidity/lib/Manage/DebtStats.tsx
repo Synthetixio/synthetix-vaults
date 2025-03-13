@@ -18,10 +18,10 @@ export function DebtStats({ newDebt, hasChanges }: { newDebt: Wei; hasChanges: b
   });
 
   return (
-    <BorderBox p={4} flex="1" flexDirection="row" bg="navy.700">
+    <BorderBox p={6} flex="1" flexDirection="row" bg="navy.700">
       <Flex flexDirection="column" width="100%">
         <Flex alignItems="center" mb="4px">
-          <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
+          <Text color="gray.500" fontSize="sm" fontFamily="heading" lineHeight="16px">
             Debt
           </Text>
           <Tooltip
@@ -52,6 +52,7 @@ export function DebtStats({ newDebt, hasChanges }: { newDebt: Wei; hasChanges: b
             formatFn={(val?: Wei) => <DebtAmount debt={val} as="span" />}
             hasChanges={hasChanges}
             data-cy="stats debt"
+            size="xl"
           />
         </Flex>
       </Flex>

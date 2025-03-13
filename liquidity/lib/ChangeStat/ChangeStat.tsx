@@ -5,7 +5,7 @@ import React from 'react';
 
 const styles = {
   sm: {
-    fontSize: '12px',
+    fontSize: '14px',
     fontWeight: '700',
     lineHeight: '14px',
   },
@@ -19,6 +19,11 @@ const styles = {
     fontWeight: '800',
     lineHeight: '24px',
   },
+  xl: {
+    fontSize: '20px',
+    fontWeight: '800',
+    lineHeight: '28px',
+  },
 };
 
 export function ChangeStat({
@@ -28,21 +33,23 @@ export function ChangeStat({
   hasChanges,
   'data-cy': dataCy,
   size = 'lg',
+  color = 'white',
   isPending,
 }: {
+  color?: string;
   value?: Wei;
   newValue: Wei;
   hasChanges: boolean;
   'data-cy'?: string;
   formatFn: (val?: Wei) => React.ReactNode;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   isPending?: boolean;
 }) {
   return (
     <Flex
       gap="1"
       alignItems="center"
-      color="white"
+      color={color}
       fontSize={styles[size].fontSize}
       fontWeight={styles[size].fontWeight}
       lineHeight={styles[size].lineHeight}

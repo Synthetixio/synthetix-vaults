@@ -1,7 +1,8 @@
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { calculateCRatio } from '@snx-v3/calculations';
 import { D27 } from '@snx-v3/constants';
+import { Rewards } from '@snx-v3/Rewards';
 import { CRatioBar } from '@snx-v3/CRatioBar';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -15,6 +16,7 @@ import React from 'react';
 import { CollateralStats } from './CollateralStats';
 import { DebtStats } from './DebtStats';
 import { PnlStats } from './PnlStats';
+import { WithdrableBalance } from './WithdrableBalance';
 
 export function ManageStats() {
   const [params] = useParams<PositionPageSchemaType>();
@@ -41,21 +43,20 @@ export function ManageStats() {
   }, [collateralChange, isAndromedaStataUSDC, stataRate]);
 
   const cRatio = calculateCRatio(liquidityPosition?.debt, liquidityPosition?.collateralValue);
-  const { newCRatio, newCollateralAmount, newDebt, hasChanges } = validatePosition({
-    issuanceRatioD18: collateralType?.issuanceRatioD18,
-    collateralAmount: liquidityPosition?.collateralAmount,
-    collateralPrice: liquidityPosition?.collateralPrice,
-    debt: liquidityPosition?.debt,
-    collateralChange: adjustedCollateralChange,
-    debtChange,
-  });
+  const { newCRatio, newCollateralAmount, newAvailableCollateral, newDebt, hasChanges } =
+    validatePosition({
+      issuanceRatioD18: collateralType?.issuanceRatioD18,
+      collateralAmount: liquidityPosition?.collateralAmount,
+      availableCollateral: liquidityPosition?.availableCollateral,
+      collateralPrice: liquidityPosition?.collateralPrice,
+      debt: liquidityPosition?.debt,
+      collateralChange: adjustedCollateralChange,
+      debtChange,
+    });
 
   return (
-    <Flex direction="column" gap={4}>
-      <Text color="white" fontSize="lg" fontFamily="heading" fontWeight="bold" lineHeight="16px">
-        Overview
-      </Text>
-      <Flex flexWrap="wrap" direction={['column', 'row']} gap={4}>
+    <Flex direction="column" gap={6}>
+      <Flex flexWrap="wrap" direction={['column', 'row']} gap={6}>
         <CollateralStats newCollateralAmount={newCollateralAmount} hasChanges={hasChanges} />
         {network?.preset === 'andromeda' ? (
           <PnlStats newDebt={newDebt} hasChanges={hasChanges} />
@@ -63,6 +64,9 @@ export function ManageStats() {
           <DebtStats newDebt={newDebt} hasChanges={hasChanges} />
         )}
       </Flex>
+      <WithdrableBalance newAvailableCollateral={newAvailableCollateral} hasChanges={hasChanges} />
+      <Rewards />
+
       {network?.preset === 'andromeda' ? null : (
         <BorderBox py={4} px={6} flexDirection="column" bg="navy.700">
           <CRatioBar

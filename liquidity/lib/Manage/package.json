@@ -13,6 +13,7 @@
     "@snx-v3/DebtAmount": "workspace:*",
     "@snx-v3/ManagePositionContext": "workspace:*",
     "@snx-v3/Multistep": "workspace:*",
+    "@snx-v3/Rewards": "workspace:*",
     "@snx-v3/TokenIcon": "workspace:*",
     "@snx-v3/Tooltip": "workspace:*",
     "@snx-v3/calculations": "workspace:*",
