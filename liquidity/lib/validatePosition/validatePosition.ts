@@ -22,7 +22,9 @@ export const validatePosition = ({
   const newDebt = wei(debt || 0).add(debtChange);
   const newCollateralAmount = wei(collateralAmount || 0).add(collateralChange);
   const newCollateralValue = newCollateralAmount.mul(collateralPrice || 0);
-  const newAvailableCollateral = wei(availableCollateral || 0).sub(collateralChange);
+  const newAvailableCollateral = wei(availableCollateral || 0).sub(
+    collateralChange.gte(0) ? wei(0) : collateralChange
+  );
 
   const newCRatio = calculateCRatio(newDebt, newCollateralValue);
 
