@@ -1,3 +1,4 @@
+import { TimeIcon } from '@chakra-ui/icons';
 import { Flex, Link, Text } from '@chakra-ui/react';
 import { Amount } from '@snx-v3/Amount';
 import { BorderBox } from '@snx-v3/BorderBox';
@@ -7,13 +8,14 @@ import { currency } from '@snx-v3/format';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
 import { makeSearch, type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { useWithdrawTimer } from '@snx-v3/useWithdrawTimer';
 import { type Wei } from '@synthetixio/wei';
 
-export function CollateralStats({
-  newCollateralAmount,
+export function WithdrableBalance({
+  newAvailableCollateral,
   hasChanges,
 }: {
-  newCollateralAmount: Wei;
+  newAvailableCollateral: Wei;
   hasChanges: boolean;
 }) {
   const [params, setParams] = useParams<PositionPageSchemaType>();
@@ -22,9 +24,10 @@ export function CollateralStats({
     accountId: params.accountId,
     collateralType,
   });
+  const { minutes, hours, isRunning } = useWithdrawTimer(params.accountId);
 
   return (
-    <BorderBox maxW={['100%', '50%']} p={6} flex="1" flexDirection="row" bg="navy.700">
+    <BorderBox p={6} flex="1" flexDirection="row" bg="navy.700">
       <Flex
         opacity={!liquidityPosition && !hasChanges ? '40%' : '100%'}
         flexDirection="column"
@@ -32,33 +35,55 @@ export function CollateralStats({
       >
         <Flex alignItems="center" mb="4px">
           <Text color="gray.500" fontSize="sm" fontFamily="heading" lineHeight="16px">
-            Collateral
+            Withdrable Balance
           </Text>
         </Flex>
         <Flex width="100%" isTruncated>
           <Flex width="100%" direction="column" gap="1">
-            <ChangeStat
-              isPending={Boolean(params.accountId && isPendingLiquidityPosition)}
-              value={liquidityPosition?.collateralAmount}
-              newValue={newCollateralAmount}
-              formatFn={(val?: Wei) =>
-                `${currency(val ?? ZEROWEI)} ${
-                  collateralType?.displaySymbol ?? params.collateralSymbol
-                }`
-              }
-              hasChanges={hasChanges}
-              data-cy="stats collateral"
-              size="xl"
-            />
+            <Flex gap={4}>
+              <ChangeStat
+                isPending={Boolean(params.accountId && isPendingLiquidityPosition)}
+                value={liquidityPosition?.availableCollateral}
+                newValue={newAvailableCollateral}
+                formatFn={(val?: Wei) =>
+                  `${currency(val ?? ZEROWEI)} ${
+                    collateralType?.displaySymbol ?? params.collateralSymbol
+                  }`
+                }
+                hasChanges={hasChanges}
+                data-cy="stats collateral"
+                size="xl"
+              />
+              {isRunning && (
+                <Flex
+                  mt={0.25}
+                  alignItems="center"
+                  color="gray.500"
+                  backgroundColor="whiteAlpha.200"
+                  fontWeight="500"
+                  borderWidth={1}
+                  borderRadius={4}
+                  px={2}
+                  py={1}
+                  gap={1}
+                >
+                  <TimeIcon />
+                  <Text
+                    color="gray.500"
+                    fontSize="sm"
+                  >{`${hours}h ${minutes}m until you can withdraw`}</Text>
+                </Flex>
+              )}
+            </Flex>
             {liquidityPosition ? (
               <ChangeStat
                 isPending={Boolean(params.accountId && isPendingLiquidityPosition)}
                 value={
                   liquidityPosition
-                    ? liquidityPosition.collateralAmount.mul(liquidityPosition.collateralPrice)
+                    ? liquidityPosition.availableCollateral.mul(liquidityPosition.collateralPrice)
                     : ZEROWEI
                 }
-                newValue={newCollateralAmount.mul(liquidityPosition?.collateralPrice ?? ZEROWEI)}
+                newValue={newAvailableCollateral.mul(liquidityPosition?.collateralPrice ?? ZEROWEI)}
                 formatFn={(val?: Wei) => `$${currency(val ?? ZEROWEI)}`}
                 size="md"
                 hasChanges={hasChanges}

@@ -19,10 +19,10 @@ export function PnlStats({ newDebt, hasChanges }: { newDebt: Wei; hasChanges: bo
   });
 
   return (
-    <BorderBox p={4} flex="1" flexDirection="row" bg="navy.700" justifyContent="space-between">
+    <BorderBox p={6} flex="1" flexDirection="row" bg="navy.700" justifyContent="space-between">
       <Flex flexDirection="column" width="100%">
         <Flex alignItems="center" mb="4px">
-          <Text color="gray.500" fontSize="xs" fontFamily="heading" lineHeight="16px">
+          <Text color="gray.500" fontSize="sm" fontFamily="heading" lineHeight="16px">
             PnL
           </Text>
           <Tooltip
@@ -44,6 +44,7 @@ export function PnlStats({ newDebt, hasChanges }: { newDebt: Wei; hasChanges: bo
             formatFn={(val?: Wei) => <PnlAmount debt={val ? val.mul(-1) : val} />}
             hasChanges={hasChanges}
             data-cy="stats pnl"
+            size="xl"
           />
         </Flex>
       </Flex>

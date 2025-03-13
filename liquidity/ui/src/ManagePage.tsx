@@ -101,9 +101,7 @@ export const ManagePage = () => {
         </Flex>
         <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
           <Flex flex={1} direction="column" gap={6}>
-            <BorderBox gap={4} p={6} flexDirection="column" bg="navy.700">
-              <ManageStats />
-            </BorderBox>
+            <ManageStats />
             {isAndromedaStataUSDC &&
               liquidityPosition &&
               liquidityPosition.collateralAmount.eq(0) && <StataDepositBanner />}
