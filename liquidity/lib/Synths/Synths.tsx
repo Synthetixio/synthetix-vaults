@@ -77,7 +77,15 @@ export function Synths() {
                   size="sm"
                   variant="solid"
                   data-cy="unwrap synths submit"
-                  onClick={() => unwrapAll()}
+                  onClick={() => {
+                    window?._paq?.push([
+                      'trackEvent',
+                      'liquidity',
+                      'v3_staking',
+                      `submit_unwrap_synths_v3`,
+                    ]);
+                    unwrapAll();
+                  }}
                 >
                   Unwrap All
                 </Button>

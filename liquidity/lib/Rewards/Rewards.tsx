@@ -62,12 +62,19 @@ export function Rewards() {
               cursor: 'not-allowed',
             }}
             data-cy="claim rewards submit"
-            onClick={() => claimAll()}
+            onClick={() => {
+              window?._paq?.push([
+                'trackEvent',
+                'liquidity',
+                'v3_staking',
+                `submit_claim_rewards_v3`,
+              ]);
+              claimAll();
+            }}
           >
             Claim
           </Button>
         </Flex>
-
         <Table data-cy="rewards table">
           <Thead>
             <Tr borderBottom="1px solid #2D2D38">
