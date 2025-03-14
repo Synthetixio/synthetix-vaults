@@ -160,6 +160,10 @@ export function PoolRow({
               </Text>
               <Tag
                 size="sm"
+                fontSize={10}
+                height="16px"
+                minHeight="16px"
+                px={1}
                 backgroundColor="gray.900"
                 borderRadius="4px"
                 color="gray.500"
