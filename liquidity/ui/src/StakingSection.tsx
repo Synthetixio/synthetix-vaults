@@ -4,12 +4,14 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 export const StakingSection = () => {
   return (
     <Flex mt={12} flexDirection="column" gap={4}>
-      <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
-        SNX Staking
-      </Heading>
-      <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
-        Stake your SNX in the new delegate staking pool to earn staking yield and extra rewards
-      </Text>
+      <Flex flexDirection="column">
+        <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
+          SNX Staking
+        </Heading>
+        <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
+          Stake your SNX in the new delegate staking pool to earn staking yield and extra rewards
+        </Text>
+      </Flex>
       <Flex
         flexDir="row"
         w="100%"

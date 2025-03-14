@@ -8,13 +8,15 @@ export const StrategySection = () => {
 
   return (
     <Flex mt={12} flexDirection="column" gap={4}>
-      <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
-        Interest Rate Strategies
-      </Heading>
-      <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
-        Capture the funding rates on Synthetix Exchange across a range of assets and any staking
-        yield
-      </Text>
+      <Flex flexDirection="column">
+        <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
+          Interest Rate Strategies
+        </Heading>
+        <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
+          Capture the funding rates on Synthetix Exchange across a range of assets and any staking
+          yield
+        </Text>
+      </Flex>
       <Flex
         flexDir="row"
         w="100%"
