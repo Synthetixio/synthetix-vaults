@@ -2,7 +2,6 @@ import { InfoIcon } from '@chakra-ui/icons';
 import {
   Button,
   Flex,
-  Heading,
   Table,
   TableContainer,
   Tbody,
@@ -21,6 +20,7 @@ import { AllRewardsModal } from './AllRewardsModal';
 import { RewardsLoading } from './RewardsLoading';
 import { RewardsRow } from './RewardsRow';
 import { BorderBox } from '@snx-v3/BorderBox';
+import { formatNumberToUsd } from '@snx-v3/formatters';
 
 export function Rewards() {
   const [params] = useParams<PositionPageSchemaType>();
@@ -38,7 +38,6 @@ export function Rewards() {
     () =>
       rewards
         ? rewards.find((reward) => reward.collateralType?.symbol === params.collateralSymbol)
-            ?.rewards
         : undefined,
     [rewards, params.collateralSymbol]
   );
@@ -52,13 +51,25 @@ export function Rewards() {
           collateralSymbol={params.collateralSymbol}
         />
         <Flex alignItems="center" justifyContent="space-between">
-          <Heading fontSize="18px" fontWeight={700} lineHeight="28px" color="gray.50" mb={3}>
-            Rewards
-          </Heading>
+          <Flex flexDirection="column">
+            <Text color="gray.500" fontSize="sm" fontFamily="heading" lineHeight="16px">
+              Rewards
+            </Text>
+            <Text
+              color="white"
+              fontSize="xl"
+              fontWeight={800}
+              fontFamily="heading"
+              lineHeight="36px"
+            >
+              {formatNumberToUsd(rewardsForCollateral?.totalRewardsValue.toNumber() ?? 0)}
+            </Text>
+          </Flex>
+
           <Button
             size="sm"
             variant="solid"
-            isDisabled={!(rewardsForCollateral && rewardsForCollateral.length > 0)}
+            isDisabled={!(rewardsForCollateral?.rewards && rewardsForCollateral.rewards.length > 0)}
             _disabled={{
               bg: 'gray.900',
               backgroundImage: 'none',
@@ -136,7 +147,7 @@ export function Rewards() {
 
             {params.accountId && isPendingRewards ? <RewardsLoading /> : null}
 
-            {rewardsForCollateral && rewardsForCollateral.length === 0 ? (
+            {rewardsForCollateral?.rewards && rewardsForCollateral.rewards.length === 0 ? (
               <Tr>
                 <Td
                   display="table-cell"
@@ -153,8 +164,8 @@ export function Rewards() {
               </Tr>
             ) : null}
 
-            {rewardsForCollateral && rewardsForCollateral.length
-              ? rewardsForCollateral.map(({ displaySymbol, claimableAmount }) => (
+            {rewardsForCollateral?.rewards && rewardsForCollateral.rewards.length
+              ? rewardsForCollateral.rewards.map(({ displaySymbol, claimableAmount }) => (
                   <RewardsRow
                     key={displaySymbol}
                     displaySymbol={displaySymbol}
