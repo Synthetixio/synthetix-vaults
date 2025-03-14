@@ -30,7 +30,7 @@ export function MyDeposits() {
 
   return (
     <StatsBox
-      title="My Deposits"
+      title="Total Value of My Deposits"
       isLoading={!(!params.accountId || (params.accountId && !isPendingLiquidityPositions))}
       value={activeWallet && totalLocked ? <Amount prefix="$" value={totalLocked} /> : '-'}
       label={

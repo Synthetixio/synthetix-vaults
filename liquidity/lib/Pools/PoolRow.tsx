@@ -1,4 +1,4 @@
-import { Button, Fade, Flex, Link, Text } from '@chakra-ui/react';
+import { Button, Fade, Flex, Link, Tag, Text } from '@chakra-ui/react';
 import { formatNumberToUsd, formatNumberToUsdShort } from '@snx-v3/formatters';
 import { Sparkles } from '@snx-v3/icons';
 import { TokenIcon } from '@snx-v3/TokenIcon';
@@ -148,15 +148,26 @@ export function PoolRow({
             />
           </Flex>
           <Flex flexDirection="column" ml={3} mr="auto">
-            <Text
-              fontSize="14px"
-              color="white"
-              fontWeight={700}
-              lineHeight="28px"
-              fontFamily="heading"
-            >
-              {collateralType.displaySymbol}
-            </Text>
+            <Flex gap={1}>
+              <Text
+                fontSize="16px"
+                color="white"
+                fontWeight={700}
+                lineHeight="24px"
+                fontFamily="heading"
+              >
+                {collateralType.displaySymbol}
+              </Text>
+              <Tag
+                size="sm"
+                backgroundColor="gray.900"
+                borderRadius="4px"
+                color="gray.500"
+                variant="solid"
+              >
+                LEGACY
+              </Tag>
+            </Flex>
             <Text
               textTransform="capitalize"
               fontSize="xs"

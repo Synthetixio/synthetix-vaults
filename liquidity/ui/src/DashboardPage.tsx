@@ -66,10 +66,11 @@ export function DashboardPage() {
               fontSize={['2rem', '3rem']}
               lineHeight="120%"
             >
-              Vaults
+              Synthetix Vaults
             </Heading>
             <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
-              Deposit USDC to earn a privileged share of protocol performance
+              A selection of high-quality yield products powering the Synthetix Ecosystem. Brought
+              to you by Synthetix
             </Text>
           </Flex>
           <Flex mt={6} gap={4} flex={1}>
@@ -88,8 +89,11 @@ export function DashboardPage() {
 
         <Flex mt={12} flexDirection="column">
           <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
-            Liquidity
+            Liquidity Providing
           </Heading>
+          <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
+            Provide liquidity to Synthetix Exchange to earn trading fees and liquidation rewards
+          </Text>
           <PoolsList positions={filteredLiquidityPositions} />
         </Flex>
         <StrategySection />

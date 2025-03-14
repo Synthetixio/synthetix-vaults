@@ -86,7 +86,7 @@ export function StatsTotalPnl() {
 
   return (
     <StatsBox
-      title="Total PNL"
+      title="My PnL"
       isLoading={
         !(
           !params.accountId ||

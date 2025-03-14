@@ -79,7 +79,7 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
           <Tooltip
             label={
               <Text textAlign="left">
-                APY is averaged over the trailing 28 days and is comprised of both performance and
+                APR is averaged over the trailing 28 days and is comprised of both performance and
                 rewards
               </Text>
             }
