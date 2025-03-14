@@ -148,7 +148,7 @@ export function PoolRow({
             />
           </Flex>
           <Flex flexDirection="column" ml={3} mr="auto">
-            <Flex gap={1}>
+            <Flex gap={1} alignItems="center">
               <Text
                 fontSize="16px"
                 color="white"
