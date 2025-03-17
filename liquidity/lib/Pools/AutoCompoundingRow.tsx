@@ -35,22 +35,10 @@ export const AutoCompoundingRow = () => {
           />
         </Flex>
         <Flex flexDirection="column" ml={3} mr="auto">
-          <Text
-            fontSize="14px"
-            color="white"
-            fontWeight={700}
-            lineHeight="28px"
-            fontFamily="heading"
-          >
+          <Text fontSize="md" color="white" fontWeight={700}>
             Auto-Compounding
           </Text>
-          <Text
-            textTransform="capitalize"
-            fontSize="xs"
-            color="gray.500"
-            fontFamily="heading"
-            lineHeight="20px"
-          >
+          <Text textTransform="capitalize" fontSize="xs" color="gray.500">
             {network?.name} Network
           </Text>
         </Flex>
@@ -69,6 +57,7 @@ export const AutoCompoundingRow = () => {
           }}
           color="gray.500"
           size="sm"
+          minWidth="124px"
         >
           Coming Soon
         </Button>

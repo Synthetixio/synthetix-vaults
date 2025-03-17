@@ -7,14 +7,22 @@ export const StrategySection = () => {
   const { network } = useNetwork();
 
   return (
-    <Flex mt={12} flexDirection="column" gap={4}>
-      <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
-        Interest Rate Strategies
-      </Heading>
-      <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
-        Capture the funding rates on Synthetix Exchange across a range of assets and any staking
-        yield
-      </Text>
+    <Flex mt={16} flexDirection="column" gap={4}>
+      <Flex flexDirection="column">
+        <Heading
+          fontSize="3xl"
+          fontFamily="heading"
+          fontWeight="medium"
+          letterSpacing="tight"
+          color="white"
+        >
+          Interest Rate Strategies
+        </Heading>
+        <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
+          Capture the funding rates on Synthetix Exchange across a range of assets and any staking
+          yield
+        </Text>
+      </Flex>
       <Flex
         flexDir="row"
         w="100%"
@@ -48,13 +56,7 @@ export const StrategySection = () => {
             />
           </Flex>
           <Flex flexDirection="column" ml={3} mr="auto">
-            <Text
-              fontSize="14px"
-              color="white"
-              fontWeight={700}
-              lineHeight="28px"
-              fontFamily="heading"
-            >
+            <Text fontSize="md" color="white" fontWeight={700} fontFamily="heading">
               Mega Vault
             </Text>
             <Text
@@ -82,6 +84,7 @@ export const StrategySection = () => {
             }}
             color="gray.500"
             size="sm"
+            minWidth="124px"
           >
             Coming Soon
           </Button>

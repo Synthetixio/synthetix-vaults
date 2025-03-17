@@ -17,7 +17,13 @@ import React from 'react';
 
 const log = debug('snx:useClaimAllRewards');
 
-export function useClaimAllRewards({ accountId }: { accountId?: string }) {
+export function useClaimAllRewards({
+  accountId,
+  collateralSymbol,
+}: {
+  accountId?: string;
+  collateralSymbol?: string;
+}) {
   const { data: rewards } = useRewards({ accountId });
 
   const toast = useToast({ isClosable: true, duration: 9000 });
@@ -54,31 +60,34 @@ export function useClaimAllRewards({ accountId }: { accountId?: string }) {
         signer
       );
 
-      rewards.forEach(({ distributor, claimableAmount, claimMethod, args }) => {
-        if (claimableAmount.gt(0)) {
-          transactions.push(CoreProxyContract.populateTransaction[claimMethod](...args));
+      rewards
+        .filter((reward) => !collateralSymbol || reward.collateralType?.symbol === collateralSymbol)
+        .forEach(({ distributor, claimableAmount, claimMethod, args }) => {
+          if (claimableAmount.gt(0)) {
+            transactions.push(CoreProxyContract.populateTransaction[claimMethod](...args));
 
-          const synthToken = synthTokens.find(
-            (synth) => synth.address.toLowerCase() === distributor.payoutToken.address.toLowerCase()
-          );
-          if (synthToken && synthToken.token) {
-            const minAmountReceived = claimableAmount
-              .toBN()
-              .sub(claimableAmount.toBN().div(100))
-              // Adjust precision for underlying token
-              .mul(ethers.utils.parseUnits('1', synthToken.token.decimals))
-              .div(D18);
-
-            transactions.push(
-              SpotMarketProxyContract.populateTransaction.unwrap(
-                synthToken.synthMarketId,
-                claimableAmount.toBN(),
-                minAmountReceived
-              )
+            const synthToken = synthTokens.find(
+              (synth) =>
+                synth.address.toLowerCase() === distributor.payoutToken.address.toLowerCase()
             );
+            if (synthToken && synthToken.token) {
+              const minAmountReceived = claimableAmount
+                .toBN()
+                .sub(claimableAmount.toBN().div(100))
+                // Adjust precision for underlying token
+                .mul(ethers.utils.parseUnits('1', synthToken.token.decimals))
+                .div(D18);
+
+              transactions.push(
+                SpotMarketProxyContract.populateTransaction.unwrap(
+                  synthToken.synthMarketId,
+                  claimableAmount.toBN(),
+                  minAmountReceived
+                )
+              );
+            }
           }
-        }
-      });
+        });
 
       const calls = await Promise.all(transactions);
       log('calls', calls);

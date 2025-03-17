@@ -261,21 +261,14 @@ export function PoolRow({
         </Flex>
 
         <Flex width="140px" direction="column" alignItems="flex-end">
-          <Text
-            fontFamily="heading"
-            fontSize="14px"
-            fontWeight={500}
-            lineHeight="28px"
-            color="white"
-          >
+          <Text fontFamily="heading" fontSize="14px" fontWeight={500} color="white">
             {unlockedCollateralValue ? formatNumberToUsd(unlockedCollateralValue.toNumber()) : '-'}
           </Text>
           {position && unlockedCollateralValue?.gt(0) ? (
             <Link
               color="cyan.500"
               fontFamily="heading"
-              fontSize="0.75rem"
-              lineHeight="1rem"
+              fontSize="xs"
               href={`?${makeSearch({
                 page: 'position',
                 collateralSymbol: position.collateralType.symbol,
@@ -301,21 +294,22 @@ export function PoolRow({
           {(!params.accountId || !position) && '-'}
           {params.accountId && position && (
             <>
-              <Text
-                fontFamily="heading"
-                fontSize="14px"
-                fontWeight={500}
-                lineHeight="20px"
-                color="gray.500"
-              >
-                Debt{' '}
-                <Text color="white" as="span">
-                  {position && position.debt.gt(0)
-                    ? formatNumberToUsd(position.debt.toNumber())
-                    : '-'}
+              {position.debt.gt(0) && (
+                <Text
+                  fontFamily="heading"
+                  fontSize="14px"
+                  fontWeight={500}
+                  lineHeight="20px"
+                  color="gray.500"
+                >
+                  Debt{' '}
+                  <Text color="white" as="span">
+                    {formatNumberToUsd(position.debt.toNumber())}
+                  </Text>
                 </Text>
-              </Text>
-              <Text color="gray.500" fontFamily="heading" fontSize="12px" lineHeight="20px">
+              )}
+
+              <Text color="gray.500" fontFamily="heading" fontSize="sm">
                 Rewards{' '}
                 <Text color={totalRewards.gt(0) ? 'green.500' : 'gray.500'} as="span">
                   {totalRewards.gt(0) ? formatNumberToUsd(totalRewards.toNumber()) : '-'}
@@ -356,6 +350,7 @@ export function PoolRow({
               opacity: 0.5,
               cursor: 'not-allowed',
             }}
+            minWidth="96px"
           >
             {position ? 'Manage' : 'Deposit'}
           </Button>

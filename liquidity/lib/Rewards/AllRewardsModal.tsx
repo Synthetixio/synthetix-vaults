@@ -24,7 +24,9 @@ import React from 'react';
 export function AllRewardsModal({
   txnStatus,
   txnHash,
+  collateralSymbol,
 }: {
+  collateralSymbol?: string;
   txnStatus?: string;
   txnHash: string | null;
 }) {
@@ -55,12 +57,16 @@ export function AllRewardsModal({
 
   React.useEffect(() => {
     if (isOpen && rewards && synthTokens && network) {
-      const groupedRewards = groupRewardsBySymbol({ network, rewards, synthTokens });
+      const filterRewards = rewards.filter(
+        (reward) => !collateralSymbol || reward.collateralType?.symbol === collateralSymbol
+      );
+
+      const groupedRewards = groupRewardsBySymbol({ network, rewards: filterRewards, synthTokens });
       if (!cachedRewards) {
         setCachedRewards(groupedRewards);
       }
     }
-  }, [isOpen, rewards, synthTokens, cachedRewards, network]);
+  }, [isOpen, rewards, synthTokens, cachedRewards, network, collateralSymbol]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

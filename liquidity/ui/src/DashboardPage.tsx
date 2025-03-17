@@ -56,15 +56,14 @@ export function DashboardPage() {
         <title>Synthetix Vaults</title>
         <meta name="description" content="Synthetix Vaults" />
       </Helmet>
-      <Flex pt={{ base: 2, sm: 8 }} flexDir="column" mb={16}>
+      <Flex pt={{ base: 2, sm: 8 }} flexDir="column" mb={28}>
         <Flex flexDirection="column" columnGap={20} justifyContent="space-between">
           <Flex flexDirection="column" minWidth={360}>
-            <Heading color="gray.50" maxWidth="40rem" fontSize={['2rem', '3rem']} lineHeight="120%">
+            <Heading color="gray.50" fontSize={['4xl', '5xl']}>
               Synthetix Vaults
             </Heading>
             <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
-              A selection of high-quality yield products powering the Synthetix Ecosystem. Brought
-              to you by Synthetix
+              A selection of high-quality yield products powering the Synthetix Ecosystem
             </Text>
           </Flex>
           <Flex mt={6} gap={4} flex={1}>
@@ -81,8 +80,14 @@ export function DashboardPage() {
 
         {!activeWallet && <ConnectBox />}
 
-        <Flex mt={12} flexDirection="column">
-          <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
+        <Flex mt={16} flexDirection="column">
+          <Heading
+            fontSize="3xl"
+            fontFamily="heading"
+            fontWeight="medium"
+            letterSpacing="tight"
+            color="white"
+          >
             Liquidity Providing
           </Heading>
           <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">

@@ -2,7 +2,6 @@ import { InfoIcon } from '@chakra-ui/icons';
 import {
   Button,
   Flex,
-  Heading,
   Table,
   TableContainer,
   Tbody,
@@ -13,47 +12,64 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { Tooltip } from '@snx-v3/Tooltip';
-import { useNetwork } from '@snx-v3/useBlockchain';
 import { useClaimAllRewards } from '@snx-v3/useClaimAllRewards';
 import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
-import { groupRewardsBySymbol, useRewards } from '@snx-v3/useRewards';
-import { useSynthTokens } from '@snx-v3/useSynthTokens';
+import { useRewardsByCollateralType } from '@snx-v3/useRewards';
 import React from 'react';
 import { AllRewardsModal } from './AllRewardsModal';
 import { RewardsLoading } from './RewardsLoading';
 import { RewardsRow } from './RewardsRow';
 import { BorderBox } from '@snx-v3/BorderBox';
+import { formatNumberToUsd } from '@snx-v3/formatters';
 
 export function Rewards() {
   const [params] = useParams<PositionPageSchemaType>();
-  const { data: rewards, isPending: isPendingRewards } = useRewards({
+
+  const { data: rewards, isPending: isPendingRewards } = useRewardsByCollateralType({
     accountId: params.accountId,
   });
-  const { exec: claimAll, txnState } = useClaimAllRewards({ accountId: params.accountId });
 
-  const { network } = useNetwork();
+  const { exec: claimAll, txnState } = useClaimAllRewards({
+    accountId: params.accountId,
+    collateralSymbol: params.collateralSymbol,
+  });
 
-  const { data: synthTokens } = useSynthTokens();
-  const groupedRewards = React.useMemo(
+  const rewardsForCollateral = React.useMemo(
     () =>
-      network && rewards && synthTokens
-        ? groupRewardsBySymbol({ network, rewards, synthTokens })
+      rewards
+        ? rewards.find((reward) => reward.collateralType?.symbol === params.collateralSymbol)
         : undefined,
-    [network, rewards, synthTokens]
+    [rewards, params.collateralSymbol]
   );
 
   return (
     <BorderBox p={6} flexDirection="row" bg="navy.700">
       <TableContainer width="100%">
-        <AllRewardsModal txnStatus={txnState.txnStatus} txnHash={txnState.txnHash} />
+        <AllRewardsModal
+          txnStatus={txnState.txnStatus}
+          txnHash={txnState.txnHash}
+          collateralSymbol={params.collateralSymbol}
+        />
         <Flex alignItems="center" justifyContent="space-between">
-          <Heading fontSize="18px" fontWeight={700} lineHeight="28px" color="gray.50" mb={3}>
-            Rewards
-          </Heading>
+          <Flex flexDirection="column">
+            <Text color="gray.500" fontSize="sm" fontFamily="heading" lineHeight="16px">
+              Rewards
+            </Text>
+            <Text
+              color="white"
+              fontSize="xl"
+              fontWeight={800}
+              fontFamily="heading"
+              lineHeight="36px"
+            >
+              {formatNumberToUsd(rewardsForCollateral?.totalRewardsValue.toNumber() ?? 0)}
+            </Text>
+          </Flex>
+
           <Button
             size="sm"
             variant="solid"
-            isDisabled={!(groupedRewards && groupedRewards.length > 0)}
+            isDisabled={!(rewardsForCollateral?.rewards && rewardsForCollateral.rewards.length > 0)}
             _disabled={{
               bg: 'gray.900',
               backgroundImage: 'none',
@@ -131,7 +147,7 @@ export function Rewards() {
 
             {params.accountId && isPendingRewards ? <RewardsLoading /> : null}
 
-            {groupedRewards && groupedRewards.length === 0 ? (
+            {rewardsForCollateral?.rewards && rewardsForCollateral.rewards.length === 0 ? (
               <Tr>
                 <Td
                   display="table-cell"
@@ -148,8 +164,8 @@ export function Rewards() {
               </Tr>
             ) : null}
 
-            {groupedRewards && groupedRewards.length
-              ? groupedRewards.map(({ displaySymbol, claimableAmount }) => (
+            {rewardsForCollateral?.rewards && rewardsForCollateral.rewards.length
+              ? rewardsForCollateral.rewards.map(({ displaySymbol, claimableAmount }) => (
                   <RewardsRow
                     key={displaySymbol}
                     displaySymbol={displaySymbol}
