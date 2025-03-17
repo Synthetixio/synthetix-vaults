@@ -23,7 +23,7 @@ export function TotalValueLocked() {
       value={<Amount prefix="$" value={totalLocked} average />}
       label={
         <>
-          <Text textAlign="left">Total Vaule Locked for all vaults</Text>
+          <Text textAlign="left">Total Value Locked for all vaults</Text>
         </>
       }
     />

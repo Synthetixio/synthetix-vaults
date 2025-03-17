@@ -35,7 +35,7 @@ export function WithdrableBalance({
       >
         <Flex alignItems="center" mb="4px">
           <Text color="gray.500" fontSize="sm" fontFamily="heading" lineHeight="16px">
-            Withdrable Balance
+            Withdrawable Balance
           </Text>
         </Flex>
         <Flex width="100%" isTruncated>

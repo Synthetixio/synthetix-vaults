@@ -73,9 +73,9 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
         </HeaderText>
         <HeaderText width="140px">Vault TVL</HeaderText>
         <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
-          <Text fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+          <HeaderText fontSize="xs" fontWeight="bold" mr={1}>
             APR
-          </Text>
+          </HeaderText>
           <Tooltip
             label={
               <Text textAlign="left">
@@ -88,9 +88,9 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
           </Tooltip>
         </Flex>
         <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
-          <Text fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+          <HeaderText fontSize="xs" fontWeight="bold" mr={1}>
             Deposited
-          </Text>
+          </HeaderText>
           <Tooltip
             label={
               <Text textAlign="left">
@@ -102,9 +102,9 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
           </Tooltip>
         </Flex>
         <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
-          <Text fontFamily="heading" fontSize="12px" lineHeight="16px" mr={1}>
+          <HeaderText fontSize="xs" fontWeight="bold" mr={1}>
             Unlocked
-          </Text>
+          </HeaderText>
           <Tooltip
             label={
               <Text textAlign="left">

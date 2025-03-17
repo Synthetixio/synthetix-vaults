@@ -3,9 +3,15 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export const StakingSection = () => {
   return (
-    <Flex mt={12} flexDirection="column" gap={4}>
+    <Flex mt={16} flexDirection="column" gap={4}>
       <Flex flexDirection="column">
-        <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
+        <Heading
+          fontSize="3xl"
+          fontFamily="heading"
+          fontWeight="medium"
+          letterSpacing="tight"
+          color="white"
+        >
           SNX Staking
         </Heading>
         <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
@@ -19,7 +25,7 @@ export const StakingSection = () => {
         borderColor="gray.900"
         rounded="base"
         bg="navy.700"
-        py={4}
+        py={6}
         px={4}
         gap={4}
         alignItems="center"
@@ -45,7 +51,7 @@ export const StakingSection = () => {
               fontWeight={700}
               lineHeight="1.25rem"
               fontFamily="heading"
-              fontSize="sm"
+              fontSize="md"
             >
               SNX 420 Pool
             </Text>
