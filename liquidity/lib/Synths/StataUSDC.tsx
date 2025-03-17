@@ -147,7 +147,7 @@ export function StataUSDC() {
           <Amount prefix="$" value={wei(stataBalance.previewRedeem, 6)} />
         </Text>
       </Flex>
-      <Flex width={['100px', '100px', '160px']} justifyContent="flex-end">
+      <Flex width={['70px', '100px', '160px']} justifyContent="flex-end">
         <Button
           size="sm"
           variant="solid"

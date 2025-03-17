@@ -56,7 +56,7 @@ export function DashboardPage() {
         <title>Synthetix Vaults</title>
         <meta name="description" content="Synthetix Vaults" />
       </Helmet>
-      <Flex pt={{ base: 2, sm: 8 }} flexDir="column" mb={28}>
+      <Flex pt={{ base: 8, sm: 8 }} flexDir="column" mb={10}>
         <Flex flexDirection="column" columnGap={20} justifyContent="space-between">
           <Flex flexDirection="column" minWidth={360}>
             <Heading color="gray.50" fontSize={['4xl', '5xl']}>
@@ -66,7 +66,7 @@ export function DashboardPage() {
               A selection of high-quality yield products powering the Synthetix Ecosystem
             </Text>
           </Flex>
-          <Flex mt={6} gap={4} flex={1}>
+          <Flex mt={6} gap={4} flexDirection={['column', 'row']} justifyContent="space-between">
             <TotalValueLocked />
             <MyDeposits />
             <StatsTotalPnl />

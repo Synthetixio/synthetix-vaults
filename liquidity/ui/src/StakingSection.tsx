@@ -3,15 +3,9 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export const StakingSection = () => {
   return (
-    <Flex mt={16} flexDirection="column" gap={4}>
+    <Flex mt={12} flexDirection="column" gap={4}>
       <Flex flexDirection="column">
-        <Heading
-          fontSize="3xl"
-          fontFamily="heading"
-          fontWeight="medium"
-          letterSpacing="tight"
-          color="white"
-        >
+        <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
           SNX Staking
         </Heading>
         <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
@@ -19,22 +13,24 @@ export const StakingSection = () => {
         </Text>
       </Flex>
       <Flex
-        flexDir="row"
+        flexDir={['column', 'row']}
         w="100%"
         border="1px solid"
         borderColor="gray.900"
         rounded="base"
         bg="navy.700"
-        py={6}
+        py={4}
         px={4}
         gap={4}
         alignItems="center"
       >
         <Flex
-          alignItems="center"
+          flexDir={['column', 'row']}
+          alignItems={['start', 'center']}
           flex="1"
           textDecoration="none"
           _hover={{ textDecoration: 'none' }}
+          gap={3}
         >
           <Image
             src="https://assets.synthetix.io/snx/SNX.svg"
@@ -45,13 +41,13 @@ export const StakingSection = () => {
             alt="SNX"
           />
 
-          <Flex flexDirection="column" ml={3}>
+          <Flex flexDirection="column">
             <Text
               color="white"
               fontWeight={700}
               lineHeight="1.25rem"
               fontFamily="heading"
-              fontSize="md"
+              fontSize="sm"
             >
               SNX 420 Pool
             </Text>
@@ -62,13 +58,14 @@ export const StakingSection = () => {
           </Flex>
         </Flex>
 
-        <Flex width={['100px', '100px', '160px']} justifyContent="flex-end">
+        <Flex width={['100%', '160px']} justifyContent="flex-end">
           <Button
             as={Link}
             href="https://420.synthetix.io/"
             target="_blank"
             variant="outline"
             color="cyan.500"
+            width={['100%', '160px']}
             size="sm"
             rightIcon={
               <ExternalLinkIcon

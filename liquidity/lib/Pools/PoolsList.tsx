@@ -1,6 +1,7 @@
 import React from 'react';
 import { Flex, Text } from '@chakra-ui/react';
-import { useEnrichedPoolsList } from '@snx-v3/usePoolsList';
+import { EnrichedPool, useEnrichedPoolsList } from '@snx-v3/usePoolsList';
+import { useWindowSize } from '@snx-v3/useWindowSize';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { InfoIcon } from '@chakra-ui/icons';
 import { PoolCardsLoading } from './PoolCardsLoading';
@@ -11,6 +12,8 @@ import { useShowMyPositionsOnly } from '@snx-v3/useShowMyPositionsOnly';
 import { useRewardsByCollateralType } from '@snx-v3/useRewards';
 import { useParams } from '@snx-v3/useParams';
 import { ZEROWEI } from '@snx-v3/constants';
+import { PoolsListMobile } from './PoolsListMobile';
+import Wei from '@synthetixio/wei';
 
 function HeaderText({ ...props }) {
   return (
@@ -28,8 +31,14 @@ function HeaderText({ ...props }) {
   );
 }
 
+export interface PoolWithPosition extends EnrichedPool {
+  position: LiquidityPositionType | undefined;
+  rewardsValue: Wei;
+}
+
 export function PoolsList({ positions }: { positions: LiquidityPositionType[] }) {
   const [params] = useParams();
+  const { isMobile } = useWindowSize();
 
   const { data: rewards } = useRewardsByCollateralType({
     accountId: params.accountId,
@@ -48,10 +57,13 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
       );
       return {
         ...pool,
+        rewardsValue:
+          rewards?.find((r) => r.collateralType.address === pool.collateral.address)
+            ?.totalRewardsValue ?? ZEROWEI,
         position,
       };
     });
-  }, [enrichedPools, positions]);
+  }, [enrichedPools, positions, rewards]);
 
   const filteredPools = React.useMemo(() => {
     if (!poolsWithPositions) {
@@ -65,6 +77,9 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
     });
   }, [poolsWithPositions, myPositionsOnly]);
 
+  if (isMobile && filteredPools) {
+    return <PoolsListMobile pools={filteredPools} />;
+  }
   return (
     <Flex mt={6} maxW="100%" overflowX="auto" direction="column" gap={4}>
       <Flex flexDir="row" minW="800px" gap={4} py={3} px={4} whiteSpace="nowrap">
@@ -123,21 +138,20 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
       {isPending ? <PoolCardsLoading /> : null}
       {!isPending && filteredPools ? (
         <Flex minW="800px" direction="column-reverse" gap={4}>
-          {filteredPools?.map(({ network, pool, collateral, totalValue, price, position }) => (
-            <PoolRow
-              key={`${network.id}-${collateral.address}`}
-              pool={pool}
-              network={network}
-              collateralType={collateral}
-              tvl={totalValue}
-              price={price}
-              position={position}
-              rewardsValue={
-                rewards?.find((r) => r.collateralType.address === collateral.address)
-                  ?.totalRewardsValue ?? ZEROWEI
-              }
-            />
-          ))}
+          {filteredPools?.map(
+            ({ network, pool, collateral, totalValue, price, rewardsValue, position }) => (
+              <PoolRow
+                key={`${network.id}-${collateral.address}`}
+                pool={pool}
+                network={network}
+                collateralType={collateral}
+                tvl={totalValue}
+                price={price}
+                position={position}
+                rewardsValue={rewardsValue}
+              />
+            )
+          )}
           <AutoCompoundingRow />
         </Flex>
       ) : null}
