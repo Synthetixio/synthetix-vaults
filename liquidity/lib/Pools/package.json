@@ -20,6 +20,7 @@
     "@snx-v3/usePoolsList": "workspace:*",
     "@snx-v3/useRewards": "workspace:*",
     "@snx-v3/useShowMyPositionsOnly": "workspace:*",
+    "@snx-v3/useWindowSize": "workspace:*",
     "@synthetixio/wei": "^2.74.4",
     "react": "^18.2.0"
   }

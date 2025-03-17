@@ -58,7 +58,7 @@ export function Synths() {
   }
   return (
     <Flex mt={12} flexDirection="column" overflowX="auto">
-      <TableContainer minW={550}>
+      <TableContainer>
         <SynthsUnwrapModal txnStatus={txnState.txnStatus} txnHash={txnState.txnHash} />
         <Flex alignItems="center" justifyContent="space-between">
           <Heading fontSize="30px" fontFamily="heading" lineHeight="36px">
@@ -71,7 +71,7 @@ export function Synths() {
               Token
             </HeaderText>
             <HeaderText width={['100px', '100px', '160px']}>Balance</HeaderText>
-            <Flex width={['100px', '100px', '160px']} justifyContent="flex-end">
+            <Flex width={['70px', '100px', '160px']} justifyContent="flex-end">
               {hasSynths && (
                 <Button
                   size="sm"

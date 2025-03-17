@@ -52,7 +52,7 @@ export function SynthRow({
         </Text>
       </Flex>
 
-      <Flex width={['100px', '100px', '160px']} justifyContent="flex-end"></Flex>
+      <Flex width={['70px', '100px', '160px']} justifyContent="flex-end"></Flex>
     </Flex>
   );
 }

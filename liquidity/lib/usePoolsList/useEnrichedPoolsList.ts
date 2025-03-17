@@ -1,10 +1,25 @@
 import { useMemo } from 'react';
-import { BASE_ANDROMEDA, MAINNET } from '@snx-v3/useBlockchain';
+import { BASE_ANDROMEDA, MAINNET, Network } from '@snx-v3/useBlockchain';
 import { useOfflinePrices } from '@snx-v3/useCollateralPriceUpdates';
 import { CollateralType, useCollateralTypes } from '@snx-v3/useCollateralTypes';
 import { useOraclePrice } from '@snx-v3/useOraclePrice';
-import { wei } from '@synthetixio/wei';
+import Wei, { wei } from '@synthetixio/wei';
 import { usePoolsList } from './usePoolsList';
+
+type CollateralTypeWithDeposited = CollateralType & {
+  collateralDeposited: string;
+};
+
+export type EnrichedPool = {
+  network: Network;
+  pool: {
+    name: string;
+    id: string;
+  };
+  collateral: CollateralTypeWithDeposited;
+  price: Wei;
+  totalValue: number;
+};
 
 export function useEnrichedPoolsList() {
   const { data: poolsList, isPending: isPendingPoolsList } = usePoolsList();
@@ -87,7 +102,7 @@ export function useEnrichedPoolsList() {
     }
   }, [stata, collateralPrices, stataPrice]);
 
-  const data = filteredPools
+  const data: EnrichedPool[] = filteredPools
     .flatMap(({ network, poolInfo, collateralTypes }) => {
       return collateralTypes?.map((collateral) => {
         const price = wei(

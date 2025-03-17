@@ -24,7 +24,6 @@ export const StrategySection = () => {
         </Text>
       </Flex>
       <Flex
-        flexDir="row"
         w="100%"
         border="1px solid"
         borderColor="gray.900"
@@ -33,7 +32,8 @@ export const StrategySection = () => {
         py={4}
         px={4}
         gap={4}
-        alignItems="center"
+        flexDirection={['column', 'row']}
+        alignItems={['flex-start', 'center']}
       >
         <Flex
           alignItems="center"
@@ -71,9 +71,10 @@ export const StrategySection = () => {
           </Flex>
         </Flex>
 
-        <Flex width={['100px', '100px', '160px']} justifyContent="flex-end">
+        <Flex width={['100%', 'auto']} justifyContent="flex-end">
           <Button
             variant="solid"
+            width="100%"
             isDisabled
             _disabled={{
               bg: 'gray.900',

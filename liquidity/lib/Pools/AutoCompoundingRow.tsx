@@ -17,7 +17,8 @@ export const AutoCompoundingRow = () => {
       py={4}
       px={4}
       gap={4}
-      alignItems="center"
+      alignItems={['flex-start', 'center']}
+      flexDirection={['column', 'row']}
     >
       <Flex alignItems="center" flex="1" textDecoration="none" _hover={{ textDecoration: 'none' }}>
         <Flex position="relative">
@@ -44,10 +45,11 @@ export const AutoCompoundingRow = () => {
         </Flex>
       </Flex>
 
-      <Flex width={['100px', '100px', '160px']} justifyContent="flex-end">
+      <Flex width={['100%', 'auto']} justifyContent="flex-end">
         <Button
           variant="solid"
           isDisabled
+          width="100%"
           _disabled={{
             bg: 'gray.900',
             backgroundImage: 'none',
