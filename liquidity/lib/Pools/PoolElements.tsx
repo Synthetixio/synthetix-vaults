@@ -231,13 +231,12 @@ export function PoolUnlockedCollateralValue({
 }) {
   const [params, setParams] = useParams();
 
-  const collateralValue = position?.collateralValue.mul(position.collateralPrice);
   const unlockedCollateralValue = position?.availableCollateral.mul(position.collateralPrice);
 
   return (
     <>
       <Text fontFamily="heading" fontSize="14px" fontWeight={500} color="white">
-        {collateralValue ? formatNumberToUsd(collateralValue.toNumber()) : '-'}
+        {unlockedCollateralValue ? formatNumberToUsd(unlockedCollateralValue.toNumber()) : '-'}
       </Text>
       {position && unlockedCollateralValue?.gt(0) ? (
         <Link
