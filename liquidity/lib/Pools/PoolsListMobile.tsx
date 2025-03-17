@@ -1,6 +1,5 @@
-import { Flex, Link, Text, Tooltip } from '@chakra-ui/react';
+import { Flex, Text, Tooltip } from '@chakra-ui/react';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPosition';
-import { makeSearch, useParams } from '@snx-v3/useParams';
 import { EnrichedPool } from '@snx-v3/usePoolsList';
 import {
   PoolActionButton,
