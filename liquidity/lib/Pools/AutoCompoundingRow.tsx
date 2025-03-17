@@ -35,18 +35,10 @@ export const AutoCompoundingRow = () => {
           />
         </Flex>
         <Flex flexDirection="column" ml={3} mr="auto">
-          <Text
-            fontSize="md"
-            color="white"
-            fontWeight={700}
-          >
+          <Text fontSize="md" color="white" fontWeight={700}>
             Auto-Compounding
           </Text>
-          <Text
-            textTransform="capitalize"
-            fontSize="xs"
-            color="gray.500"
-          >
+          <Text textTransform="capitalize" fontSize="xs" color="gray.500">
             {network?.name} Network
           </Text>
         </Flex>

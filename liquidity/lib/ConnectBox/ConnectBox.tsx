@@ -20,7 +20,12 @@ export const ConnectBox: FC = () => {
     >
       <Flex p={10} flexDirection="column" gap="24px" justifyContent="center">
         <Flex flexDirection="column">
-          <Heading color="gray.50" fontSize={['24px', '30px']} letterSpacing="tight" fontWeight="medium">
+          <Heading
+            color="gray.50"
+            fontSize={['24px', '30px']}
+            letterSpacing="tight"
+            fontWeight="medium"
+          >
             Connect your wallet to get started
           </Heading>
           <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
