@@ -71,7 +71,7 @@ export function Synths() {
               Token
             </HeaderText>
             <HeaderText width={['100px', '100px', '160px']}>Balance</HeaderText>
-            <Flex width={['70px', '100px', '160px']} justifyContent="flex-end">
+            <Flex width={['80px', '100px', '160px']} justifyContent="flex-end">
               {hasSynths && (
                 <Button
                   size="sm"
