@@ -44,7 +44,7 @@ describe(__filename, () => {
 
     cy.get('[data-cy="stats collateral"] [data-cy="change stats current"]')
       .should('exist')
-      .and('include.text', '0 Static aUSDC');
+      .and('include.text', '0 USDC Via Aave');
     cy.get('[data-cy="stats collateral"] [data-cy="change stats new"]').should('not.exist');
 
     cy.get('[data-cy="deposit amount input"]').should('exist');
@@ -52,7 +52,7 @@ describe(__filename, () => {
 
     cy.get('[data-cy="stats collateral"] [data-cy="change stats new"]')
       .should('exist')
-      .and('include.text', '462.82 Static aUSDC');
+      .and('include.text', '462.82 USDC Via Aave');
 
     cy.get('[data-cy="deposit submit"]').should('be.enabled');
     cy.get('[data-cy="deposit submit"]').click();
@@ -77,7 +77,7 @@ describe(__filename, () => {
 
     cy.get('[data-cy="stats collateral"] [data-cy="change stats current"]', {
       timeout: 60_000,
-    }).and('include.text', '462.82 Static aUSDC');
+    }).and('include.text', '462.82 USDC Via Aave');
     cy.get('[data-cy="deposit submit"]').should('be.disabled');
   });
 });
