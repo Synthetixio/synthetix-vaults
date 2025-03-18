@@ -218,7 +218,7 @@ export function Deposit() {
         <Alert mb={6} status="info" borderRadius="6px">
           <AlertIcon />
           <AlertDescription>
-            Deposit USDC and it will automatically wrap into Static aUSDC
+            Deposit USDC and it will automatically wrap into USDC via Aave
           </AlertDescription>
         </Alert>
       </Collapse>
