@@ -17,7 +17,7 @@ export function StataDepositBanner() {
           This position earns yield via Aave and Synthetix
         </Text>
         <Text color="white.600" fontSize="14px" fontWeight={300}>
-          Deposit USDC, and we’ll wrap it into Static aUSDC for you. Watch your balance stay the
+          Deposit USDC, and we’ll wrap it into USDC via Aave for you. Watch your balance stay the
           same while the value grows, earning effortless yield through Aave and Synthetix.
         </Text>
         <Button
@@ -30,7 +30,7 @@ export function StataDepositBanner() {
           colorScheme="gray"
           w="fit-content"
         >
-          Read more about Static aUSDC
+          Read more about USDC via Aave
         </Button>
       </Flex>
 

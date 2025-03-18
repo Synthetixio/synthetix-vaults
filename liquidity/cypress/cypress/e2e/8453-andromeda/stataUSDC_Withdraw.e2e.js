@@ -49,7 +49,7 @@ describe(__filename, () => {
 
     cy.get('[data-cy="stats collateral"] [data-cy="change stats current"]')
       .should('exist')
-      .and('include.text', '370.25 USDC Via Aave');
+      .and('include.text', '370.25 USDC via Aave');
 
     cy.get('[data-cy="stats collateral"] [data-cy="change stats new"]').should('not.exist');
 
@@ -82,7 +82,7 @@ describe(__filename, () => {
 
     cy.get('[data-cy="stats collateral"] [data-cy="change stats current"]').and(
       'include.text',
-      '370.25 USDC Via Aave'
+      '370.25 USDC via Aave'
     );
     cy.get('[data-cy="withdraw submit"]').should('be.disabled');
   });

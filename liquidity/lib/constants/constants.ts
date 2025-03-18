@@ -92,7 +92,7 @@ export const tokenOverrides: {
     '0x4EA71A20e655794051D1eE8b6e4A3269B13ccaCc': {
       symbol: 'stataUSDC',
       displaySymbol: 'USDC via Aave',
-      name: 'Static aUSDC',
+      name: 'USDC via Aave',
     },
   },
   '1-main': {
