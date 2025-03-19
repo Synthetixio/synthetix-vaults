@@ -83,7 +83,7 @@ export function StataUSDC() {
       toast.closeAll();
       toast({
         title: 'Success',
-        description: 'Your USDC via Aave has been unwrapped to USDC.',
+        description: 'Your Static aUSDC has been unwrapped to USDC.',
         status: 'success',
         duration: 5000,
         variant: 'left-accent',
@@ -138,7 +138,7 @@ export function StataUSDC() {
             fontFamily="heading"
             fontSize="sm"
           >
-            USDC via Aave
+            Static aUSDC
           </Text>
         </Flex>
       </Flex>

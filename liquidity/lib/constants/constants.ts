@@ -91,8 +91,8 @@ export const tokenOverrides: {
   '8453-andromeda': {
     '0x4EA71A20e655794051D1eE8b6e4A3269B13ccaCc': {
       symbol: 'stataUSDC',
-      displaySymbol: 'USDC via Aave',
-      name: 'USDC via Aave',
+      displaySymbol: 'Static aUSDC',
+      name: 'Static aUSDC',
     },
   },
   '1-main': {
