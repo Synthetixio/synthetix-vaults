@@ -33,12 +33,6 @@ export function PoolRow({
   position: LiquidityPositionType | undefined;
   rewardsValue: Wei;
 }) {
-  const collateralValue = React.useMemo(() => {
-    if (position) {
-      return position.collateralValue.mul(position.collateralPrice);
-    }
-  }, [position]);
-
   const order = React.useMemo(
     () =>
       wei(collateralType.collateralDeposited, Number(collateralType.decimals), true)
@@ -92,7 +86,9 @@ export function PoolRow({
             lineHeight="28px"
             color="white"
           >
-            {collateralValue ? formatNumberToUsd(collateralValue.toNumber()) : '-'}
+            {position?.collateralValue
+              ? formatNumberToUsd(position.collateralValue.toNumber())
+              : '-'}
           </Text>
         </Flex>
 
