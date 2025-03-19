@@ -39,7 +39,6 @@
     "@snx-v3/useClaimedRewards": "workspace:*",
     "@snx-v3/useCollateralPrices": "workspace:*",
     "@snx-v3/useCollateralTypes": "workspace:*",
-    "@snx-v3/useCreateAccount": "workspace:*",
     "@snx-v3/useIsAndromedaStataUSDC": "workspace:*",
     "@snx-v3/useIssuedDebt": "workspace:*",
     "@snx-v3/useLiquidityPosition": "workspace:*",

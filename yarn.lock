@@ -5559,7 +5559,6 @@ __metadata:
     "@snx-v3/useClaimedRewards": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
-    "@snx-v3/useCreateAccount": "workspace:*"
     "@snx-v3/useIsAndromedaStataUSDC": "workspace:*"
     "@snx-v3/useIssuedDebt": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
@@ -5992,7 +5991,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/useCreateAccount@workspace:*, @snx-v3/useCreateAccount@workspace:liquidity/lib/useCreateAccount":
+"@snx-v3/useCreateAccount@workspace:liquidity/lib/useCreateAccount":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useCreateAccount@workspace:liquidity/lib/useCreateAccount"
   dependencies:

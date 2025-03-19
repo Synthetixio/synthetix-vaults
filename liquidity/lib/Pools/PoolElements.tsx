@@ -137,7 +137,11 @@ export function PoolAPR({ network, collateral }: PoolAPRProps) {
     <Text fontFamily="heading" fontSize="14px" lineHeight="20px" fontWeight={500} color="white">
       {isPendingApr ? '~' : null}
       {!isPendingApr && positionApr && positionApr.apr28d > 0
-        ? (positionApr.apr28d * 100 + (isAndromedaStataUSDC && stataUSDCApr ? stataUSDCApr : 0))
+        ? (
+            positionApr.apr28dPerformance * 100 +
+            (isAndromedaStataUSDC && stataUSDCApr ? stataUSDCApr : 0) +
+            positionApr.apr24hIncentiveRewards * 100
+          )
             .toFixed(2)
             .concat('%')
         : '-'}
@@ -149,10 +153,12 @@ export function PoolAPR({ network, collateral }: PoolAPRProps) {
                 <Text mr={2}>Performance:</Text>
                 <Text>{(positionApr.apr28dPerformance * 100).toFixed(2).concat('%')}</Text>
               </Flex>
-              <Flex justifyContent="space-between">
-                <Text mr={2}>Rewards: </Text>
-                <Text>{(positionApr.apr28dIncentiveRewards * 100).toFixed(2).concat('%')}</Text>
-              </Flex>
+              {positionApr.apr24hIncentiveRewards > 0 && (
+                <Flex justifyContent="space-between">
+                  <Text mr={2}>Rewards: </Text>
+                  <Text>{(positionApr.apr24hIncentiveRewards * 100).toFixed(2).concat('%')}</Text>
+                </Flex>
+              )}
               {isAndromedaStataUSDC && stataUSDCApr ? (
                 <Flex justifyContent="space-between">
                   <Text mr={2}>AAVE yield: </Text>
