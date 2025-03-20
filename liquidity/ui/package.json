@@ -48,6 +48,7 @@
     "@snx-v3/usePythPrice": "workspace:*",
     "@snx-v3/useRewards": "workspace:*",
     "@snx-v3/useShowMyPositionsOnly": "workspace:*",
+    "@snx-v3/useStrategyPoolsList": "workspace:*",
     "@synthetixio/devtools-formatters": "workspace:*",
     "@synthetixio/magic-wallet": "workspace:*",
     "@synthetixio/safe-import": "workspace:*",
