@@ -14,12 +14,16 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useIsAndromedaStataUSDC } from '@snx-v3/useIsAndromedaStataUSDC';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type ManageActionType, type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import {
+  type ManageActionType,
+  type LiquidityPositionPageSchemaType,
+  useParams,
+} from '@snx-v3/useParams';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
-export const ManagePage = () => {
-  const [params, setParams] = useParams<PositionPageSchemaType>();
+export const LiquidityManagePage = () => {
+  const [params, setParams] = useParams<LiquidityPositionPageSchemaType>();
   const { network } = useNetwork();
 
   const { data: collateralType, isPending: isPendingCollateralType } = useCollateralType(

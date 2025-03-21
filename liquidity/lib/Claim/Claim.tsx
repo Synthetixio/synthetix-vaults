@@ -8,7 +8,7 @@ import { TokenIcon } from '@snx-v3/TokenIcon';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { useTokenPrice } from '@snx-v3/useTokenPrice';
 import { validatePosition } from '@snx-v3/validatePosition';
@@ -18,7 +18,7 @@ import { useContext, useMemo } from 'react';
 export function Claim() {
   const { network } = useNetwork();
   const { debtChange, collateralChange, setDebtChange } = useContext(ManagePositionContext);
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: liquidityPosition, isPending: isPendingLiquidityPosition } = useLiquidityPosition({

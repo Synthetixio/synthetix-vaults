@@ -16,7 +16,7 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useDebtRepayer } from '@snx-v3/useDebtRepayer';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useRepay } from '@snx-v3/useRepay';
 import { useSynthTokens } from '@snx-v3/useSynthTokens';
 import { useSystemToken } from '@snx-v3/useSystemToken';
@@ -33,7 +33,7 @@ export function ClosePositionTransactions({
   onClose: () => void;
   onBack: () => void;
 }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: liquidityPosition } = useLiquidityPosition({

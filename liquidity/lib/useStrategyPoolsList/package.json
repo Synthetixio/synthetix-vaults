@@ -6,6 +6,7 @@
   "dependencies": {
     "@snx-v3/useBlockchain": "workspace:*",
     "@tanstack/react-query": "^5.8.3",
+    "debug": "^4.4.0",
     "ethers": "^5.7.2",
     "react": "^18.2.0"
   }

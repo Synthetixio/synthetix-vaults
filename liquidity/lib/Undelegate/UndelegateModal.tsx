@@ -16,7 +16,7 @@ import { transactionLink } from '@snx-v3/etherscanLink';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { Wei, wei } from '@synthetixio/wei';
 import React from 'react';
 
@@ -29,7 +29,7 @@ export function UndelegateModal({
   approvalTxnStatus?: string;
   txnHash: string | null;
 }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { collateralChange, setCollateralChange, setDebtChange } =
     React.useContext(ManagePositionContext);
   const { data: collateralType } = useCollateralType(params.collateralSymbol);

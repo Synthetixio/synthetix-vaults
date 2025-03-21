@@ -11,14 +11,14 @@ import { useBorrow } from '@snx-v3/useBorrow';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { wei } from '@synthetixio/wei';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { ClaimSuccessBanner } from './ClaimSuccessBanner';
 
 export function ClaimModal({ onClose }: { onClose: () => void }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { debtChange, setDebtChange } = useContext(ManagePositionContext);
   const { network } = useNetwork();
   const [showClaimBanner, setShowClaimBanner] = useState(false);

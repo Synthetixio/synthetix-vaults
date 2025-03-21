@@ -5,11 +5,11 @@ import { ChangeStat } from '@snx-v3/ChangeStat';
 import { DebtAmount } from '@snx-v3/DebtAmount';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { type Wei } from '@synthetixio/wei';
 
 export function DebtStats({ newDebt, hasChanges }: { newDebt: Wei; hasChanges: boolean }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: liquidityPosition, isPending: isPendingLiquidityPosition } = useLiquidityPosition({

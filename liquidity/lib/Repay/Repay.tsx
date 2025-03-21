@@ -9,7 +9,7 @@ import { TokenIcon } from '@snx-v3/TokenIcon';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useRepay } from '@snx-v3/useRepay';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
@@ -18,7 +18,7 @@ import React from 'react';
 import { RepayModal } from './RepayModal';
 
 export function Repay() {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { debtChange, setDebtChange } = React.useContext(ManagePositionContext);
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: liquidityPosition, isPending: isPendingLiquidityPosition } = useLiquidityPosition({

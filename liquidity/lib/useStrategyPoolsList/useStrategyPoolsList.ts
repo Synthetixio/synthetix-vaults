@@ -2,7 +2,22 @@ import { BASE_ANDROMEDA, useNetwork, useProviderForChain } from '@snx-v3/useBloc
 import { usePositionManagerDeltaNeutralBTC } from '../contracts/usePositionManagerDeltaNeutralBTC';
 import { usePositionManagerDeltaNeutralETH } from '../contracts/usePositionManagerDeltaNeutralETH';
 import { useQuery } from '@tanstack/react-query';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
+import debug from 'debug';
+const log = debug('snx:useStrategyPoolsList');
+
+interface StrategyPool {
+  name: string;
+  symbol: string;
+  displaySymbol: string;
+  token: string;
+  asset: string;
+  totalSupply: BigNumber;
+  totalAssets: number;
+  totalAssetsCap: BigNumber;
+  performanceFee: BigNumber;
+  exchangeRate: BigNumber;
+}
 
 export function useStrategyPoolsList() {
   const { network } = useNetwork();
@@ -70,6 +85,19 @@ export function useStrategyPoolsList() {
         DeltaNeutralETHContract.exchangeRate(),
       ]);
 
+      log('ETH', {
+        name: ethName,
+        displaySymbol: 'ETH Delta Neutral',
+        token: 'ETH',
+        symbol: ethSymbol,
+        asset: ethAsset,
+        totalSupply: ethTotalSupply,
+        totalAssets: ethTotalAssets,
+        totalAssetsCap: ethTotalAssetsCap,
+        performanceFee: ethPerformanceFee,
+        exchangeRate: ethExchangeRate,
+      });
+
       return [
         {
           name: btcName,
@@ -78,7 +106,7 @@ export function useStrategyPoolsList() {
           token: 'BTC',
           asset: btcAsset,
           totalSupply: btcTotalSupply,
-          totalAssets: btcTotalAssets,
+          totalAssets: btcTotalAssets.toNumber() / 1e6,
           totalAssetsCap: btcTotalAssetsCap,
           performanceFee: btcPerformanceFee,
           exchangeRate: btcExchangeRate,
@@ -90,12 +118,12 @@ export function useStrategyPoolsList() {
           symbol: ethSymbol,
           asset: ethAsset,
           totalSupply: ethTotalSupply,
-          totalAssets: ethTotalAssets,
+          totalAssets: ethTotalAssets.toNumber() / 1e6,
           totalAssetsCap: ethTotalAssetsCap,
           performanceFee: ethPerformanceFee,
           exchangeRate: ethExchangeRate,
         },
-      ];
+      ] as StrategyPool[];
     },
   });
 }

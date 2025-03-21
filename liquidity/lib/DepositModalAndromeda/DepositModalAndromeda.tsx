@@ -12,7 +12,7 @@ import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { usePositionManagerForCollateral } from '@snx-v3/usePositionManagerForCollateral';
 import { useUSDC } from '@snx-v3/useUSDC';
 import { withERC7412 } from '@snx-v3/withERC7412';
@@ -25,7 +25,7 @@ import React from 'react';
 const log = debug('snx:DepositModalAndromeda');
 
 export function DepositModalAndromeda({ onClose }: { onClose: () => void }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 

@@ -5,7 +5,7 @@ import { getStatsUrl } from '@snx-v3/getStatsUrl';
 import { TokenIcon } from '@snx-v3/TokenIcon';
 import { NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useVaultsData } from '@snx-v3/useVaultsData';
 import React from 'react';
 
@@ -14,7 +14,7 @@ import React from 'react';
 export function PositionTitle() {
   const { network } = useNetwork();
 
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const { data: vaultsData, isPending: isPendingVaultsData } = useVaultsData(network);

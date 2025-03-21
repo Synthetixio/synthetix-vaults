@@ -27,7 +27,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useDebtRepayer } from '@snx-v3/useDebtRepayer';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { makeSearch, type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { makeSearch, type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { usePoolConfiguration } from '@snx-v3/usePoolConfiguration';
 import { useUndelegate } from '@snx-v3/useUndelegate';
 import { useUndelegateBaseAndromeda } from '@snx-v3/useUndelegateBaseAndromeda';
@@ -40,7 +40,7 @@ import React from 'react';
 import { UndelegateModal } from './UndelegateModal';
 
 export function Undelegate() {
-  const [params, setParams] = useParams<PositionPageSchemaType>();
+  const [params, setParams] = useParams<LiquidityPositionPageSchemaType>();
   const { collateralChange, debtChange, setCollateralChange } =
     React.useContext(ManagePositionContext);
   const { data: collateralType } = useCollateralType(params.collateralSymbol);

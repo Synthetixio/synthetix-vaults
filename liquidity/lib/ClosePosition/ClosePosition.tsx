@@ -19,7 +19,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { useClosePosition } from '@snx-v3/useClosePosition';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useTokenPrice } from '@snx-v3/useTokenPrice';
@@ -28,7 +28,7 @@ import { ClosePositionOneStep } from './ClosePositionOneStep';
 import { ClosePositionTransactions } from './ClosePositionTransactions';
 
 function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit: () => void }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: systemToken } = useSystemToken();
 
@@ -229,7 +229,7 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
 }
 
 export const ClosePosition = ({ onClose }: { onClose: () => void }) => {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
 
   const [transactionStep, setTransactions] = React.useState(false);
   const { setCollateralChange, setDebtChange } = React.useContext(ManagePositionContext);

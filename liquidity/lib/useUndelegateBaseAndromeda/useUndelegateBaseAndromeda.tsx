@@ -9,7 +9,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useDebtRepayer } from '@snx-v3/useDebtRepayer';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useSpotMarketProxy } from '@snx-v3/useSpotMarketProxy';
 import { withERC7412 } from '@snx-v3/withERC7412';
 import { Wei, wei } from '@synthetixio/wei';
@@ -21,7 +21,7 @@ import React from 'react';
 const log = debug('snx:useUndelegateBaseAndromeda');
 
 export function useUndelegateBaseAndromeda({ undelegateAmount }: { undelegateAmount?: Wei }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: liquidityPosition } = useLiquidityPosition({

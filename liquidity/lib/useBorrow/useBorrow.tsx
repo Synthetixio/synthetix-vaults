@@ -9,13 +9,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import debug from 'debug';
 import { ethers } from 'ethers';
 import { useReducer } from 'react';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 
 const log = debug('snx:useBorrow');
 
 export const useBorrow = ({ borrowAmount }: { borrowAmount?: Wei }) => {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 
   const [txnState, dispatch] = useReducer(reducer, initialState);

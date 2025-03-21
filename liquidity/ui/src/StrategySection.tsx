@@ -5,6 +5,8 @@ import { useStrategyPoolsList } from '@snx-v3/useStrategyPoolsList';
 import DeltaNeutralIcon from './assets/delta-neutral.svg';
 import { InfoIcon } from '@chakra-ui/icons';
 import { makeSearch, useParams } from '@snx-v3/useParams';
+import { wei } from '@synthetixio/wei';
+import { formatNumberToUsdShort } from '@snx-v3/formatters';
 
 function HeaderText({ ...props }) {
   return (
@@ -174,6 +176,14 @@ export const StrategySection = () => {
             width="260px"
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
+            as={Link}
+            href={`?${makeSearch({
+              page: 'vault-position',
+              collateralSymbol: 'USDC',
+              symbol: pool.displaySymbol,
+              manageAction: 'deposit',
+              accountId: params.accountId,
+            })}`}
           >
             <Flex position="relative">
               <Image
@@ -209,7 +219,10 @@ export const StrategySection = () => {
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
           >
-            -
+            {formatNumberToUsdShort(pool.totalAssets, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </Flex>
           <Flex
             width="140px"
@@ -240,12 +253,12 @@ export const StrategySection = () => {
             <Button
               as={Link}
               href={`?${makeSearch({
-                page: 'position',
-                collateralSymbol: 'BTC',
+                page: 'vault-position',
+                collateralSymbol: 'USDC',
+                symbol: pool.displaySymbol,
                 manageAction: 'deposit',
                 accountId: params.accountId,
               })}`}
-              // onClick={onClick}
               size="sm"
               height="32px"
               py="10px"

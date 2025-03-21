@@ -14,7 +14,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { usePythFeeds } from '@snx-v3/usePythFeeds';
 import { usePythVerifier } from '@snx-v3/usePythVerifier';
 import { useSystemToken } from '@snx-v3/useSystemToken';
@@ -34,7 +34,7 @@ export function ClosePositionOneStep({
   onClose: () => void;
   onBack: () => void;
 }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: liquidityPosition, refetch: refetchLiquidityPosition } = useLiquidityPosition({

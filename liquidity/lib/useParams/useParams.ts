@@ -27,21 +27,40 @@ export const ManageActionSchema = z.union([
 ]);
 export type ManageActionType = z.infer<typeof ManageActionSchema>;
 
-export const PositionPageSchema = z.object({
+export const LiquidityPositionPageSchema = z.object({
   page: z.literal('position'),
   collateralSymbol: z.string(),
   manageAction: ManageActionSchema,
   accountId: z.string().optional(),
 });
-export type PositionPageSchemaType = z.infer<typeof PositionPageSchema>;
+export type LiquidityPositionPageSchemaType = z.infer<typeof LiquidityPositionPageSchema>;
 
-const AllowedQueriesSchema = z.union([HomePageSchema, SettingsPageSchema, PositionPageSchema]);
+export const VaultPositionPageSchema = z.object({
+  page: z.literal('vault-position'),
+  collateralSymbol: z.string(),
+  symbol: z.string(),
+  manageAction: ManageActionSchema,
+  accountId: z.string().optional(),
+});
+export type VaultPositionPageSchemaType = z.infer<typeof VaultPositionPageSchema>;
+
+const AllowedQueriesSchema = z.union([
+  HomePageSchema,
+  SettingsPageSchema,
+  LiquidityPositionPageSchema,
+  VaultPositionPageSchema,
+]);
 type AllowedQueriesType = z.infer<typeof AllowedQueriesSchema>;
 
 export function searchParamsToObject(searchParams: URLSearchParams) {
   const params = Object.fromEntries(Array.from(searchParams));
 
-  for (const schema of [HomePageSchema, SettingsPageSchema, PositionPageSchema]) {
+  for (const schema of [
+    HomePageSchema,
+    SettingsPageSchema,
+    LiquidityPositionPageSchema,
+    VaultPositionPageSchema,
+  ]) {
     const parsed = schema.safeParse(params);
     if (parsed.success) {
       return parsed.data;

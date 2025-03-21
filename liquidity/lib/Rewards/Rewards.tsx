@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { Tooltip } from '@snx-v3/Tooltip';
 import { useClaimAllRewards } from '@snx-v3/useClaimAllRewards';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useRewardsByCollateralType } from '@snx-v3/useRewards';
 import React from 'react';
 import { AllRewardsModal } from './AllRewardsModal';
@@ -23,7 +23,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { formatNumberToUsd } from '@snx-v3/formatters';
 
 export function Rewards() {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
 
   const { data: rewards, isPending: isPendingRewards } = useRewardsByCollateralType({
     accountId: params.accountId,
