@@ -5,7 +5,6 @@ import { useStrategyPoolsList } from '@snx-v3/useStrategyPoolsList';
 import DeltaNeutralIcon from './assets/delta-neutral.svg';
 import { InfoIcon } from '@chakra-ui/icons';
 import { makeSearch, useParams } from '@snx-v3/useParams';
-import { wei } from '@synthetixio/wei';
 import { formatNumberToUsdShort } from '@snx-v3/formatters';
 
 function HeaderText({ ...props }) {
