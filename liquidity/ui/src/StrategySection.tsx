@@ -248,7 +248,7 @@ export const StrategySection = () => {
             -
           </Flex>
 
-          <Flex width={['100%', '120px']} justifyContent="flex-end">
+          <Flex width={['100%', '120px']} flex="auto" justifyContent="flex-end">
             <Button
               as={Link}
               href={`?${makeSearch({
