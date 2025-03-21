@@ -3,7 +3,7 @@ import { Button, Divider, Skeleton, Table, Tbody, Td, Text, Th, Thead, Tr } from
 import { Amount } from '@snx-v3/Amount';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useLocks } from '@snx-v3/useLocks';
-import { PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { wei } from '@synthetixio/wei';
 import { intlFormat } from 'date-fns';
 import React from 'react';
@@ -11,7 +11,7 @@ import React from 'react';
 export const LockedCollateral: React.FC<{
   onClose: () => void;
 }> = ({ onClose }) => {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
 
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { data: locks, isPending: isPendingLocks } = useLocks(

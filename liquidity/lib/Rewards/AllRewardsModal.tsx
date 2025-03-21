@@ -14,7 +14,7 @@ import {
 import { Amount } from '@snx-v3/Amount';
 import { etherscanLink } from '@snx-v3/etherscanLink';
 import { useNetwork } from '@snx-v3/useBlockchain';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { groupRewardsBySymbol, useRewards } from '@snx-v3/useRewards';
 import { useSynthTokens } from '@snx-v3/useSynthTokens';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
@@ -30,7 +30,7 @@ export function AllRewardsModal({
   txnStatus?: string;
   txnHash: string | null;
 }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { network } = useNetwork();
   const { data: rewards } = useRewards({ accountId: params.accountId });
   const { data: synthTokens } = useSynthTokens();

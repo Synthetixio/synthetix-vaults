@@ -10,7 +10,7 @@ import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlo
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { useWithdraw } from '@snx-v3/useWithdraw';
 import { useWithdrawTimer } from '@snx-v3/useWithdrawTimer';
@@ -18,7 +18,7 @@ import React from 'react';
 import { WithdrawModal } from './WithdrawModal';
 
 export function Withdraw({ isDebtWithdrawal = false }: { isDebtWithdrawal?: boolean }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { setWithdrawAmount, withdrawAmount } = React.useContext(ManagePositionContext);
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 

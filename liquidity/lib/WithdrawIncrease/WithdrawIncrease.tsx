@@ -1,6 +1,6 @@
 import { Alert, AlertIcon, Text } from '@chakra-ui/react';
 import { useAccountCollateralUnlockDate } from '@snx-v3/useAccountCollateralUnlockDate';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 
 export function WithdrawIncrease() {
   return (
@@ -12,7 +12,7 @@ export function WithdrawIncrease() {
 }
 
 export function DepositsIncreaseTimeout() {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { data: accountCollateralUnlockDate } = useAccountCollateralUnlockDate({
     accountId: params.accountId,
   });

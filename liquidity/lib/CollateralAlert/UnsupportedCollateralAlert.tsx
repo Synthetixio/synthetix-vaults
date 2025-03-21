@@ -8,10 +8,10 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
-import { makeSearch, type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { makeSearch, type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 
 export const UnsupportedCollateralAlert = ({ isOpen }: { isOpen: boolean }) => {
-  const [params, setParams] = useParams<PositionPageSchemaType>();
+  const [params, setParams] = useParams<LiquidityPositionPageSchemaType>();
   return (
     <Modal isOpen={isOpen} onClose={() => {}}>
       <ModalOverlay />

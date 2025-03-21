@@ -14,7 +14,7 @@ import { useCollateralPriceUpdates } from '@snx-v3/useCollateralPriceUpdates';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { usePositionManagerForCollateral } from '@snx-v3/usePositionManagerForCollateral';
 import { useWithdrawTimer } from '@snx-v3/useWithdrawTimer';
 import { withERC7412 } from '@snx-v3/withERC7412';
@@ -28,7 +28,7 @@ import { WithdrawModalAndromeda } from './WithdrawModalAndromeda';
 const log = debug('snx:WithdrawAndromeda');
 
 export function WithdrawAndromeda() {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { setWithdrawAmount } = React.useContext(ManagePositionContext);
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
 

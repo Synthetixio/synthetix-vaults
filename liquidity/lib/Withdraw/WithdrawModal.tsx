@@ -16,7 +16,7 @@ import { transactionLink } from '@snx-v3/etherscanLink';
 import { ManagePositionContext } from '@snx-v3/ManagePositionContext';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
-import { PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useSystemToken } from '@snx-v3/useSystemToken';
 import { WithdrawIncrease } from '@snx-v3/WithdrawIncrease';
 import { Wei, wei } from '@synthetixio/wei';
@@ -31,7 +31,7 @@ export function WithdrawModal({
   txnHash: string | null;
   isDebtWithdrawal?: boolean;
 }) {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { withdrawAmount, setWithdrawAmount } = React.useContext(ManagePositionContext);
   const { data: systemToken } = useSystemToken();
   const { data: collateralType } = useCollateralType(params.collateralSymbol);

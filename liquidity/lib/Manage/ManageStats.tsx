@@ -9,7 +9,7 @@ import { useNetwork } from '@snx-v3/useBlockchain';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { useIsAndromedaStataUSDC } from '@snx-v3/useIsAndromedaStataUSDC';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useStaticAaveUSDCRate } from '@snx-v3/useStaticAaveUSDCRate';
 import { validatePosition } from '@snx-v3/validatePosition';
 import React from 'react';
@@ -19,7 +19,7 @@ import { PnlStats } from './PnlStats';
 import { WithdrableBalance } from './WithdrableBalance';
 
 export function ManageStats() {
-  const [params] = useParams<PositionPageSchemaType>();
+  const [params] = useParams<LiquidityPositionPageSchemaType>();
   const { network } = useNetwork();
 
   const { debtChange, collateralChange } = React.useContext(ManagePositionContext);

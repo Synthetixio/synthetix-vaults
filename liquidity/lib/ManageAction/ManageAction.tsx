@@ -17,7 +17,7 @@ import {
   makeSearch,
   ManageActionSchema,
   ManageActionType,
-  type PositionPageSchemaType,
+  type LiquidityPositionPageSchemaType,
   useParams,
 } from '@snx-v3/useParams';
 import { validatePosition } from '@snx-v3/validatePosition';
@@ -33,7 +33,7 @@ export const ManageAction = ({
   setTxnModalOpen: (action?: ManageActionType) => void;
   txnModalOpen?: ManageActionType;
 }) => {
-  const [params, setParams] = useParams<PositionPageSchemaType>();
+  const [params, setParams] = useParams<LiquidityPositionPageSchemaType>();
   const { network } = useNetwork();
 
   const { debtChange, collateralChange, setCollateralChange, setDebtChange } =

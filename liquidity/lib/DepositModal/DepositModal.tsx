@@ -16,7 +16,7 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { useCoreProxy } from '@snx-v3/useCoreProxy';
 import { useDeposit } from '@snx-v3/useDeposit';
 import { useLiquidityPosition } from '@snx-v3/useLiquidityPosition';
-import { type PositionPageSchemaType, useParams } from '@snx-v3/useParams';
+import { type LiquidityPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import { useWrapEth } from '@snx-v3/useWrapEth';
 import { Wei, wei } from '@synthetixio/wei';
 import { useMachine } from '@xstate/react';
@@ -24,7 +24,7 @@ import React from 'react';
 import { DepositMachine, Events, ServiceNames, State } from './DepositMachine';
 
 export function DepositModal({ onClose }: { onClose: () => void }) {
-  const [params, setParams] = useParams<PositionPageSchemaType>();
+  const [params, setParams] = useParams<LiquidityPositionPageSchemaType>();
   const { collateralChange, setCollateralChange } = React.useContext(ManagePositionContext);
   const { data: CoreProxy } = useCoreProxy();
 
