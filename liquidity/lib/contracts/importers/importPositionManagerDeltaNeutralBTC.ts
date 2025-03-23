@@ -7,6 +7,8 @@ const abi = [
   'function totalAssetsCap() view returns (uint256)',
   'function performanceFee() view returns (uint256)',
   'function exchangeRate() view returns (uint256)',
+  'function deposit(uint256, address)',
+  'function redeem(uint256, address, address)',
 ];
 
 export async function importPositionManagerDeltaNeutralBTC(

@@ -7,6 +7,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { type VaultPositionPageSchemaType, useParams } from '@snx-v3/useParams';
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { DepositVault } from '../../lib/DepositVault/DepositVault';
 
 export const VaultManagePage = () => {
   const [params] = useParams<VaultPositionPageSchemaType>();
@@ -30,7 +31,7 @@ export const VaultManagePage = () => {
             <ManageStats />
           </Flex>
           <Flex width="100%" flex={1} alignSelf="flex-start" flexDirection="column">
-            Deposit and Withdraw
+            {params.manageAction === 'deposit' && <DepositVault />}
           </Flex>
         </Flex>
       </Box>
