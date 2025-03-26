@@ -6493,13 +6493,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useStrategyPoolInfo@workspace:liquidity/lib/useStrategyPoolInfo":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useStrategyPoolInfo@workspace:liquidity/lib/useStrategyPoolInfo"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    debug: "npm:^4.4.0"
+    ethers: "npm:^5.7.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useStrategyPoolsList@workspace:*, @snx-v3/useStrategyPoolsList@workspace:liquidity/lib/useStrategyPoolsList":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useStrategyPoolsList@workspace:liquidity/lib/useStrategyPoolsList"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    debug: "npm:^4.4.0"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown

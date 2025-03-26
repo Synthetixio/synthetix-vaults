@@ -18,10 +18,12 @@ import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import debug from 'debug';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
+import { useStrategyPoolInfo } from '../useStrategyPoolInfo';
+import { wei } from '@synthetixio/wei';
 
-const log = debug('snx:DepositVault');
+const log = debug('snx:WithdrawVault');
 
-export const DepositVault = () => {
+export const WithdrawVault = () => {
   const [params] = useParams<VaultPositionPageSchemaType>();
   const [amount, setAmount] = useState(ZEROWEI);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,8 +35,8 @@ export const DepositVault = () => {
   const { data: DeltaNeutralETH } = usePositionManagerDeltaNeutralETH();
   const { data: DeltaNeutralBTC } = usePositionManagerDeltaNeutralBTC();
   const errorParser = useContractErrorParser();
-
   const { data: usdcBalance } = useTokenBalance(USDCToken?.address);
+
   const deltaNeutral = useMemo(() => {
     if (params.symbol === 'BTC Delta Neutral') {
       return DeltaNeutralBTC;
@@ -44,6 +46,8 @@ export const DepositVault = () => {
     }
   }, [DeltaNeutralBTC, DeltaNeutralETH, params.symbol]);
 
+  const { data: vaultInfo } = useStrategyPoolInfo(deltaNeutral?.address);
+
   const overAvailableBalance = amount.gt(usdcBalance || ZEROWEI);
   const toast = useToast({ isClosable: true, duration: 9000 });
 
@@ -52,6 +56,8 @@ export const DepositVault = () => {
     amount: parseUnits(amount.toString(), 6),
     spender: deltaNeutral?.address,
   });
+
+  const maxAmount = wei(vaultInfo?.totalAssets || '0');
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -69,14 +75,15 @@ export const DepositVault = () => {
       const contract = new ethers.Contract(deltaNeutral?.address, deltaNeutral?.abi, signer);
       const walletAddress = await signer.getAddress();
 
-      const depositTx = await contract.populateTransaction.deposit(
+      const withdrawTx = await contract.populateTransaction.redeem(
         parseUnits(amount.toString(), 6).toString(),
+        walletAddress,
         walletAddress
       );
 
       const txn = await signer.sendTransaction({
-        ...depositTx,
-        gasLimit: depositTx?.gasLimit?.mul(15).div(10),
+        ...withdrawTx,
+        gasLimit: withdrawTx?.gasLimit?.mul(15).div(10),
       });
       log('txn', txn);
 
@@ -90,7 +97,7 @@ export const DepositVault = () => {
 
       toast.closeAll();
       toast({
-        title: 'Deposit',
+        title: 'Withdraw',
         description: contractError ? (
           <ContractError contractError={contractError} />
         ) : (
@@ -107,9 +114,9 @@ export const DepositVault = () => {
   return (
     <>
       <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
-        Deposit
+        Withdraw
       </Text>
-      <BorderBox w="100%" display="flex" p={3} mb="6">
+      <BorderBox w="100%" display="flex" alignItems="center" p={3} mb="6">
         <Flex alignItems="flex-start" flexDir="column" gap="1">
           <BorderBox display="flex" py={1.5} px={2.5}>
             <Text display="flex" gap={2} alignItems="center" fontWeight="600">
@@ -121,6 +128,19 @@ export const DepositVault = () => {
               {collateralType?.displaySymbol ?? params.collateralSymbol}
             </Text>
           </BorderBox>
+          <Flex fontSize="xs" color="whiteAlpha.700">
+            <Amount prefix="Balance: " value={maxAmount} />
+            &nbsp;
+            <Text
+              as="span"
+              cursor="pointer"
+              onClick={() => setAmount(maxAmount)}
+              color="cyan.500"
+              fontWeight={700}
+            >
+              Max
+            </Text>
+          </Flex>
         </Flex>
 
         <Flex flexDir="column" flexGrow={1}>
@@ -143,17 +163,14 @@ export const DepositVault = () => {
       </BorderBox>
 
       <Button
-        data-cy="deposit submit"
         type="submit"
-        isDisabled={!(amount.gt(0) && !overAvailableBalance && collateralType)}
+        isDisabled={
+          !(amount.gt(0) && !overAvailableBalance && collateralType && amount.lte(maxAmount))
+        }
         onClick={handleSubmit}
         isLoading={isLoading}
       >
-        {amount.lte(0)
-          ? 'Enter Amount'
-          : requireApproval
-            ? 'Approve USDC'
-            : 'Deposit and Lock Collateral'}
+        {amount.lte(0) ? 'Enter Amount' : 'Withdraw'}
       </Button>
     </>
   );

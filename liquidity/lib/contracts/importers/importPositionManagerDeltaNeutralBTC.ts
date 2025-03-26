@@ -9,6 +9,23 @@ const abi = [
   'function exchangeRate() view returns (uint256)',
   'function deposit(uint256, address)',
   'function redeem(uint256, address, address)',
+  'error ExceedsTotalAssetsCap()',
+  'error ExceedsMaxAssetTransactionSize()',
+  'error NotEnoughToCoverFees()',
+  'error NotEnoughToCoverPriceImpact()',
+  'error Paused()',
+  'error InvalidValue()',
+  'error PriceNotAvailable()',
+  'error InvalidPrice()',
+  'error InsufficientShares(uint256 shares)',
+  'error InsufficientCollateral(uint256 collateral)',
+  'error NotAuthorized()',
+  'error PendingOrder()',
+  'error FunctionNotSupported()',
+  'error NegativeAvailableMargin()',
+  'error NotEnoughShares(uint256 shares, uint256 minShares)',
+  'error NotEnoughAssets(uint256 assets, uint256 minAssets)',
+  'error ExceedsMaxRedemptionPercent()',
 ];
 
 export async function importPositionManagerDeltaNeutralBTC(

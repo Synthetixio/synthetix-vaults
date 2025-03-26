@@ -6,6 +6,7 @@ import { usePositionManagerAndromedaStataUSDC } from '@snx-v3/usePositionManager
 import { usePositionManagerAndromedaUSDC } from '@snx-v3/usePositionManagerAndromedaUSDC';
 import { useStaticAaveUSDC } from '@snx-v3/useStaticAaveUSDC';
 import { useCallback } from 'react';
+import { usePositionManagerDeltaNeutralBTC } from '../contracts/usePositionManagerDeltaNeutralBTC';
 
 export function useContractErrorParser() {
   const { data: AllErrors } = useAllErrors();
@@ -14,6 +15,7 @@ export function useContractErrorParser() {
   const { data: PositionManager } = usePositionManager();
   const { data: PositionManagerAndromedaStataUSDC } = usePositionManagerAndromedaStataUSDC();
   const { data: PositionManagerAndromedaUSDC } = usePositionManagerAndromedaUSDC();
+  const { data: PositionManagerDeltaNeutral } = usePositionManagerDeltaNeutralBTC();
 
   return useCallback(
     (error: any) => {
@@ -26,6 +28,7 @@ export function useContractErrorParser() {
           PositionManager,
           PositionManagerAndromedaStataUSDC,
           PositionManagerAndromedaUSDC,
+          PositionManagerDeltaNeutral,
         ]),
       });
     },
@@ -36,6 +39,7 @@ export function useContractErrorParser() {
       PositionManagerAndromedaStataUSDC,
       PositionManagerAndromedaUSDC,
       StaticAaveUSDC,
+      PositionManagerDeltaNeutral,
     ]
   );
 }

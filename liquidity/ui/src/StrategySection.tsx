@@ -27,10 +27,10 @@ export const StrategySection = () => {
   const { network } = useNetwork();
   const targetNetwork = network || BASE_ANDROMEDA;
 
-  const [params] = useParams();
+  const [params, setParams] = useParams();
   const btnDisabled = !network;
 
-  const { data: pools } = useStrategyPoolsList();
+  const pools = useStrategyPoolsList();
 
   return (
     <Flex mt={16} flexDirection="column" gap={4}>
@@ -218,10 +218,12 @@ export const StrategySection = () => {
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
           >
-            {formatNumberToUsdShort(pool.totalAssets, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+            {pool.totalAssets !== undefined
+              ? formatNumberToUsdShort(pool.totalAssets, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })
+              : '-'}
           </Flex>
           <Flex
             width="140px"
@@ -258,6 +260,16 @@ export const StrategySection = () => {
                 manageAction: 'deposit',
                 accountId: params.accountId,
               })}`}
+              onClick={(e) => {
+                e.preventDefault();
+                setParams({
+                  page: 'vault-position',
+                  collateralSymbol: 'USDC',
+                  symbol: pool.displaySymbol,
+                  manageAction: 'deposit',
+                  accountId: params.accountId,
+                });
+              }}
               size="sm"
               height="32px"
               py="10px"
