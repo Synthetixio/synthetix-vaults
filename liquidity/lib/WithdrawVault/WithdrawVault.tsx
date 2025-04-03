@@ -11,15 +11,14 @@ import { ZEROWEI } from '@snx-v3/constants';
 import { useUSDC } from '@snx-v3/useUSDC';
 import { usePositionManagerDeltaNeutralETH } from '../contracts/usePositionManagerDeltaNeutralETH';
 import { usePositionManagerDeltaNeutralBTC } from '../contracts/usePositionManagerDeltaNeutralBTC';
-import { useApprove } from '@snx-v3/useApprove';
 import { parseUnits } from '@snx-v3/format';
 import { ethers } from 'ethers';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import debug from 'debug';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
-import { useStrategyPoolInfo } from '../useStrategyPoolInfo';
 import { wei } from '@synthetixio/wei';
+import { useStrategyPoolPosition } from '../useStrategyPoolPosition';
 
 const log = debug('snx:WithdrawVault');
 
@@ -46,30 +45,18 @@ export const WithdrawVault = () => {
     }
   }, [DeltaNeutralBTC, DeltaNeutralETH, params.symbol]);
 
-  const { data: vaultInfo } = useStrategyPoolInfo(deltaNeutral?.address);
+  const { data: position } = useStrategyPoolPosition(deltaNeutral?.address);
 
   const overAvailableBalance = amount.gt(usdcBalance || ZEROWEI);
   const toast = useToast({ isClosable: true, duration: 9000 });
 
-  const { approve, requireApproval, refetchAllowance } = useApprove({
-    contractAddress: USDCToken?.address,
-    amount: parseUnits(amount.toString(), 6),
-    spender: deltaNeutral?.address,
-  });
-
-  const maxAmount = wei(vaultInfo?.totalAssets || '0');
+  const maxAmount = wei(position?.balance || '0');
 
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
       if (!(deltaNeutral && provider && network && signer)) {
         return;
-      }
-
-      if (requireApproval) {
-        await approve(false);
-
-        refetchAllowance();
       }
 
       const contract = new ethers.Contract(deltaNeutral?.address, deltaNeutral?.abi, signer);
@@ -113,12 +100,9 @@ export const WithdrawVault = () => {
   };
   return (
     <>
-      <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
-        Withdraw
-      </Text>
-      <BorderBox w="100%" display="flex" alignItems="center" p={3} mb="6">
+      <BorderBox mt={6} w="100%" display="flex" alignItems="center" p={3} mb="6" bg="whiteAlpha.50">
         <Flex alignItems="flex-start" flexDir="column" gap="1">
-          <BorderBox display="flex" py={1.5} px={2.5}>
+          <BorderBox bg="none" display="flex" py={1.5} px={2.5}>
             <Text display="flex" gap={2} alignItems="center" fontWeight="600">
               <TokenIcon
                 symbol={collateralType?.symbol ?? params.collateralSymbol}

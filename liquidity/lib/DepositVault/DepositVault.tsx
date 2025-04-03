@@ -104,14 +104,12 @@ export const DepositVault = () => {
 
     setIsLoading(false);
   };
+
   return (
     <>
-      <Text color="gray./50" fontSize="sm" fontWeight="700" mb="3">
-        Deposit
-      </Text>
-      <BorderBox w="100%" display="flex" p={3} mb="6">
+      <BorderBox mt={6} w="100%" display="flex" p={3} mb="6" bg="whiteAlpha.50">
         <Flex alignItems="flex-start" flexDir="column" gap="1">
-          <BorderBox display="flex" py={1.5} px={2.5}>
+          <BorderBox bg="none" display="flex" py={1.5} px={2.5}>
             <Text display="flex" gap={2} alignItems="center" fontWeight="600">
               <TokenIcon
                 symbol={collateralType?.symbol ?? params.collateralSymbol}
@@ -121,6 +119,19 @@ export const DepositVault = () => {
               {collateralType?.displaySymbol ?? params.collateralSymbol}
             </Text>
           </BorderBox>
+          <Flex fontSize="xs" color="whiteAlpha.700">
+            <Amount prefix="Balance: " value={usdcBalance || ZEROWEI} />
+            &nbsp;
+            <Text
+              as="span"
+              cursor="pointer"
+              onClick={() => setAmount(usdcBalance || ZEROWEI)}
+              color="cyan.500"
+              fontWeight={700}
+            >
+              Max
+            </Text>
+          </Flex>
         </Flex>
 
         <Flex flexDir="column" flexGrow={1}>
