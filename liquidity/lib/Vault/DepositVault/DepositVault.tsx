@@ -9,8 +9,8 @@ import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useMemo, useState } from 'react';
 import { ZEROWEI } from '@snx-v3/constants';
 import { useUSDC } from '@snx-v3/useUSDC';
-import { usePositionManagerDeltaNeutralETH } from '../contracts/usePositionManagerDeltaNeutralETH';
-import { usePositionManagerDeltaNeutralBTC } from '../contracts/usePositionManagerDeltaNeutralBTC';
+import { usePositionManagerDeltaNeutralETH } from '../../contracts/usePositionManagerDeltaNeutralETH';
+import { usePositionManagerDeltaNeutralBTC } from '../../contracts/usePositionManagerDeltaNeutralBTC';
 import { useApprove } from '@snx-v3/useApprove';
 import { parseUnits } from '@snx-v3/format';
 import { ethers } from 'ethers';
@@ -18,6 +18,7 @@ import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import debug from 'debug';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
+import { useStrategyPoolPosition } from '../../useStrategyPoolPosition';
 
 const log = debug('snx:DepositVault');
 
@@ -34,7 +35,7 @@ export const DepositVault = () => {
   const { data: DeltaNeutralBTC } = usePositionManagerDeltaNeutralBTC();
   const errorParser = useContractErrorParser();
 
-  const { data: usdcBalance } = useTokenBalance(USDCToken?.address);
+  const { data: usdcBalance, refetch: refetchUSDCBalance } = useTokenBalance(USDCToken?.address);
   const deltaNeutral = useMemo(() => {
     if (params.symbol === 'BTC Delta Neutral') {
       return DeltaNeutralBTC;
@@ -43,6 +44,8 @@ export const DepositVault = () => {
       return DeltaNeutralETH;
     }
   }, [DeltaNeutralBTC, DeltaNeutralETH, params.symbol]);
+
+  const { refetch: refetchPosition } = useStrategyPoolPosition(deltaNeutral?.address);
 
   const overAvailableBalance = amount.gt(usdcBalance || ZEROWEI);
   const toast = useToast({ isClosable: true, duration: 9000 });
@@ -81,6 +84,10 @@ export const DepositVault = () => {
       log('txn', txn);
 
       const receipt = await provider.waitForTransaction(txn.hash);
+
+      refetchUSDCBalance();
+      refetchPosition();
+
       log('receipt', receipt);
     } catch (error) {
       const contractError = errorParser(error);

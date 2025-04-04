@@ -11,7 +11,7 @@ import React from 'react';
 
 // import { useApr } from '@snx-v3/useApr';
 
-export function PositionTitle() {
+export function PositionTitle({ isVault }: { isVault?: boolean }) {
   const { network } = useNetwork();
 
   const [params] = useParams<LiquidityPositionPageSchemaType>();
@@ -53,8 +53,8 @@ export function PositionTitle() {
       >
         <TokenIcon
           symbol={collateralType?.symbol ?? params.collateralSymbol}
-          height={42}
-          width={42}
+          height={64}
+          width={64}
           fill="#0B0B22"
           color="#00D1FF"
         />
@@ -62,13 +62,15 @@ export function PositionTitle() {
       <Flex direction="column" gap={0.5}>
         <Heading
           ml={4}
-          fontWeight={700}
-          fontSize={['18px', '20px', '24px']}
+          mb={1}
+          fontWeight={500}
+          fontSize={['20px', '24px', '30px']}
           color="gray.50"
           display="flex"
           alignItems="center"
         >
-          {collateralType?.displaySymbol ?? params.collateralSymbol} Liquidity Position
+          {collateralType?.displaySymbol ?? params.collateralSymbol}{' '}
+          {isVault ? 'Vault' : 'Liquidity Position'}
         </Heading>
         <Flex
           ml={4}

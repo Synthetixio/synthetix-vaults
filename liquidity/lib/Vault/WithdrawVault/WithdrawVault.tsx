@@ -9,8 +9,8 @@ import { useTokenBalance } from '@snx-v3/useTokenBalance';
 import { useMemo, useState } from 'react';
 import { ZEROWEI } from '@snx-v3/constants';
 import { useUSDC } from '@snx-v3/useUSDC';
-import { usePositionManagerDeltaNeutralETH } from '../contracts/usePositionManagerDeltaNeutralETH';
-import { usePositionManagerDeltaNeutralBTC } from '../contracts/usePositionManagerDeltaNeutralBTC';
+import { usePositionManagerDeltaNeutralETH } from '../../contracts/usePositionManagerDeltaNeutralETH';
+import { usePositionManagerDeltaNeutralBTC } from '../../contracts/usePositionManagerDeltaNeutralBTC';
 import { parseUnits } from '@snx-v3/format';
 import { ethers } from 'ethers';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
@@ -18,7 +18,8 @@ import debug from 'debug';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
 import { wei } from '@synthetixio/wei';
-import { useStrategyPoolPosition } from '../useStrategyPoolPosition';
+import { useStrategyPoolPosition } from '../../useStrategyPoolPosition';
+import { useStrategyPoolInfo } from '../../useStrategyPoolInfo';
 
 const log = debug('snx:WithdrawVault');
 
@@ -34,7 +35,7 @@ export const WithdrawVault = () => {
   const { data: DeltaNeutralETH } = usePositionManagerDeltaNeutralETH();
   const { data: DeltaNeutralBTC } = usePositionManagerDeltaNeutralBTC();
   const errorParser = useContractErrorParser();
-  const { data: usdcBalance } = useTokenBalance(USDCToken?.address);
+  const { data: usdcBalance, refetch: refetchUSDCBalance } = useTokenBalance(USDCToken?.address);
 
   const deltaNeutral = useMemo(() => {
     if (params.symbol === 'BTC Delta Neutral') {
@@ -45,7 +46,10 @@ export const WithdrawVault = () => {
     }
   }, [DeltaNeutralBTC, DeltaNeutralETH, params.symbol]);
 
-  const { data: position } = useStrategyPoolPosition(deltaNeutral?.address);
+  const { data: position, refetch: refetchPosition } = useStrategyPoolPosition(
+    deltaNeutral?.address
+  );
+  const { data: poolInfo } = useStrategyPoolInfo(deltaNeutral?.address);
 
   const overAvailableBalance = amount.gt(usdcBalance || ZEROWEI);
   const toast = useToast({ isClosable: true, duration: 9000 });
@@ -63,7 +67,7 @@ export const WithdrawVault = () => {
       const walletAddress = await signer.getAddress();
 
       const withdrawTx = await contract.populateTransaction.redeem(
-        parseUnits(amount.toString(), 6).toString(),
+        parseUnits(amount.toString(), 18).toString(),
         walletAddress,
         walletAddress
       );
@@ -75,6 +79,10 @@ export const WithdrawVault = () => {
       log('txn', txn);
 
       const receipt = await provider.waitForTransaction(txn.hash);
+
+      refetchUSDCBalance();
+      refetchPosition();
+
       log('receipt', receipt);
     } catch (error) {
       const contractError = errorParser(error);
@@ -113,7 +121,7 @@ export const WithdrawVault = () => {
             </Text>
           </BorderBox>
           <Flex fontSize="xs" color="whiteAlpha.700">
-            <Amount prefix="Balance: " value={maxAmount} />
+            <Amount prefix="Available: " value={maxAmount} />
             &nbsp;
             <Text
               as="span"
@@ -130,18 +138,24 @@ export const WithdrawVault = () => {
         <Flex flexDir="column" flexGrow={1}>
           <NumberInput
             InputProps={{
-              'data-max': usdcBalance?.toString(),
+              'data-max': maxAmount?.toString(),
               min: 0,
             }}
             value={amount}
             onChange={(value) => {
               setAmount(value);
             }}
-            max={usdcBalance}
+            max={maxAmount}
             min={ZEROWEI}
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
-            <Amount prefix="$" value={amount.abs().mul(1)} />
+            <Amount
+              prefix="$"
+              value={amount
+                .abs()
+                .mul(poolInfo?.exchangeRate || '1')
+                .mul(1)}
+            />
           </Flex>
         </Flex>
       </BorderBox>

@@ -2,6 +2,7 @@ import { InfoIcon } from '@chakra-ui/icons';
 import {
   Button,
   Flex,
+  FlexProps,
   Table,
   TableContainer,
   Tbody,
@@ -22,7 +23,7 @@ import { RewardsRow } from './RewardsRow';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { formatNumberToUsd } from '@snx-v3/formatters';
 
-export function Rewards() {
+export function Rewards({ ...props }: FlexProps) {
   const [params] = useParams<LiquidityPositionPageSchemaType>();
 
   const { data: rewards, isPending: isPendingRewards } = useRewardsByCollateralType({
@@ -43,7 +44,7 @@ export function Rewards() {
   );
 
   return (
-    <BorderBox p={6} flexDirection="row" bg="navy.700">
+    <BorderBox p={6} flexDirection="row" bg="navy.700" {...props}>
       <TableContainer width="100%">
         <AllRewardsModal
           txnStatus={txnState.txnStatus}
@@ -57,10 +58,10 @@ export function Rewards() {
             </Text>
             <Text
               color="white"
-              fontSize="xl"
-              fontWeight={800}
+              fontSize="20px"
+              fontWeight={500}
               fontFamily="heading"
-              lineHeight="36px"
+              lineHeight="28px"
             >
               {formatNumberToUsd(rewardsForCollateral?.totalRewardsValue.toNumber() ?? 0)}
             </Text>

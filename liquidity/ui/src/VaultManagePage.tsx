@@ -1,5 +1,4 @@
 import { UnsupportedCollateralAlert } from '@snx-v3/CollateralAlert';
-import { ManageStats, PositionTitle } from '@snx-v3/Manage';
 import { ManagePositionProvider } from '@snx-v3/ManagePositionContext';
 import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { Box, Flex, Link, Tab, TabList, Tabs } from '@chakra-ui/react';
@@ -7,9 +6,12 @@ import { Box, Flex, Link, Tab, TabList, Tabs } from '@chakra-ui/react';
 import { type VaultPositionPageSchemaType, makeSearch, useParams } from '@snx-v3/useParams';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { DepositVault } from '../../lib/DepositVault/DepositVault';
+import { DepositVault } from '../../lib/Vault/DepositVault/DepositVault';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { WithdrawVault } from '../../lib/WithdrawVault/WithdrawVault';
+import { WithdrawVault } from '../../lib/Vault/WithdrawVault/WithdrawVault';
+import { VaultPositionStats } from '../../lib/Vault/VaultPositionStats/VaultPositionStats';
+import { VaultInfo } from '../../lib/Vault/VaultInfo/VaultInfo';
+import { VaultHistory } from '../../lib/Vault/VaultHistory/VaultHistory';
 
 export const VaultManagePage = () => {
   const [params, setParams] = useParams<VaultPositionPageSchemaType>();
@@ -27,12 +29,9 @@ export const VaultManagePage = () => {
       <UnsupportedCollateralAlert isOpen={!isPendingCollateralType && !collateralType} />
       <Box mb={12} mt={6}>
         <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
-          <Flex flex={1} direction="column" gap={6}>
-            <PositionTitle />
+          <VaultInfo />
 
-            <ManageStats />
-          </Flex>
-          <Flex width="100%" flex={1} alignSelf="flex-start" flexDirection="column">
+          <Flex width="100%" flex={1} alignSelf="flex-start" flexDirection="column" gap={6}>
             <BorderBox border="none" flexDir="column" p={6}>
               <Tabs isFitted index={params.manageAction === 'deposit' ? 0 : 1}>
                 <TabList>
@@ -98,8 +97,12 @@ export const VaultManagePage = () => {
               {params.manageAction === 'deposit' && <DepositVault />}
               {params.manageAction === 'withdraw' && <WithdrawVault />}
             </BorderBox>
+
+            <VaultPositionStats />
           </Flex>
         </Flex>
+
+        <VaultHistory />
       </Box>
     </ManagePositionProvider>
   );
