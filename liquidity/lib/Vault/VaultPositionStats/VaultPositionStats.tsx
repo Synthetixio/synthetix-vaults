@@ -57,7 +57,7 @@ export const VaultPositionStats = () => {
             value={wei(position?.balance || '0')}
             newValue={wei(position?.balance || '0').add(1000)}
             formatFn={(val?: Wei) => (
-              <Text fontSize="20px" fontWeight="medium" lineHeight="28px">
+              <Text fontSize="20px" fontWeight={500} lineHeight="28px">
                 {currency(val ?? ZEROWEI)}
               </Text>
             )}

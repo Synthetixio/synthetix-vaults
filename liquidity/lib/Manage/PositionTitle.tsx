@@ -43,13 +43,14 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
   }, [collateralType, vaultsData]);
 
   return (
-    <Flex alignItems="center">
+    <Flex alignItems="top">
       <Flex
-        bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)"
+        // bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)" // not sure if we need this?
         justifyContent="center"
-        alignItems="center"
+        alignItems="top"
         borderRadius="100%"
         display="flex"
+        flexShrink={0}
       >
         <TokenIcon
           symbol={collateralType?.symbol ?? params.collateralSymbol}
@@ -78,8 +79,9 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
           fontSize={['10px', '12px']}
           color="white"
           alignItems="center"
-          gap={3}
+          gap={2}
           lineHeight="14px"
+          flexWrap="wrap"
         >
           <Flex
             mt={0.25}

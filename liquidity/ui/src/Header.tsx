@@ -18,7 +18,7 @@ export default function Header() {
       mb="4"
       py="3"
       borderBottomWidth="1px"
-      borderBottomColor="gray.900"
+      borderBottomColor="whiteAlpha.200"
       px={{ base: 1, md: 10 }}
     >
       <Container maxW="1236px" as={Flex} justifyContent="space-between" alignItems="center">
