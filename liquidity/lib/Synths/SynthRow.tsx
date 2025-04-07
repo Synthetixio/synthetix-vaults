@@ -47,7 +47,13 @@ export function SynthRow({
       </Flex>
 
       <Flex width={['100px', '100px', '160px']} direction="column" alignItems="flex-end">
-        <Text color="white" fontSize="14px" fontFamily="heading" fontWeight="medium" lineHeight="20px">
+        <Text
+          color="white"
+          fontSize="14px"
+          fontFamily="heading"
+          fontWeight="medium"
+          lineHeight="20px"
+        >
           <Amount value={balance} />
         </Text>
       </Flex>
