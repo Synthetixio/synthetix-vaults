@@ -28,7 +28,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({ label, value, ...props }) 
       >
         {label}
       </Text>
-      <Text fontSize="20px" lineHeight="28px" fontWeight={500}>
+      <Text fontSize="20px" lineHeight="28px" fontWeight="medium">
         {value}
       </Text>
     </BorderBox>

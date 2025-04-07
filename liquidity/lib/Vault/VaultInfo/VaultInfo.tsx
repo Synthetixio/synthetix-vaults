@@ -45,7 +45,7 @@ export const VaultInfo = () => {
             value={
               <Amount
                 fontSize="24px"
-                fontWeight={500}
+                fontWeight="medium"
                 prefix="$"
                 value={wei(poolInfo?.totalAssets || '0').mul(poolInfo?.exchangeRate || '1')}
               />
@@ -56,7 +56,7 @@ export const VaultInfo = () => {
           />
           <StatsCard
             label="28d APR"
-            value={<Amount fontSize="24px" fontWeight={500} suffix="%" value={wei('55')} />}
+            value={<Amount fontSize="24px" fontWeight="medium" suffix="%" value={wei('55')} />}
             justifyContent="center"
             alignItems="center"
             textAlign="center"

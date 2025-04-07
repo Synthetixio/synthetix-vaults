@@ -63,9 +63,9 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
         <Heading
           ml={4}
           mb={1}
-          fontWeight={500}
+          fontWeight="medium"
           fontSize={['20px', '24px', '30px']}
-          color="gray.50"
+          color="white"
           display="flex"
           alignItems="center"
         >
@@ -76,7 +76,7 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
           ml={4}
           fontWeight={700}
           fontSize={['10px', '12px']}
-          color="gray.50"
+          color="white"
           alignItems="center"
           gap={3}
           lineHeight="14px"

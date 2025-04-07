@@ -59,7 +59,7 @@ export function Rewards({ ...props }: FlexProps) {
             <Text
               color="white"
               fontSize="20px"
-              fontWeight={500}
+              fontWeight="medium"
               fontFamily="heading"
               lineHeight="28px"
             >

@@ -11,9 +11,7 @@ export function MyPositionsOnlyToggle() {
       py={2}
       px={4}
       bg="navy.700"
-      border="1px solid"
-      borderColor="gray.900"
-      rounded="base"
+      rounded="md"
       fontSize={14}
       color="gray.500"
       gap={3}

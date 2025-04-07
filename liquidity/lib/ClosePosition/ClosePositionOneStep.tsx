@@ -225,7 +225,7 @@ export function ClosePositionOneStep({
 
   return (
     <Flex flexDirection="column" data-cy="close position multistep">
-      <Text color="gray.50" fontSize="20px" fontWeight={700}>
+      <Text color="white" fontSize="20px" fontWeight={700}>
         <ArrowBackIcon cursor="pointer" onClick={onBack} mr={2} />
         Close Position
       </Text>
