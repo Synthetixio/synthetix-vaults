@@ -28,7 +28,14 @@ export const VaultInfo = () => {
   const { data: poolInfo } = useStrategyPoolInfo(deltaNeutral?.address);
 
   return (
-    <BorderBox alignSelf="self-start" flex={1} border="none" flexDir="column" p={6} gap={6}>
+    <BorderBox
+      alignSelf="self-start"
+      flex={1}
+      border="none"
+      flexDir="column"
+      p={['4', '6']}
+      gap={6}
+    >
       <Flex direction="column" gap={6}>
         <PositionTitle isVault />
 
@@ -39,12 +46,12 @@ export const VaultInfo = () => {
           (always positive) and the ETH perpetual funding rate on Perps V3.
         </Text>
 
-        <Flex gap={6}>
+        <Flex gap={['4', '6']}>
           <StatsCard
             label="Total Value Locked"
             value={
               <Amount
-                fontSize="24px"
+                fontSize={['xl', '2xl']}
                 fontWeight="medium"
                 prefix="$"
                 value={wei(poolInfo?.totalAssets || '0').mul(poolInfo?.exchangeRate || '1')}
@@ -56,7 +63,9 @@ export const VaultInfo = () => {
           />
           <StatsCard
             label="28d APR"
-            value={<Amount fontSize="24px" fontWeight="medium" suffix="%" value={wei('55')} />}
+            value={
+              <Amount fontSize={['xl', '2xl']} fontWeight="medium" suffix="%" value={wei('55')} />
+            }
             justifyContent="center"
             alignItems="center"
             textAlign="center"

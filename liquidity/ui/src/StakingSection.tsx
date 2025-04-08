@@ -47,16 +47,10 @@ export const StakingSection = () => {
             />
 
             <Flex flexDirection="column">
-              <Text
-                color="white"
-                fontWeight={700}
-                lineHeight="1.25rem"
-                fontFamily="heading"
-                fontSize="sm"
-              >
+              <Text color="white" fontWeight={700} fontFamily="heading" fontSize="md">
                 SNX 420 Pool
               </Text>
-              <Text color="gray.500" fontFamily="heading" fontSize="0.75rem" lineHeight="1rem">
+              <Text color="gray.500" fontFamily="heading" fontSize="xs" lineHeight="20px">
                 The 420 pool starts generating yield for you from Ethena and other yield sources
                 immediately
               </Text>

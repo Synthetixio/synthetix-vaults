@@ -207,23 +207,22 @@ export function PoolPerformance({
   return (
     <>
       {position.debt.gt(0) && (
-        <Text
-          fontFamily="heading"
-          fontSize="14px"
-          fontWeight="medium"
-          lineHeight="20px"
-          color="gray.500"
-        >
+        <Text fontFamily="heading" fontSize="xs" color="gray.500">
           Debt{' '}
-          <Text color="white" as="span">
+          <Text color="white" as="span" fontSize="sm" fontWeight="medium">
             {formatNumberToUsd(position.debt.toNumber())}
           </Text>
         </Text>
       )}
 
-      <Text color="gray.500" fontFamily="heading" fontSize="sm">
+      <Text color="gray.500" fontFamily="heading" fontSize="xs">
         Rewards{' '}
-        <Text color={totalRewards.gt(0) ? 'green.500' : 'gray.500'} as="span">
+        <Text
+          color={totalRewards.gt(0) ? 'green.500' : 'gray.500'}
+          as="span"
+          fontSize="sm"
+          fontWeight="medium"
+        >
           {totalRewards.gt(0) ? formatNumberToUsd(totalRewards.toNumber()) : '-'}
         </Text>
       </Text>
@@ -250,6 +249,7 @@ export function PoolUnlockedCollateralValue({
           color="cyan.500"
           fontFamily="heading"
           fontSize="xs"
+          lineHeight="21px"
           href={`?${makeSearch({
             page: 'position',
             collateralSymbol: position.collateralType.symbol,

@@ -65,10 +65,11 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
           ml={4}
           mb={1}
           fontWeight="medium"
-          fontSize={['20px', '24px', '30px']}
+          fontSize={['24px', '30px']}
           color="white"
           display="flex"
           alignItems="center"
+          letterSpacing="tight"
         >
           {collateralType?.displaySymbol ?? params.collateralSymbol}{' '}
           {isVault ? 'Vault' : 'Liquidity Position'}
@@ -76,7 +77,7 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
         <Flex
           ml={4}
           fontWeight={700}
-          fontSize={['10px', '12px']}
+          fontSize="xs"
           color="white"
           alignItems="center"
           gap={2}
@@ -92,7 +93,7 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
             borderRadius={4}
             px={1}
             py={0.5}
-            gap={2}
+            gap={1}
           >
             <NetworkIcon size="14px" networkId={network?.id} />
             <Text>{network?.label} Network</Text>
@@ -105,7 +106,7 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
             borderRadius={4}
             px={1}
             py={0.5}
-            gap={2}
+            gap={1}
           >
             <Text>TVL</Text>
             <Text>
@@ -132,7 +133,7 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
             borderRadius={4}
             px={1}
             py={0.5}
-            gap={2}
+            gap={1}
           >
             <Text>More Stats</Text>
             <ArrowUpIcon transform="rotate(45deg)" />

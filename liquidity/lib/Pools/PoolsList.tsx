@@ -89,6 +89,7 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
       p={['4', '6']}
       backgroundColor="navy.700"
       borderRadius="md"
+      mt={0}
     >
       <Flex flexDir="row" minW="800px" gap={4} py={3} px={4} whiteSpace="nowrap">
         <HeaderText width="260px" justifyContent="left">

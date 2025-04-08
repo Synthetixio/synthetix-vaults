@@ -33,12 +33,13 @@ export const VaultPositionStats = () => {
   const { data: poolInfo } = useStrategyPoolInfo(deltaNeutral?.address);
 
   return (
-    <BorderBox border="none" flexDir="column" p={6} gap={6}>
+    <BorderBox border="none" flexDir="column" p={['4', '6']} gap={6}>
       <Flex gap={6}>
         <StatsCard
           label="Total Value of My Deposits"
           value={
             <Amount
+              color="white"
               prefix="$"
               value={wei(position?.balance || '0').mul(poolInfo?.exchangeRate || '0')}
             />
@@ -58,7 +59,7 @@ export const VaultPositionStats = () => {
             newValue={wei(position?.balance || '0').add(1000)}
             formatFn={(val?: Wei) => (
               <Text fontSize="20px" fontWeight={500} lineHeight="28px">
-                {currency(val ?? ZEROWEI)}
+                ${currency(val ?? ZEROWEI)}
               </Text>
             )}
             hasChanges
