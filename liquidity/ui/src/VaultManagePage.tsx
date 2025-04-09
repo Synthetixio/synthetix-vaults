@@ -12,6 +12,7 @@ import { WithdrawVault } from '../../lib/Vault/WithdrawVault/WithdrawVault';
 import { VaultPositionStats } from '../../lib/Vault/VaultPositionStats/VaultPositionStats';
 import { VaultInfo } from '../../lib/Vault/VaultInfo/VaultInfo';
 import { VaultHistory } from '../../lib/Vault/VaultHistory/VaultHistory';
+import { TvlChart } from '../../lib/Vault/TVLChart/TVLChart';
 
 export const VaultManagePage = () => {
   const [params, setParams] = useParams<VaultPositionPageSchemaType>();
@@ -29,7 +30,10 @@ export const VaultManagePage = () => {
       <UnsupportedCollateralAlert isOpen={!isPendingCollateralType && !collateralType} />
       <Box mb={12} mt={6}>
         <Flex mt={['0', '6']} flexDirection={['column', 'column', 'row']} gap={4}>
-          <VaultInfo />
+          <Flex width="100%" flex={1} alignSelf="flex-start" flexDirection="column" gap={6}>
+            <VaultInfo />
+            <TvlChart />
+          </Flex>
 
           <Flex width="100%" flex={1} alignSelf="flex-start" flexDirection="column" gap={6}>
             <BorderBox border="none" flexDir="column" p={['4', '6']}>
