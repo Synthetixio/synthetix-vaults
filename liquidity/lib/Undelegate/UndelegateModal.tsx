@@ -71,7 +71,7 @@ export function UndelegateModal({
         minWidth="384px"
       >
         <ModalBody data-cy="undelegate dialog" p={6}>
-          <Text color="gray.50" fontSize="20px" fontWeight={700}>
+          <Text color="white" fontSize="20px" fontWeight={700}>
             Unlocking Collateral
           </Text>
 

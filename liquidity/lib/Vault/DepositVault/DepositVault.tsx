@@ -114,9 +114,17 @@ export const DepositVault = () => {
 
   return (
     <>
-      <BorderBox mt={6} w="100%" display="flex" p={3} mb="6" bg="whiteAlpha.50">
+      <BorderBox
+        mt={6}
+        w="100%"
+        display="flex"
+        p={3}
+        mb="6"
+        bg="whiteAlpha.50"
+        borderColor="whiteAlpha.200"
+      >
         <Flex alignItems="flex-start" flexDir="column" gap="1">
-          <BorderBox bg="none" display="flex" py={1.5} px={2.5}>
+          <BorderBox bg="none" display="flex" py={1.5} px={2.5} borderColor="whiteAlpha.200">
             <Text display="flex" gap={2} alignItems="center" fontWeight="600">
               <TokenIcon
                 symbol={collateralType?.symbol ?? params.collateralSymbol}

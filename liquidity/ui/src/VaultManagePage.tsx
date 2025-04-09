@@ -28,13 +28,13 @@ export const VaultManagePage = () => {
       </Helmet>
       <UnsupportedCollateralAlert isOpen={!isPendingCollateralType && !collateralType} />
       <Box mb={12} mt={6}>
-        <Flex mt={6} flexDirection={['column', 'column', 'row']} gap={4}>
+        <Flex mt={['0', '6']} flexDirection={['column', 'column', 'row']} gap={4}>
           <VaultInfo />
 
           <Flex width="100%" flex={1} alignSelf="flex-start" flexDirection="column" gap={6}>
-            <BorderBox border="none" flexDir="column" p={6}>
+            <BorderBox border="none" flexDir="column" p={['4', '6']}>
               <Tabs isFitted index={params.manageAction === 'deposit' ? 0 : 1}>
-                <TabList>
+                <TabList borderBottomColor="whiteAlpha.200">
                   <Tab
                     as={Link}
                     href={`?${makeSearch({
@@ -56,10 +56,11 @@ export const VaultManagePage = () => {
                     }}
                     color={params.manageAction === 'deposit' ? 'white' : 'gray.500'}
                     fontWeight={700}
-                    fontSize={['12px', '16px']}
+                    fontSize="md"
                     whiteSpace="nowrap"
                     textDecoration="none"
                     _hover={{ textDecoration: 'none' }}
+                    _focus={{ outline: 'none', boxShadow: 'none' }}
                   >
                     Deposit
                   </Tab>
@@ -84,10 +85,11 @@ export const VaultManagePage = () => {
                     }}
                     color={params.manageAction === 'withdraw' ? 'white' : 'gray.500'}
                     fontWeight={700}
-                    fontSize={['12px', '16px']}
+                    fontSize="md"
                     whiteSpace="nowrap"
                     textDecoration="none"
                     _hover={{ textDecoration: 'none' }}
+                    _focus={{ outline: 'none', boxShadow: 'none' }}
                   >
                     Withdraw
                   </Tab>

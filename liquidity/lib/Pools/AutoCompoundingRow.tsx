@@ -10,10 +10,8 @@ export const AutoCompoundingRow = () => {
     <Flex
       flexDir="row"
       w="100%"
-      border="1px solid"
-      borderColor="gray.900"
-      rounded="base"
-      bg="navy.700"
+      rounded="md"
+      bg="whiteAlpha.50"
       py={4}
       px={4}
       gap={4}

@@ -60,7 +60,7 @@ export function ChangeStat({
         as="div"
         data-cy="change stats current"
         textAlign="center"
-        opacity={value && value.eq(0) ? '70%' : undefined}
+        color={value && value.eq(0) ? 'gray.500' : undefined}
         whiteSpace="nowrap"
       >
         {isPending ? '~' : formatFn(value)}

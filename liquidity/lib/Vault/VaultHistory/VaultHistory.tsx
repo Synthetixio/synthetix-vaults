@@ -5,18 +5,39 @@ import { useState } from 'react';
 export const VaultHistory = () => {
   const [index, setIndex] = useState(0);
   return (
-    <BorderBox mt={6} alignSelf="self-start" flex={1} border="none" flexDir="column" p={6} gap={6}>
-      <Tabs isFitted index={index}>
-        <TabList overflow="auto">
+    <BorderBox
+      mt={6}
+      alignSelf="self-start"
+      flex={1}
+      border="none"
+      flexDir="column"
+      p={['4', '6']}
+      gap={4}
+    >
+      <Tabs index={index}>
+        <TabList
+          display="flex"
+          alignItems="flex-end"
+          overflowX="auto"
+          overflowY="hidden"
+          borderBottom="1px"
+          borderColor="whiteAlpha.200"
+          pb="2px"
+          sx={{
+            scrollbarWidth: 'none', // hide scrollbar in Firefox
+            '&::-webkit-scrollbar': {
+              display: 'none', // hide scrollbar in Chrome/Safari
+            },
+          }}
+        >
           <Tab
             color={index === 0 ? 'white' : 'gray.500'}
             fontWeight={400}
-            fontSize={['12px', '14px']}
+            fontSize="sm"
             whiteSpace="nowrap"
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(0)}
-            maxW="190px"
           >
             Deposits & Withdrawals
           </Tab>
@@ -24,12 +45,11 @@ export const VaultHistory = () => {
           <Tab
             color={index === 1 ? 'white' : 'gray.500'}
             fontWeight={400}
-            fontSize={['12px', '14px']}
+            fontSize="sm"
             whiteSpace="nowrap"
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(1)}
-            maxW="190px"
           >
             Positions (5)
           </Tab>
@@ -37,12 +57,11 @@ export const VaultHistory = () => {
           <Tab
             color={index === 2 ? 'white' : 'gray.500'}
             fontWeight={400}
-            fontSize={['12px', '14px']}
+            fontSize="sm"
             whiteSpace="nowrap"
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(2)}
-            maxW="190px"
           >
             Trade History
           </Tab>
@@ -50,12 +69,11 @@ export const VaultHistory = () => {
           <Tab
             color={index === 3 ? 'white' : 'gray.500'}
             fontWeight={400}
-            fontSize={['12px', '14px']}
+            fontSize="sm"
             whiteSpace="nowrap"
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(3)}
-            maxW="190px"
           >
             Funding History
           </Tab>
@@ -67,7 +85,7 @@ export const VaultHistory = () => {
           mt={4}
           bg="whiteAlpha.50"
           borderWidth="1px"
-          borderColor="gray.900"
+          borderColor="whiteAlpha.200"
         >
           <Table>
             <Thead>

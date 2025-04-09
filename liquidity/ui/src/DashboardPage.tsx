@@ -19,7 +19,9 @@ export function DashboardPage() {
   const [params] = useParams();
   const { network } = useNetwork();
 
-  const { data: liquidityPositions } = useLiquidityPositions({ accountId: params.accountId });
+  const { data: liquidityPositions } = useLiquidityPositions({
+    accountId: params.accountId,
+  });
 
   const filteredLiquidityPositions = React.useMemo(
     () =>
@@ -56,17 +58,37 @@ export function DashboardPage() {
         <title>Synthetix Vaults</title>
         <meta name="description" content="Synthetix Vaults" />
       </Helmet>
-      <Flex pt={{ base: 8, sm: 8 }} flexDir="column" mb={10}>
+      <Flex pt={{ base: 8, sm: 8 }} flexDir="column" mb={['28', '48']}>
         <Flex flexDirection="column" columnGap={20} justifyContent="space-between">
           <Flex flexDirection="column" minWidth={360}>
-            <Heading color="gray.50" fontSize={['4xl', '5xl']}>
-              Synthetix Vaults
+            <Heading
+              color="white"
+              fontSize={['5xl', '6xl']}
+              fontWeight="medium"
+              letterSpacing="tight"
+            >
+              Vaults
             </Heading>
-            <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
+            <Text
+              color="gray.500"
+              fontSize="lg"
+              lineHeight="120%"
+              fontFamily="heading"
+              mt="1rem"
+              fontWeight="medium"
+            >
               A selection of high-quality yield products powering the Synthetix Ecosystem
             </Text>
           </Flex>
-          <Flex mt={6} gap={4} flexDirection={['column', 'row']} justifyContent="space-between">
+          <Flex
+            mt={8}
+            gap={4}
+            p={['4', '6']}
+            flexDirection={{ base: 'column', md: 'row' }}
+            justifyContent="space-between"
+            backgroundColor="navy.700"
+            borderRadius="md"
+          >
             <TotalValueLocked />
             <MyDeposits />
             <StatsTotalPnl />
@@ -80,7 +102,7 @@ export function DashboardPage() {
 
         {!activeWallet && <ConnectBox />}
 
-        <Flex mt={16} flexDirection="column">
+        <Flex mt={16} flexDirection="column" gap={4}>
           <Heading
             fontSize="3xl"
             fontFamily="heading"
@@ -90,7 +112,7 @@ export function DashboardPage() {
           >
             Liquidity Providing
           </Heading>
-          <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
+          <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading">
             Provide liquidity to Synthetix Exchange to earn trading fees and liquidation rewards
           </Text>
           <PoolsList positions={filteredLiquidityPositions} />

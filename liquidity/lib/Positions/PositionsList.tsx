@@ -30,7 +30,7 @@ export const PositionsList = ({ positions }: { positions: LiquidityPositionType[
         fontSize="18px"
         fontWeight={700}
         lineHeight="28px"
-        color="gray.50"
+        color="white"
         mb={3}
       >
         {network ? (

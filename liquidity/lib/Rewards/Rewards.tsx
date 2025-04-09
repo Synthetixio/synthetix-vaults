@@ -52,14 +52,14 @@ export function Rewards({ ...props }: FlexProps) {
           collateralSymbol={params.collateralSymbol}
         />
         <Flex alignItems="center" justifyContent="space-between">
-          <Flex flexDirection="column">
+          <Flex flexDirection="column" gap={1}>
             <Text color="gray.500" fontSize="sm" fontFamily="heading" lineHeight="16px">
               Rewards
             </Text>
             <Text
               color="white"
               fontSize="20px"
-              fontWeight={500}
+              fontWeight="medium"
               fontFamily="heading"
               lineHeight="28px"
             >
@@ -92,7 +92,7 @@ export function Rewards({ ...props }: FlexProps) {
             Claim
           </Button>
         </Flex>
-        <Table data-cy="rewards table">
+        <Table data-cy="rewards table" mt={4}>
           <Thead>
             <Tr borderBottom="1px solid #2D2D38">
               <Th

@@ -62,7 +62,7 @@ export function BorrowModal({ txnStatus, txnHash }: { txnStatus: string; txnHash
         minWidth="384px"
       >
         <ModalBody data-cy="borrow dialog" p={6}>
-          <Text color="gray.50" fontSize="20px" fontWeight={700}>
+          <Text color="white" fontSize="20px" fontWeight={700}>
             Borrowing Debt
           </Text>
 
