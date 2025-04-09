@@ -134,7 +134,7 @@ export const DepositVault = () => {
               {collateralType?.displaySymbol ?? params.collateralSymbol}
             </Text>
           </BorderBox>
-          <Flex fontSize="xs" color="whiteAlpha.700">
+          <Flex minW="110px" fontSize="xs" color="whiteAlpha.700">
             <Amount prefix="Balance: " value={usdcBalance || ZEROWEI} />
             &nbsp;
             <Text

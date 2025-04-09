@@ -1,6 +1,10 @@
 import { BorderBox } from '@snx-v3/BorderBox';
-import { Tab, Table, TabList, Tabs, Th, Thead, Tr, Tbody, Td, Box, Text } from '@chakra-ui/react';
+import { Tab, TabList, Tabs, Box } from '@chakra-ui/react';
 import { useState } from 'react';
+import { VaultDeposits } from './VaultDeposits';
+import { VaultPositions } from './VaultPositions';
+import { VaultTradeHistory } from './VaultTradeHistory';
+import { VaultFunding } from './VaultFunding';
 
 export const VaultHistory = () => {
   const [index, setIndex] = useState(0);
@@ -51,7 +55,7 @@ export const VaultHistory = () => {
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(1)}
           >
-            Positions (5)
+            Positions (2)
           </Tab>
 
           <Tab
@@ -87,134 +91,10 @@ export const VaultHistory = () => {
           borderWidth="1px"
           borderColor="whiteAlpha.200"
         >
-          <Table>
-            <Thead>
-              <Tr>
-                <Th
-                  py={2}
-                  textTransform="unset"
-                  color="gray.600"
-                  border="none"
-                  fontFamily="heading"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  fontWeight={400}
-                >
-                  Date
-                </Th>
-                <Th
-                  py={2}
-                  textTransform="unset"
-                  color="gray.600"
-                  border="none"
-                  fontFamily="heading"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  fontWeight={400}
-                >
-                  Address
-                </Th>
-
-                <Th
-                  py={2}
-                  textTransform="unset"
-                  color="gray.600"
-                  border="none"
-                  fontFamily="heading"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  fontWeight={400}
-                >
-                  Value
-                </Th>
-                <Th
-                  py={2}
-                  textTransform="unset"
-                  color="gray.600"
-                  border="none"
-                  fontFamily="heading"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  fontWeight={400}
-                >
-                  Realised PnL
-                </Th>
-                <Th
-                  py={2}
-                  textTransform="unset"
-                  color="gray.600"
-                  border="none"
-                  fontFamily="heading"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  fontWeight={400}
-                >
-                  Transaction
-                </Th>
-              </Tr>
-            </Thead>
-
-            <Tbody>
-              <Tr border="none" borderTop="1px" borderTopColor="gray.900" width="100%" height="0px">
-                <Td height="0px" border="none" px={0} pt={0} pb={0} />
-                <Td height="0px" border="none" px={0} pt={0} pb={0} />
-                <Td height="0px" border="none" px={0} pt={0} pb={0} />
-                <Td height="0px" border="none" px={0} pt={0} pb={0} />
-                <Td height="0px" border="none" px={0} pt={0} pb={0} />
-                <Td height="0px" border="none" px={0} pt={0} pb={0} />
-                <Td height="0px" border="none" px={0} pt={0} pb={0} />
-              </Tr>
-
-              <Tr>
-                <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-                  02/24/2025
-                  <Text textColor="gray.500">14:03:21</Text>
-                </Td>
-                <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-                  0x46f...ec8fc
-                </Td>
-                <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-                  $1,200.0232
-                </Td>
-                <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-                  -
-                </Td>
-                <Td
-                  textDecoration="underline"
-                  border="none"
-                  fontSize="12px"
-                  fontWeight={400}
-                  py={2}
-                >
-                  0x46f...ec8fc
-                </Td>
-              </Tr>
-              <Tr>
-                <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-                  02/24/2025
-                  <Text textColor="gray.500">14:03:21</Text>
-                </Td>
-                <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-                  0x46f...ec8fc
-                </Td>
-                <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-                  $1,200.0232
-                </Td>
-                <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-                  -
-                </Td>
-                <Td
-                  textDecoration="underline"
-                  border="none"
-                  fontSize="12px"
-                  fontWeight={400}
-                  py={2}
-                >
-                  0x46f...ec8fc
-                </Td>
-              </Tr>
-            </Tbody>
-          </Table>
+          {index === 0 && <VaultDeposits />}
+          {index === 1 && <VaultPositions />}
+          {index === 2 && <VaultTradeHistory />}
+          {index === 3 && <VaultFunding />}
         </Box>
       </Tabs>
     </BorderBox>
