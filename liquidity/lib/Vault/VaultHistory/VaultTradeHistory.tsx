@@ -3,7 +3,7 @@ import { Table, Th, Thead, Tr, Tbody, Td, Text } from '@chakra-ui/react';
 export const VaultTradeHistory = () => {
   return (
     <Table>
-      <Thead>
+      <Thead whiteSpace="nowrap">
         <Tr>
           <Th
             py={2}
@@ -14,6 +14,7 @@ export const VaultTradeHistory = () => {
             fontSize="12px"
             lineHeight="16px"
             fontWeight={400}
+            width="160px"
           >
             Date
           </Th>

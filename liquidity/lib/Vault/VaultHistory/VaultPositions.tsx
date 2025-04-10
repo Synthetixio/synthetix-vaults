@@ -3,7 +3,7 @@ import { Table, Th, Thead, Tr, Tbody, Td } from '@chakra-ui/react';
 export const VaultPositions = () => {
   return (
     <Table>
-      <Thead>
+      <Thead whiteSpace="nowrap">
         <Tr>
           <Th
             py={2}

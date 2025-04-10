@@ -28,9 +28,9 @@ export const VaultHistory = () => {
           borderColor="whiteAlpha.200"
           pb="2px"
           sx={{
-            scrollbarWidth: 'none', // hide scrollbar in Firefox
+            scrollbarWidth: 'none',
             '&::-webkit-scrollbar': {
-              display: 'none', // hide scrollbar in Chrome/Safari
+              display: 'none',
             },
           }}
         >
