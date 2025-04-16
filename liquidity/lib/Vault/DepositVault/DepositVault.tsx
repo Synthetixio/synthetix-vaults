@@ -72,7 +72,7 @@ export const DepositVault = () => {
       const contract = new ethers.Contract(deltaNeutral?.address, deltaNeutral?.abi, signer);
       const walletAddress = await signer.getAddress();
 
-      const depositTx = await contract.populateTransaction.deposit(
+      const depositTx = await contract.populateTransaction['deposit(uint256,address)'](
         parseUnits(amount.toString(), 6).toString(),
         walletAddress
       );
