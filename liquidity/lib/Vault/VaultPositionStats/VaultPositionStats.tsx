@@ -1,4 +1,4 @@
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams, VaultPositionPageSchemaType } from '@snx-v3/useParams';
 import { useMemo } from 'react';
@@ -58,9 +58,9 @@ export const VaultPositionStats = () => {
             value={wei(position?.balance || '0')}
             newValue={wei(position?.balance || '0').add(1000)}
             formatFn={(val?: Wei) => (
-              <Text fontSize="20px" fontWeight={500} lineHeight="28px">
+              <span style={{ fontSize: '20px', fontWeight: 500, lineHeight: '28px' }}>
                 ${currency(val ?? ZEROWEI)}
-              </Text>
+              </span>
             )}
             hasChanges
             size="sm"
