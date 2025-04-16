@@ -163,7 +163,7 @@ export const StrategySection = () => {
         </Flex>
         {pools?.map((pool) => (
           <Flex
-            key={pool.name}
+            key={`${pool.displaySymbol}-${pool.token}`}
             w="100%"
             rounded="md"
             bg="whiteAlpha.50"
