@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Text, Flex, Button, useToast } from '@chakra-ui/react';
 import { TokenIcon } from '@snx-v3/TokenIcon';
 import { BorderBox } from '@snx-v3/BorderBox';
@@ -19,6 +20,7 @@ import debug from 'debug';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
 import { useStrategyPoolPosition } from '../../useStrategyPoolPosition';
+import { useFundingRateVaultData } from '../../useFundingRateVaultData';
 
 const log = debug('snx:DepositVault');
 
@@ -44,6 +46,8 @@ export const DepositVault = () => {
       return DeltaNeutralETH;
     }
   }, [DeltaNeutralBTC, DeltaNeutralETH, params.symbol]);
+  const { data: FundingRateVaultData } = useFundingRateVaultData(deltaNeutral?.address);
+  console.log('FundingRateVaultData', FundingRateVaultData);
 
   const { refetch: refetchPosition } = useStrategyPoolPosition(deltaNeutral?.address);
 
@@ -178,7 +182,7 @@ export const DepositVault = () => {
         {amount.lte(0)
           ? 'Enter Amount'
           : requireApproval
-            ? 'Approve USDC'
+            ? 'Approve USDC meow'
             : 'Deposit and Lock Collateral'}
       </Button>
     </>
