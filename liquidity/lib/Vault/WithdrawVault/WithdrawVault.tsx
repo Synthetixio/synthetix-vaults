@@ -66,7 +66,7 @@ export const WithdrawVault = () => {
       const contract = new ethers.Contract(deltaNeutral?.address, deltaNeutral?.abi, signer);
       const walletAddress = await signer.getAddress();
 
-      const withdrawTx = await contract.populateTransaction.redeem(
+      const withdrawTx = await contract.populateTransaction['redeem(uint256,address,address)'](
         parseUnits(amount.toString(), 18).toString(),
         walletAddress,
         walletAddress
