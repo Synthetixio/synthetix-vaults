@@ -1,4 +1,4 @@
-import formatHumanReadableAbi from '../../format/human-readable-abi';
+import formatHumanReadableAbi from '@snx-v3/format/human-readable-abi';
 import fundingRateVaultAbi from '../abis/funding-rate-vault-abi.json';
 
 export async function importPositionManagerDeltaNeutralETH(
