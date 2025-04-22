@@ -5,7 +5,8 @@ import { useStrategyPoolsList } from '@snx-v3/useStrategyPoolsList';
 import DeltaNeutralIcon from './assets/delta-neutral.svg';
 import { InfoIcon } from '@chakra-ui/icons';
 import { makeSearch, useParams } from '@snx-v3/useParams';
-import { formatNumberToUsdShort } from '@snx-v3/formatters';
+import { currency } from '@snx-v3/format';
+import { wei } from '@synthetixio/wei';
 
 function HeaderText({ ...props }) {
   return (
@@ -224,12 +225,7 @@ export const StrategySection = () => {
                 color="white"
                 textAlign="right"
               >
-                {pool.totalAssets !== undefined
-                  ? formatNumberToUsdShort(pool.totalAssets, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })
-                  : '-'}
+                {pool.totalAssets !== undefined ? `$${currency(wei(pool.totalAssets, 6))}` : '-'}
               </Text>
             </Flex>
             <Flex
