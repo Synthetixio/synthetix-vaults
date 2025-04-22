@@ -6,6 +6,7 @@ export interface FundingRateVaultMetadata {
   description: string;
   abi: ContractInterface;
   perpsMarket: string;
+  deployedBlock: number;
 }
 
 export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadata> = {
@@ -14,6 +15,7 @@ export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadat
       'A USDC-denominated vault on Base. Deposits are swapped for cbETH on Aerodrome, then deposited onto Synthetix Perps V3 to collateralise a short ETH perpetual derivative position of the equivalent size. The strategy therefore earns both the Coinbase staking yield (always positive) and the ETH perpetual funding rate on Perps V3.',
     abi,
     perpsMarket: 'ETH',
+    deployedBlock: 29_014_954,
   },
 };
 
