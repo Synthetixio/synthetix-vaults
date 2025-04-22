@@ -168,7 +168,7 @@ export const DepositVault = ({ vaultData }: Props) => {
         {amount.lte(0)
           ? 'Enter Amount'
           : requireApproval
-            ? 'Approve USDC meow'
+            ? 'Approve USDC'
             : 'Deposit and Lock Collateral'}
       </Button>
     </>
