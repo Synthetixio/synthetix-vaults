@@ -6,11 +6,9 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { Amount } from '@snx-v3/Amount';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ZEROWEI } from '@snx-v3/constants';
 import { useUSDC } from '@snx-v3/useUSDC';
-import { usePositionManagerDeltaNeutralETH } from '../../contracts/usePositionManagerDeltaNeutralETH';
-import { usePositionManagerDeltaNeutralBTC } from '../../contracts/usePositionManagerDeltaNeutralBTC';
 import { parseUnits } from '@snx-v3/format';
 import { ethers } from 'ethers';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
@@ -18,12 +16,15 @@ import debug from 'debug';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
 import { wei } from '@synthetixio/wei';
-import { useStrategyPoolPosition } from '../../useStrategyPoolPosition';
-import { useStrategyPoolInfo } from '../../useStrategyPoolInfo';
+import { FundingRateVaultData } from '../../useFundingRateVaultData';
 
 const log = debug('snx:WithdrawVault');
 
-export const WithdrawVault = () => {
+interface Props {
+  vaultData: FundingRateVaultData;
+}
+
+export const WithdrawVault = ({ vaultData }: Props) => {
   const [params] = useParams<VaultPositionPageSchemaType>();
   const [amount, setAmount] = useState(ZEROWEI);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,38 +33,22 @@ export const WithdrawVault = () => {
   const signer = useSigner();
   const provider = useProvider();
   const { data: USDCToken } = useUSDC();
-  const { data: DeltaNeutralETH } = usePositionManagerDeltaNeutralETH();
-  const { data: DeltaNeutralBTC } = usePositionManagerDeltaNeutralBTC();
   const errorParser = useContractErrorParser();
   const { data: usdcBalance, refetch: refetchUSDCBalance } = useTokenBalance(USDCToken?.address);
-
-  const deltaNeutral = useMemo(() => {
-    if (params.symbol === 'BTC Delta Neutral') {
-      return DeltaNeutralBTC;
-    }
-    if (params.symbol === 'ETH Delta Neutral') {
-      return DeltaNeutralETH;
-    }
-  }, [DeltaNeutralBTC, DeltaNeutralETH, params.symbol]);
-
-  const { data: position, refetch: refetchPosition } = useStrategyPoolPosition(
-    deltaNeutral?.address
-  );
-  const { data: poolInfo } = useStrategyPoolInfo(deltaNeutral?.address);
 
   const overAvailableBalance = amount.gt(usdcBalance || ZEROWEI);
   const toast = useToast({ isClosable: true, duration: 9000 });
 
-  const maxAmount = wei(position?.balance || '0');
+  const maxAmount = wei(vaultData.balanceOf || '0');
 
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      if (!(deltaNeutral && provider && network && signer)) {
+      if (!(provider && network && signer)) {
         return;
       }
 
-      const contract = new ethers.Contract(deltaNeutral?.address, deltaNeutral?.abi, signer);
+      const contract = new ethers.Contract(vaultData.address, vaultData.abi, signer);
       const walletAddress = await signer.getAddress();
 
       const withdrawTx = await contract.populateTransaction['redeem(uint256,address,address)'](
@@ -81,7 +66,6 @@ export const WithdrawVault = () => {
       const receipt = await provider.waitForTransaction(txn.hash);
 
       refetchUSDCBalance();
-      refetchPosition();
 
       log('receipt', receipt);
     } catch (error) {
@@ -161,7 +145,7 @@ export const WithdrawVault = () => {
               prefix="$"
               value={amount
                 .abs()
-                .mul(poolInfo?.exchangeRate || '1')
+                .mul(vaultData.exchangeRate || '1')
                 .mul(1)}
             />
           </Flex>

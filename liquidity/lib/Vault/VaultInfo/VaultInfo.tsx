@@ -1,32 +1,16 @@
 import { BorderBox } from '@snx-v3/BorderBox';
-import { useParams, VaultPositionPageSchemaType } from '@snx-v3/useParams';
-import { useMemo } from 'react';
-import { usePositionManagerDeltaNeutralETH } from '../../contracts/usePositionManagerDeltaNeutralETH';
-import { usePositionManagerDeltaNeutralBTC } from '../../contracts/usePositionManagerDeltaNeutralBTC';
-import { useStrategyPoolInfo } from '../../useStrategyPoolInfo';
 import { PositionTitle } from '@snx-v3/Manage';
 import { Text, Flex } from '@chakra-ui/react';
 import { StatsCard } from '../VaultPositionStats/StatsCard';
 import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
+import { FundingRateVaultData } from '../../useFundingRateVaultData';
 
-export const VaultInfo = () => {
-  const [params] = useParams<VaultPositionPageSchemaType>();
+interface Props {
+  vaultData: FundingRateVaultData;
+}
 
-  const { data: DeltaNeutralETH } = usePositionManagerDeltaNeutralETH();
-  const { data: DeltaNeutralBTC } = usePositionManagerDeltaNeutralBTC();
-
-  const deltaNeutral = useMemo(() => {
-    if (params.symbol === 'BTC Delta Neutral') {
-      return DeltaNeutralBTC;
-    }
-    if (params.symbol === 'ETH Delta Neutral') {
-      return DeltaNeutralETH;
-    }
-  }, [DeltaNeutralBTC, DeltaNeutralETH, params.symbol]);
-
-  const { data: poolInfo } = useStrategyPoolInfo(deltaNeutral?.address);
-
+export const VaultInfo = ({ vaultData }: Props) => {
   return (
     <BorderBox
       alignSelf="self-start"
@@ -40,10 +24,7 @@ export const VaultInfo = () => {
         <PositionTitle isVault />
 
         <Text color="gray.500" fontSize="14px" fontWeight={400}>
-          A USDC-denominated vault on Base. Deposits are swapped for wstETH on Aerodrome, then
-          deposits onto Synthetix Perps V3 to collateralise a short ETH perpetual derivative
-          position of the equivalent size. The strategy therefore earns both the Lido staking yield
-          (always positive) and the ETH perpetual funding rate on Perps V3.
+          {vaultData.description}
         </Text>
 
         <Flex gap={['4', '6']}>
@@ -54,7 +35,7 @@ export const VaultInfo = () => {
                 fontSize={['xl', '2xl']}
                 fontWeight="medium"
                 prefix="$"
-                value={wei(poolInfo?.totalAssets || '0').mul(poolInfo?.exchangeRate || '1')}
+                value={wei(vaultData.totalAssets || '0', 6)}
               />
             }
             justifyContent="center"

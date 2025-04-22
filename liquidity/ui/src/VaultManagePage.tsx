@@ -12,27 +12,31 @@ import { WithdrawVault } from '../../lib/Vault/WithdrawVault/WithdrawVault';
 import { VaultPositionStats } from '../../lib/Vault/VaultPositionStats/VaultPositionStats';
 import { VaultInfo } from '../../lib/Vault/VaultInfo/VaultInfo';
 import { VaultHistory } from '../../lib/Vault/VaultHistory/VaultHistory';
-import { TvlChart } from '../../lib/Vault/TVLChart/TVLChart';
+import { useFundingRateVaultData } from '../../lib/useFundingRateVaultData';
+// import { TvlChart } from '../../lib/Vault/TVLChart/TVLChart';
 
 export const VaultManagePage = () => {
   const [params, setParams] = useParams<VaultPositionPageSchemaType>();
 
+  const { data: vaultData } = useFundingRateVaultData(params.vaultAddress);
   const { data: collateralType, isPending: isPendingCollateralType } = useCollateralType(
     params.collateralSymbol
   );
 
   return (
     <ManagePositionProvider>
-      <Helmet>
-        <title>{`Synthetix ${params.symbol} Position`}</title>
-        <meta name="description" content={`Synthetix Vaults - ${params.symbol} Position`} />
-      </Helmet>
+      {vaultData && (
+        <Helmet>
+          <title>{vaultData.name}</title>
+          <meta name="description" content={`Synthetix Vaults - ${vaultData.name}`} />
+        </Helmet>
+      )}
       <UnsupportedCollateralAlert isOpen={!isPendingCollateralType && !collateralType} />
       <Box mb={12} mt={6}>
         <Flex mt={['0', '6']} flexDirection={['column', 'column', 'row']} gap={4}>
           <Flex width="100%" flex={1} alignSelf="flex-start" flexDirection="column" gap={6}>
-            <VaultInfo />
-            <TvlChart />
+            {vaultData && <VaultInfo vaultData={vaultData} />}
+            {/* <TvlChart /> */}
           </Flex>
 
           <Flex width="100%" flex={1} alignSelf="flex-start" flexDirection="column" gap={6}>
@@ -44,7 +48,7 @@ export const VaultManagePage = () => {
                     href={`?${makeSearch({
                       page: 'vault-position',
                       collateralSymbol: params.collateralSymbol,
-                      symbol: params.symbol,
+                      vaultAddress: params.vaultAddress,
                       manageAction: 'deposit',
                       accountId: params.accountId,
                     })}`}
@@ -53,7 +57,7 @@ export const VaultManagePage = () => {
                       setParams({
                         page: 'vault-position',
                         collateralSymbol: params.collateralSymbol,
-                        symbol: params.symbol,
+                        vaultAddress: params.vaultAddress,
                         manageAction: 'deposit',
                         accountId: params.accountId,
                       });
@@ -73,7 +77,7 @@ export const VaultManagePage = () => {
                     href={`?${makeSearch({
                       page: 'vault-position',
                       collateralSymbol: params.collateralSymbol,
-                      symbol: params.symbol,
+                      vaultAddress: params.vaultAddress,
                       manageAction: 'withdraw',
                       accountId: params.accountId,
                     })}`}
@@ -82,7 +86,7 @@ export const VaultManagePage = () => {
                       setParams({
                         page: 'vault-position',
                         collateralSymbol: params.collateralSymbol,
-                        symbol: params.symbol,
+                        vaultAddress: params.vaultAddress,
                         manageAction: 'withdraw',
                         accountId: params.accountId,
                       });
@@ -100,11 +104,15 @@ export const VaultManagePage = () => {
                 </TabList>
               </Tabs>
 
-              {params.manageAction === 'deposit' && <DepositVault />}
-              {params.manageAction === 'withdraw' && <WithdrawVault />}
+              {vaultData && params.manageAction === 'deposit' && (
+                <DepositVault vaultData={vaultData} />
+              )}
+              {vaultData && params.manageAction === 'withdraw' && (
+                <WithdrawVault vaultData={vaultData} />
+              )}
             </BorderBox>
 
-            <VaultPositionStats />
+            {vaultData && <VaultPositionStats vaultData={vaultData} />}
           </Flex>
         </Flex>
 

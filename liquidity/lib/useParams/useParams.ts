@@ -38,9 +38,9 @@ export type LiquidityPositionPageSchemaType = z.infer<typeof LiquidityPositionPa
 export const VaultPositionPageSchema = z.object({
   page: z.literal('vault-position'),
   collateralSymbol: z.string(),
-  symbol: z.string(),
   manageAction: ManageActionSchema,
   accountId: z.string().optional(),
+  vaultAddress: z.string(),
 });
 export type VaultPositionPageSchemaType = z.infer<typeof VaultPositionPageSchema>;
 

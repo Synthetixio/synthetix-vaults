@@ -163,7 +163,7 @@ export const StrategySection = () => {
         </Flex>
         {pools?.map((pool) => (
           <Flex
-            key={`${pool.displaySymbol}-${pool.token}`}
+            key={`${pool.symbol}`}
             w="100%"
             rounded="md"
             bg="whiteAlpha.50"
@@ -182,14 +182,14 @@ export const StrategySection = () => {
               href={`?${makeSearch({
                 page: 'vault-position',
                 collateralSymbol: 'USDC',
-                symbol: pool.displaySymbol,
                 manageAction: 'deposit',
                 accountId: params.accountId,
+                vaultAddress: pool.address,
               })}`}
             >
               <Flex position="relative" flexShrink={0}>
                 <Image
-                  src={`https://assets.synthetix.io/markets/${pool.token}.svg`}
+                  src={`https://assets.synthetix.io/markets/${pool.perpsMarket}.svg`}
                   style={{ width: 40, height: 40 }}
                 />
                 <NetworkIcon
@@ -202,7 +202,7 @@ export const StrategySection = () => {
               </Flex>
               <Flex flexDirection="column" ml={3} mr="auto">
                 <Text fontSize="md" color="white" fontWeight={700} fontFamily="heading">
-                  {pool.displaySymbol}
+                  {pool.name}
                 </Text>
                 <Text
                   textTransform="capitalize"
@@ -262,8 +262,8 @@ export const StrategySection = () => {
                 as={Link}
                 href={`?${makeSearch({
                   page: 'vault-position',
+                  vaultAddress: pool.address,
                   collateralSymbol: 'USDC',
-                  symbol: pool.displaySymbol,
                   manageAction: 'deposit',
                   accountId: params.accountId,
                 })}`}
@@ -271,8 +271,8 @@ export const StrategySection = () => {
                   e.preventDefault();
                   setParams({
                     page: 'vault-position',
+                    vaultAddress: pool.address,
                     collateralSymbol: 'USDC',
-                    symbol: pool.displaySymbol,
                     manageAction: 'deposit',
                     accountId: params.accountId,
                   });
