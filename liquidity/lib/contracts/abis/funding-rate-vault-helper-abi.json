@@ -7,7 +7,8 @@
         "name": "fundingRateVaultAddress",
         "type": "address",
         "internalType": "address"
-      }
+      },
+      { "name": "userAddress", "type": "address", "internalType": "address" }
     ],
     "outputs": [
       {
