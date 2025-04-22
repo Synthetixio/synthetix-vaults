@@ -21,12 +21,10 @@ export const VaultInfo = ({ vaultData }: Props) => {
       gap={6}
     >
       <Flex direction="column" gap={6}>
-        <PositionTitle isVault />
-
+        <PositionTitle isVault name={vaultData.name} />
         <Text color="gray.500" fontSize="14px" fontWeight={400}>
           {vaultData.description}
         </Text>
-
         <Flex gap={['4', '6']}>
           <StatsCard
             label="Total Value Locked"
@@ -56,10 +54,61 @@ export const VaultInfo = ({ vaultData }: Props) => {
             alignItems="center"
             textAlign="center"
           />
+        </Flex>
+        {/* TODO: Change these back to 7, 30, 90, 365 */}
+        <Flex gap={['2', '3']}>
           <StatsCard
-            label="28d APR"
+            label="1d APR"
             value={
-              <Amount fontSize={['xl', '2xl']} fontWeight="medium" suffix="%" value={wei('55')} />
+              <Amount
+                fontSize={['xl', '2xl']}
+                fontWeight="medium"
+                suffix="%"
+                value={wei(vaultData.apr7d * 100)}
+              />
+            }
+            justifyContent="center"
+            alignItems="center"
+            textAlign="center"
+          />
+          <StatsCard
+            label="2d APR"
+            value={
+              <Amount
+                fontSize={['xl', '2xl']}
+                fontWeight="medium"
+                suffix="%"
+                value={wei(vaultData.apr30d * 100)}
+              />
+            }
+            justifyContent="center"
+            alignItems="center"
+            textAlign="center"
+          />
+          <StatsCard
+            label="3d APR"
+            value={
+              <Amount
+                fontSize={['xl', '2xl']}
+                fontWeight="medium"
+                suffix="%"
+                value={wei(vaultData.apr90d * 100)}
+              />
+            }
+            justifyContent="center"
+            alignItems="center"
+            textAlign="center"
+          />
+          <StatsCard
+            label="7d APR"
+            value={
+              <Amount
+                fontSize={['xl', '2xl']}
+                fontWeight="medium"
+                suffix="%"
+                // value={vaultData.apr1y === 0 ? undefined : wei(vaultData.apr1y * 100)}
+                value={wei(vaultData.apr1y * 100)}
+              />
             }
             justifyContent="center"
             alignItems="center"
