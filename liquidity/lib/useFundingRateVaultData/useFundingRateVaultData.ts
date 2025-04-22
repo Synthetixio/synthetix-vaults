@@ -43,7 +43,7 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
       walletAddress && fundingRateVaultAddress && provider && FundingRateVaultHelper
     ),
     queryKey: [
-      `${network?.id}-${network?.preset}`,
+      `${network?.id}-${network?.preset}-${activeWallet?.address}`,
       'FundingRateVaultData',
       { accountAddress: walletAddress, fundingRateVaultAddress },
     ],
@@ -58,8 +58,10 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         provider
       );
 
-      let data: FundingRateVaultData =
-        await FundingRateVaultHelperContract.getData(fundingRateVaultAddress);
+      let data: FundingRateVaultData = await FundingRateVaultHelperContract.getData(
+        fundingRateVaultAddress,
+        walletAddress
+      );
 
       const metadata = getFundingRateVaultMetadata(fundingRateVaultAddress);
 
