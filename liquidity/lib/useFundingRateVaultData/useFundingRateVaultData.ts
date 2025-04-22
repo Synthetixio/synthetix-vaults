@@ -2,8 +2,12 @@ import { useNetwork, useProviderForChain, useWallet } from '@snx-v3/useBlockchai
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import { useFundingRateVaultHelper } from '../contracts/useFundingRateVaultHelper';
+import getFundingRateVaultMetadata, {
+  FundingRateVaultMetadata,
+} from '../../ui/src/data/funding-rate-vault-metadata';
 
-export interface FundingRateVaultData {
+export interface FundingRateVaultData extends FundingRateVaultMetadata {
+  address: string;
   totalSupply: number;
   balanceOf: number;
   name: string;
@@ -54,8 +58,21 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         provider
       );
 
-      const data: FundingRateVaultData =
+      let data: FundingRateVaultData =
         await FundingRateVaultHelperContract.getData(fundingRateVaultAddress);
+
+      const metadata = getFundingRateVaultMetadata(fundingRateVaultAddress);
+
+      if (!metadata) {
+        throw new Error(`No metadata found for vault ${fundingRateVaultAddress}`);
+      }
+
+      data = {
+        ...data,
+        address: fundingRateVaultAddress,
+        ...metadata,
+      };
+
       return data;
     },
     refetchInterval: 120_000,
