@@ -11,7 +11,7 @@ import React from 'react';
 
 // import { useApr } from '@snx-v3/useApr';
 
-export function PositionTitle({ isVault }: { isVault?: boolean }) {
+export function PositionTitle({ isVault, name }: { isVault?: boolean; name?: string }) {
   const { network } = useNetwork();
 
   const [params] = useParams<LiquidityPositionPageSchemaType>();
@@ -71,8 +71,9 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
           alignItems="center"
           letterSpacing="tight"
         >
-          {collateralType?.displaySymbol ?? params.collateralSymbol}{' '}
-          {isVault ? 'Vault' : 'Liquidity Position'}
+          {name
+            ? name
+            : `${collateralType?.displaySymbol ?? params.collateralSymbol} Liquidity Position`}
         </Heading>
         <Flex
           ml={4}
@@ -98,46 +99,50 @@ export function PositionTitle({ isVault }: { isVault?: boolean }) {
             <NetworkIcon size="14px" networkId={network?.id} />
             <Text>{network?.label} Network</Text>
           </Flex>
-          <Flex
-            alignItems="center"
-            color="gray.500"
-            fontWeight="500"
-            borderWidth={1}
-            borderRadius={4}
-            px={1}
-            py={0.5}
-            gap={1}
-          >
-            <Text>TVL</Text>
-            <Text>
-              {isPendingVaultsData
-                ? '~'
-                : vaultData
-                  ? formatNumberToUsd(vaultData.collateral.value.toNumber(), {
-                      maximumFractionDigits: 0,
-                    })
-                  : '-'}
-            </Text>
-          </Flex>
-          <Flex
-            as={Link}
-            isExternal
-            href={getStatsUrl(network?.id)}
-            textDecoration="none"
-            _hover={{ textDecoration: 'none' }}
-            cursor="pointer"
-            alignItems="center"
-            color="gray.500"
-            fontWeight="500"
-            borderWidth={1}
-            borderRadius={4}
-            px={1}
-            py={0.5}
-            gap={1}
-          >
-            <Text>More Stats</Text>
-            <ArrowUpIcon transform="rotate(45deg)" />
-          </Flex>
+          {!isVault && (
+            <Flex
+              alignItems="center"
+              color="gray.500"
+              fontWeight="500"
+              borderWidth={1}
+              borderRadius={4}
+              px={1}
+              py={0.5}
+              gap={1}
+            >
+              <Text>TVL</Text>
+              <Text>
+                {isPendingVaultsData
+                  ? '~'
+                  : vaultData
+                    ? formatNumberToUsd(vaultData.collateral.value.toNumber(), {
+                        maximumFractionDigits: 0,
+                      })
+                    : '-'}
+              </Text>
+            </Flex>
+          )}
+          {!isVault && (
+            <Flex
+              as={Link}
+              isExternal
+              href={getStatsUrl(network?.id)}
+              textDecoration="none"
+              _hover={{ textDecoration: 'none' }}
+              cursor="pointer"
+              alignItems="center"
+              color="gray.500"
+              fontWeight="500"
+              borderWidth={1}
+              borderRadius={4}
+              px={1}
+              py={0.5}
+              gap={1}
+            >
+              <Text>More Stats</Text>
+              <ArrowUpIcon transform="rotate(45deg)" />
+            </Flex>
+          )}
         </Flex>
       </Flex>
     </Flex>
