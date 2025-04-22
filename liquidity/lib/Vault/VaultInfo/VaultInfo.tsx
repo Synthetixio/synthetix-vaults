@@ -43,6 +43,20 @@ export const VaultInfo = ({ vaultData }: Props) => {
             textAlign="center"
           />
           <StatsCard
+            label="My deposits"
+            value={
+              <Amount
+                fontSize={['xl', '2xl']}
+                fontWeight="medium"
+                prefix="$"
+                value={wei(vaultData.balanceOf || '0', 18).mul(vaultData.exchangeRate || '1')}
+              />
+            }
+            justifyContent="center"
+            alignItems="center"
+            textAlign="center"
+          />
+          <StatsCard
             label="28d APR"
             value={
               <Amount fontSize={['xl', '2xl']} fontWeight="medium" suffix="%" value={wei('55')} />
