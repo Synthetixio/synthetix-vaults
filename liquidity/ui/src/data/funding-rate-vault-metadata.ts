@@ -1,0 +1,26 @@
+import { ContractInterface } from 'ethers';
+
+import abi from '../../../lib/contracts/abis/funding-rate-vault-abi.json';
+
+export interface FundingRateVaultMetadata {
+  description: string;
+  abi: ContractInterface;
+  perpsMarket: string;
+}
+
+export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadata> = {
+  '0xE51cc84D89b01dD3189458f5bDc69d9877f77119': {
+    description:
+      'A USDC-denominated vault on Base. Deposits are swapped for cbETH on Aerodrome, then deposited onto Synthetix Perps V3 to collateralise a short ETH perpetual derivative position of the equivalent size. The strategy therefore earns both the Coinbase staking yield (always positive) and the ETH perpetual funding rate on Perps V3.',
+    abi,
+    perpsMarket: 'ETH',
+  },
+};
+
+const getFundingRateVaultMetadata = (
+  fundingRateVaultAddress: string
+): FundingRateVaultMetadata | undefined => {
+  return FUNDING_RATE_VAULT_METADATA[fundingRateVaultAddress];
+};
+
+export default getFundingRateVaultMetadata;
