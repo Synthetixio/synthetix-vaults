@@ -69,7 +69,7 @@ export const DepositVault = ({ vaultData }: Props) => {
 
         const txn = await signer.sendTransaction({
           ...depositTx,
-          gasLimit: depositTx?.gasLimit?.mul(15).div(10),
+          gasLimit: depositTx?.gasLimit?.mul(3),
         });
         log('txn', txn);
 
@@ -165,11 +165,7 @@ export const DepositVault = ({ vaultData }: Props) => {
         onClick={handleSubmit}
         isLoading={isLoading}
       >
-        {amount.lte(0)
-          ? 'Enter Amount'
-          : requireApproval
-            ? 'Approve USDC'
-            : 'Deposit and Lock Collateral'}
+        {amount.lte(0) ? 'Enter Amount' : requireApproval ? 'Approve USDC' : 'Deposit into Vault'}
       </Button>
     </>
   );
