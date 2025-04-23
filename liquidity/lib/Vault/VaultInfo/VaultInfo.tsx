@@ -54,6 +54,21 @@ export const VaultInfo = ({ vaultData }: Props) => {
             alignItems="center"
             textAlign="center"
           />
+          <StatsCard
+            label="My PnL"
+            value={
+              <Amount
+                color={vaultData.pnl > 0 ? 'green.500' : undefined}
+                fontSize={['xl', '2xl']}
+                fontWeight="medium"
+                prefix="$"
+                value={wei(vaultData.pnl)}
+              />
+            }
+            justifyContent="center"
+            alignItems="center"
+            textAlign="center"
+          />
         </Flex>
         {/* TODO: Change these back to 7, 30, 90, 365 */}
         <Flex gap={['2', '3']}>
