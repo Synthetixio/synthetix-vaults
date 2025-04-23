@@ -12,6 +12,26 @@ const SECONDS_PER_BLOCK = 2;
 const SECONDS_PER_DAY = 86400;
 const SECONDS_PER_YEAR = SECONDS_PER_DAY * 365;
 
+export interface EventType {
+  timestamp: Date;
+  transactionHash: string;
+}
+
+export interface FundingRateVaultDepositEvent extends EventType {
+  sender: string;
+  owner: string;
+  assets: BigNumber;
+  shares: BigNumber;
+}
+
+export interface FundingRateVaultWithdrawEvent extends EventType {
+  sender: string;
+  receiver: string;
+  owner: string;
+  assets: BigNumber;
+  shares: BigNumber;
+}
+
 export interface FundingRateVaultData extends FundingRateVaultMetadata {
   address: string;
   totalSupply: BigNumber;
@@ -39,7 +59,18 @@ export interface FundingRateVaultData extends FundingRateVaultMetadata {
   apr30d: number;
   apr90d: number;
   apr1y: number;
+  deposits: FundingRateVaultDepositEvent[];
+  withdrawals: FundingRateVaultWithdrawEvent[];
+  pnl: number;
 }
+
+const getTimeFromBlockNumber = (currentBlock: number, blockNumber: number) => {
+  const now = new Date();
+  const blocksPast = currentBlock - blockNumber;
+  const secondsPast = blocksPast * SECONDS_PER_BLOCK;
+  const blockTimestamp = now.getTime() / 1000 - secondsPast;
+  return new Date(blockTimestamp * 1000);
+};
 
 export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
   const { activeWallet } = useWallet();
@@ -62,25 +93,25 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         throw 'OMFG';
       }
 
+      // Get Vault Data
       const FundingRateVaultHelperContract = new ethers.Contract(
         FundingRateVaultHelper.address,
         FundingRateVaultHelper.abi,
         provider
       );
-
       let data: FundingRateVaultData = await FundingRateVaultHelperContract.getData(
         fundingRateVaultAddress,
         walletAddress
       );
 
+      // Get Vault Metadata
       const metadata = getFundingRateVaultMetadata(fundingRateVaultAddress);
-
       if (!metadata) {
         throw new Error(`No metadata found for vault ${fundingRateVaultAddress}`);
       }
 
+      // Get Vault APRs
       const currentBlock = await provider.getBlock('latest');
-
       const VaultContract = new ethers.Contract(fundingRateVaultAddress, vaultAbi, provider);
       // TODO: Change these back to 7, 30, 90, 365
       const aprs = await Promise.all(
@@ -107,6 +138,59 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         })
       );
 
+      // Get Vault Deposit events
+      const filter = VaultContract.filters.Deposit(null, null);
+      const events = await VaultContract.queryFilter(filter);
+      const deposits: FundingRateVaultDepositEvent[] = events.map((event) => {
+        const { args, transactionHash, blockNumber } = event;
+        const { sender, owner, assets, shares } = args as any;
+        return {
+          sender,
+          owner,
+          assets: assets,
+          shares: shares,
+          timestamp: getTimeFromBlockNumber(currentBlock.number, blockNumber),
+          transactionHash,
+        };
+      });
+
+      // Get Vault Withdraw events
+      const withdrawFilter = VaultContract.filters.Withdraw(null, null, null);
+      const withdrawEvents = await VaultContract.queryFilter(withdrawFilter);
+      const withdrawals: FundingRateVaultWithdrawEvent[] = withdrawEvents.map((event) => {
+        const { args, transactionHash, blockNumber } = event;
+
+        const { sender, receiver, owner, assets, shares } = args as any;
+        return {
+          sender,
+          receiver,
+          owner,
+          assets: assets,
+          shares: shares,
+          timestamp: getTimeFromBlockNumber(currentBlock.number, blockNumber),
+          transactionHash,
+        };
+      });
+
+      // Get PnL
+      const userDeposits = deposits.filter(
+        (deposit) => deposit.owner.toLowerCase() === walletAddress.toLowerCase()
+      );
+      const userWithdrawals = withdrawals.filter(
+        (withdrawal) => withdrawal.owner.toLowerCase() === walletAddress.toLowerCase()
+      );
+      const netDeposited = userDeposits.reduce(
+        (acc, deposit) => acc.add(deposit.assets),
+        BigNumber.from(0)
+      );
+      const netWithdrawn = userWithdrawals.reduce(
+        (acc, withdrawal) => acc.add(withdrawal.assets),
+        BigNumber.from(0)
+      );
+      const depositsValue = netDeposited.sub(netWithdrawn);
+      const currentValue = data.balanceOf.mul(data.exchangeRate).div(BigNumber.from(10).pow(18));
+      const pnl = wei(currentValue).toNumber() - wei(depositsValue, 6).toNumber();
+
       data = {
         ...data,
         address: fundingRateVaultAddress,
@@ -115,6 +199,9 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         apr30d: aprs[1],
         apr90d: aprs[2],
         apr1y: aprs[3],
+        deposits,
+        withdrawals,
+        pnl,
       };
 
       return data;
