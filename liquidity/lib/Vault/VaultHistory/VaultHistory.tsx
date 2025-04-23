@@ -5,8 +5,13 @@ import { VaultDeposits } from './VaultDeposits';
 import { VaultPositions } from './VaultPositions';
 import { VaultTradeHistory } from './VaultTradeHistory';
 import { VaultFunding } from './VaultFunding';
+import { FundingRateVaultData } from '../../useFundingRateVaultData';
 
-export const VaultHistory = () => {
+interface Props {
+  vaultData: FundingRateVaultData;
+}
+
+export const VaultHistory = ({ vaultData }: Props) => {
   const [index, setIndex] = useState(0);
   return (
     <BorderBox
@@ -91,7 +96,7 @@ export const VaultHistory = () => {
           borderWidth="1px"
           borderColor="whiteAlpha.200"
         >
-          {index === 0 && <VaultDeposits />}
+          {index === 0 && <VaultDeposits vaultData={vaultData} />}
           {index === 1 && <VaultPositions />}
           {index === 2 && <VaultTradeHistory />}
           {index === 3 && <VaultFunding />}

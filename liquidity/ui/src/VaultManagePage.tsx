@@ -113,7 +113,7 @@ export const VaultManagePage = () => {
           </Flex>
         </Flex>
 
-        <VaultHistory />
+        {vaultData && <VaultHistory vaultData={vaultData} />}
       </Box>
     </ManagePositionProvider>
   );
