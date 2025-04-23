@@ -9,7 +9,6 @@ import { Helmet } from 'react-helmet';
 import { DepositVault } from '../../lib/Vault/DepositVault/DepositVault';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { WithdrawVault } from '../../lib/Vault/WithdrawVault/WithdrawVault';
-import { VaultPositionStats } from '../../lib/Vault/VaultPositionStats/VaultPositionStats';
 import { VaultInfo } from '../../lib/Vault/VaultInfo/VaultInfo';
 import { VaultHistory } from '../../lib/Vault/VaultHistory/VaultHistory';
 import { useFundingRateVaultData } from '../../lib/useFundingRateVaultData';
@@ -111,8 +110,6 @@ export const VaultManagePage = () => {
                 <WithdrawVault vaultData={vaultData} />
               )}
             </BorderBox>
-
-            {vaultData && <VaultPositionStats vaultData={vaultData} />}
           </Flex>
         </Flex>
 
