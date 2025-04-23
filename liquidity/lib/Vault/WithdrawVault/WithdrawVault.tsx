@@ -59,7 +59,7 @@ export const WithdrawVault = ({ vaultData }: Props) => {
 
       const txn = await signer.sendTransaction({
         ...withdrawTx,
-        gasLimit: withdrawTx?.gasLimit?.mul(15).div(10),
+        gasLimit: withdrawTx?.gasLimit?.mul(3),
       });
       log('txn', txn);
 
