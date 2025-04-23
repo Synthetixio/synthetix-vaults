@@ -44,7 +44,7 @@ export const VaultDeposits = ({ vaultData }: Props) => {
       };
       return dowEvent;
     }),
-  ];
+  ].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
 
   return (
     <Table>
@@ -62,6 +62,18 @@ export const VaultDeposits = ({ vaultData }: Props) => {
             width="160px"
           >
             Date
+          </Th>
+          <Th
+            py={2}
+            textTransform="unset"
+            color="gray.600"
+            border="none"
+            fontFamily="heading"
+            fontSize="12px"
+            lineHeight="16px"
+            fontWeight={400}
+          >
+            Type
           </Th>
           <Th
             py={2}
@@ -98,18 +110,6 @@ export const VaultDeposits = ({ vaultData }: Props) => {
             lineHeight="16px"
             fontWeight={400}
           >
-            Realised PnL
-          </Th>
-          <Th
-            py={2}
-            textTransform="unset"
-            color="gray.600"
-            border="none"
-            fontFamily="heading"
-            fontSize="12px"
-            lineHeight="16px"
-            fontWeight={400}
-          >
             Transaction
           </Th>
         </Tr>
@@ -133,13 +133,13 @@ export const VaultDeposits = ({ vaultData }: Props) => {
               <Text textColor="gray.500">{event.timestamp.toLocaleTimeString()}</Text>
             </Td>
             <Td border="none" fontSize="12px" fontWeight={400} py={2}>
+              {event.type === 'deposit' ? 'Deposit' : 'Withdrawal'}
+            </Td>
+            <Td border="none" fontSize="12px" fontWeight={400} py={2}>
               {truncateAddress(event.user)}
             </Td>
             <Td border="none" fontSize="12px" fontWeight={400} py={2}>
               {formatNumberToUsdShort(wei(event.assets, 6).toNumber())}
-            </Td>
-            <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-              -
             </Td>
             <Td textDecoration="underline" border="none" fontSize="12px" fontWeight={400} py={2}>
               <a
