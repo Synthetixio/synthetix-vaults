@@ -58,27 +58,27 @@ export const DepositVault = ({ vaultData }: Props) => {
         await approve(false);
 
         refetchAllowance();
+      } else {
+        const contract = new ethers.Contract(vaultData.address, vaultData.abi, signer);
+        const walletAddress = await signer.getAddress();
+
+        const depositTx = await contract.populateTransaction['deposit(uint256,address)'](
+          parseUnits(amount.toString(), 6).toString(),
+          walletAddress
+        );
+
+        const txn = await signer.sendTransaction({
+          ...depositTx,
+          gasLimit: depositTx?.gasLimit?.mul(15).div(10),
+        });
+        log('txn', txn);
+
+        const receipt = await provider.waitForTransaction(txn.hash);
+
+        refetchUSDCBalance();
+
+        log('receipt', receipt);
       }
-
-      const contract = new ethers.Contract(vaultData.address, vaultData.abi, signer);
-      const walletAddress = await signer.getAddress();
-
-      const depositTx = await contract.populateTransaction['deposit(uint256,address)'](
-        parseUnits(amount.toString(), 6).toString(),
-        walletAddress
-      );
-
-      const txn = await signer.sendTransaction({
-        ...depositTx,
-        gasLimit: depositTx?.gasLimit?.mul(15).div(10),
-      });
-      log('txn', txn);
-
-      const receipt = await provider.waitForTransaction(txn.hash);
-
-      refetchUSDCBalance();
-
-      log('receipt', receipt);
     } catch (error) {
       const contractError = errorParser(error);
       if (contractError) {
