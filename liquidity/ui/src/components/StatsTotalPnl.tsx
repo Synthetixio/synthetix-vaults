@@ -94,8 +94,6 @@ export function StatsTotalPnl() {
     );
   }, [fundingRateVaults]);
 
-  console.log('totalFundingRateVaults', totalFundingRateVaults);
-
   return (
     <StatsBox
       title="My PnL"
