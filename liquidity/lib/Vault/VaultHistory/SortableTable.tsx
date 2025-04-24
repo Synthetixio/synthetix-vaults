@@ -1,8 +1,9 @@
-import { Table, Th, Thead, Tr, Tbody, Td, Text, Image, Box } from '@chakra-ui/react';
+import { Table, Th, Thead, Tr, Tbody, Td, Text, Image, Box, Flex } from '@chakra-ui/react';
 import { truncateAddress } from '@snx-v3/formatters';
 import { etherscanLink } from '@snx-v3/etherscanLink';
 import { useNetwork } from '@snx-v3/useBlockchain';
 import sortIcon from './sort.svg';
+import externalLinkIcon from './external-link.svg';
 import { useState } from 'react';
 
 interface HeaderType {
@@ -142,17 +143,20 @@ export const SortableTable = ({ headers, rows }: Props) => {
                 </Td>
               ))}
               <Td textDecoration="underline" border="none" fontSize="12px" fontWeight={400} py={2}>
-                <a
-                  href={etherscanLink({
-                    chain: network?.name || '',
-                    address: row.transactionHash,
-                    isTx: true,
-                  })}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {truncateAddress(row.transactionHash)}
-                </a>
+                <Flex alignItems="center">
+                  <a
+                    href={etherscanLink({
+                      chain: network?.name || '',
+                      address: row.transactionHash,
+                      isTx: true,
+                    })}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {truncateAddress(row.transactionHash)}
+                  </a>
+                  <Image src={externalLinkIcon} width="14px" height="14px" marginLeft="4px" />
+                </Flex>
               </Td>
             </Tr>
           ))}
