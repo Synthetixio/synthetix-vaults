@@ -123,14 +123,20 @@ export const SortableTable = ({ headers, rows }: Props) => {
           <Td height="0px" border="none" px={0} pt={0} pb={0} />
         </Tr>
 
-        {sortedRows.map((row) => (
-          <Tr key={row.transactionHash}>
+        {sortedRows.map((row, index) => (
+          <Tr key={`${row.transactionHash}-${index}`}>
             <Td border="none" fontSize="12px" fontWeight={400} py={2}>
               {row.date.toLocaleDateString()}
               <Text textColor="gray.500">{row.date.toLocaleTimeString()}</Text>
             </Td>
-            {row.values.map((value) => (
-              <Td key={value} border="none" fontSize="12px" fontWeight={400} py={2}>
+            {row.values.map((value, index) => (
+              <Td
+                key={`${row.transactionHash}-${value}-${index}`}
+                border="none"
+                fontSize="12px"
+                fontWeight={400}
+                py={2}
+              >
                 {value}
               </Td>
             ))}
