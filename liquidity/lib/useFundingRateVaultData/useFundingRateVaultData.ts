@@ -32,6 +32,15 @@ export interface FundingRateVaultWithdrawEvent extends EventType {
   shares: BigNumber;
 }
 
+export interface FundingRateVaultTradeEvent extends EventType {
+  fromAsset: string;
+  fromSymbol: string;
+  toAsset: string;
+  toSymbol: string;
+  amountIn: number;
+  amountOut: number;
+}
+
 export interface FundingRateVaultData extends FundingRateVaultMetadata {
   address: string;
   totalSupply: BigNumber;
@@ -59,9 +68,10 @@ export interface FundingRateVaultData extends FundingRateVaultMetadata {
   apr30d: number;
   apr90d: number;
   apr1y: number;
+  pnl: number;
   deposits: FundingRateVaultDepositEvent[];
   withdrawals: FundingRateVaultWithdrawEvent[];
-  pnl: number;
+  trades: FundingRateVaultTradeEvent[];
 }
 
 const getTimeFromBlockNumber = (currentBlock: number, blockNumber: number) => {
@@ -172,6 +182,24 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         };
       });
 
+      // Get Vault Trade events
+      const tradeFilter = VaultContract.filters.AssetsSwapped(null, null);
+      const tradeEvents = await VaultContract.queryFilter(tradeFilter);
+      const trades: FundingRateVaultTradeEvent[] = tradeEvents.map((event) => {
+        const { args, transactionHash, blockNumber } = event;
+        const { fromAsset, toAsset, amountIn, amountOut } = args as any;
+        return {
+          fromAsset,
+          fromSymbol: metadata.assetData[fromAsset].symbol,
+          toAsset,
+          toSymbol: metadata.assetData[toAsset].symbol,
+          amountIn: wei(amountIn, metadata.assetData[fromAsset].decimals).toNumber(),
+          amountOut: wei(amountOut, metadata.assetData[toAsset].decimals).toNumber(),
+          timestamp: getTimeFromBlockNumber(currentBlock.number, blockNumber),
+          transactionHash,
+        };
+      });
+
       // Get PnL
       const userDeposits = deposits.filter(
         (deposit) => deposit.owner.toLowerCase() === walletAddress.toLowerCase()
@@ -201,6 +229,7 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         apr1y: aprs[3],
         deposits,
         withdrawals,
+        trades,
         pnl,
       };
 
