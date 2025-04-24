@@ -3,7 +3,6 @@ import { Tab, TabList, Tabs, TabPanel, TabPanels } from '@chakra-ui/react';
 import { useState } from 'react';
 import { VaultDeposits } from './VaultDeposits';
 import { VaultTradeHistory } from './VaultTradeHistory';
-import { VaultFunding } from './VaultFunding';
 import { VaultMargin } from './VaultMargin';
 import { FundingRateVaultData } from '../../useFundingRateVaultData';
 import { VaultPositions } from './VaultPositions';
@@ -44,6 +43,7 @@ export const VaultHistory = ({ vaultData }: Props) => {
             color={index === 0 ? 'white' : 'gray.500'}
             fontWeight={400}
             fontSize="sm"
+            px={6}
             whiteSpace="nowrap"
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
@@ -56,6 +56,7 @@ export const VaultHistory = ({ vaultData }: Props) => {
             color={index === 1 ? 'white' : 'gray.500'}
             fontWeight={400}
             fontSize="sm"
+            px={6}
             whiteSpace="nowrap"
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
@@ -68,6 +69,7 @@ export const VaultHistory = ({ vaultData }: Props) => {
             color={index === 2 ? 'white' : 'gray.500'}
             fontWeight={400}
             fontSize="sm"
+            px={6}
             whiteSpace="nowrap"
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
@@ -80,22 +82,11 @@ export const VaultHistory = ({ vaultData }: Props) => {
             color={index === 3 ? 'white' : 'gray.500'}
             fontWeight={400}
             fontSize="sm"
+            px={6}
             whiteSpace="nowrap"
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(3)}
-          >
-            Funding History
-          </Tab>
-
-          <Tab
-            color={index === 4 ? 'white' : 'gray.500'}
-            fontWeight={400}
-            fontSize="sm"
-            whiteSpace="nowrap"
-            textDecoration="none"
-            _hover={{ textDecoration: 'none' }}
-            onClick={() => setIndex(4)}
           >
             Positions
           </Tab>
@@ -110,9 +101,6 @@ export const VaultHistory = ({ vaultData }: Props) => {
           </TabPanel>
           <TabPanel>
             <VaultMargin vaultData={vaultData} />
-          </TabPanel>
-          <TabPanel>
-            <VaultFunding />
           </TabPanel>
           <TabPanel>
             <VaultPositions vaultData={vaultData} />
