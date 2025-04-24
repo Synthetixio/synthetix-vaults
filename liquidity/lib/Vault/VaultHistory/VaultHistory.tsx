@@ -2,7 +2,6 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { Tab, TabList, Tabs, Box } from '@chakra-ui/react';
 import { useState } from 'react';
 import { VaultDeposits } from './VaultDeposits';
-import { VaultPositions } from './VaultPositions';
 import { VaultTradeHistory } from './VaultTradeHistory';
 import { VaultFunding } from './VaultFunding';
 import { FundingRateVaultData } from '../../useFundingRateVaultData';
@@ -60,7 +59,7 @@ export const VaultHistory = ({ vaultData }: Props) => {
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(1)}
           >
-            Positions (2)
+            Trades
           </Tab>
 
           <Tab
@@ -71,18 +70,6 @@ export const VaultHistory = ({ vaultData }: Props) => {
             textDecoration="none"
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(2)}
-          >
-            Trade History
-          </Tab>
-
-          <Tab
-            color={index === 3 ? 'white' : 'gray.500'}
-            fontWeight={400}
-            fontSize="sm"
-            whiteSpace="nowrap"
-            textDecoration="none"
-            _hover={{ textDecoration: 'none' }}
-            onClick={() => setIndex(3)}
           >
             Funding History
           </Tab>
@@ -97,9 +84,8 @@ export const VaultHistory = ({ vaultData }: Props) => {
           borderColor="whiteAlpha.200"
         >
           {index === 0 && <VaultDeposits vaultData={vaultData} />}
-          {index === 1 && <VaultPositions />}
-          {index === 2 && <VaultTradeHistory />}
-          {index === 3 && <VaultFunding />}
+          {index === 1 && <VaultTradeHistory vaultData={vaultData} />}
+          {index === 2 && <VaultFunding />}
         </Box>
       </Tabs>
     </BorderBox>
