@@ -1,4 +1,4 @@
-import { Table, Th, Thead, Tr, Tbody, Td, Text } from '@chakra-ui/react';
+import { Table, Th, Thead, Tr, Tbody, Td, Text, Image } from '@chakra-ui/react';
 import { EventType, FundingRateVaultData } from '../../useFundingRateVaultData';
 import { BigNumber } from 'ethers';
 import { formatNumberToUsdShort } from '@snx-v3/formatters';
@@ -6,6 +6,8 @@ import { wei } from '@synthetixio/wei';
 import { truncateAddress } from '../../formatters/string';
 import { etherscanLink } from '../../etherscanLink/etherscanLink';
 import { useNetwork } from '../../useBlockchain/useBlockchain';
+import sortIcon from './sort.svg';
+import { useState } from 'react';
 
 interface Props {
   vaultData: FundingRateVaultData;
@@ -20,6 +22,8 @@ interface DepositOrWithdrawalEvent extends EventType {
 export const VaultDeposits = ({ vaultData }: Props) => {
   const { deposits, withdrawals } = vaultData;
   const { network } = useNetwork();
+  const [sort, setSort] = useState<string>('timestamp');
+  const [inverse, setInverse] = useState(false);
 
   const events: DepositOrWithdrawalEvent[] = [
     ...deposits.map((deposit) => {
@@ -44,7 +48,42 @@ export const VaultDeposits = ({ vaultData }: Props) => {
       };
       return dowEvent;
     }),
-  ].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  ].sort((a, b) => {
+    if (sort === 'timestamp') {
+      return b.timestamp.getTime() - a.timestamp.getTime();
+    }
+    if (sort === 'type') {
+      return a.type.localeCompare(b.type);
+    }
+    if (sort === 'address') {
+      return a.user.localeCompare(b.user);
+    }
+    if (sort === 'value') {
+      return b.assets.toNumber() - a.assets.toNumber();
+    }
+    throw new Error('Invalid sort');
+  });
+
+  if (inverse) {
+    events.reverse();
+  }
+
+  const SortByColumn = ({ sortType }: { sortType: string }) => {
+    return (
+      <button
+        onClick={() => {
+          if (sortType === sort) {
+            setInverse(!inverse);
+          } else {
+            setSort(sortType);
+            setInverse(false);
+          }
+        }}
+      >
+        <Image height="10px" marginLeft="10px" src={sortIcon} />
+      </button>
+    );
+  };
 
   return (
     <Table>
@@ -60,8 +99,11 @@ export const VaultDeposits = ({ vaultData }: Props) => {
             lineHeight="16px"
             fontWeight={400}
             width="160px"
+            display="flex"
+            alignItems="center"
           >
             Date
+            <SortByColumn sortType="timestamp" />
           </Th>
           <Th
             py={2}
@@ -74,6 +116,7 @@ export const VaultDeposits = ({ vaultData }: Props) => {
             fontWeight={400}
           >
             Type
+            <SortByColumn sortType="type" />
           </Th>
           <Th
             py={2}
@@ -86,6 +129,7 @@ export const VaultDeposits = ({ vaultData }: Props) => {
             fontWeight={400}
           >
             Address
+            <SortByColumn sortType="address" />
           </Th>
 
           <Th
@@ -99,6 +143,7 @@ export const VaultDeposits = ({ vaultData }: Props) => {
             fontWeight={400}
           >
             Value
+            <SortByColumn sortType="value" />
           </Th>
           <Th
             py={2}
