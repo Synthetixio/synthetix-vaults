@@ -2,11 +2,17 @@ import { ContractInterface } from 'ethers';
 
 import abi from '../../../lib/contracts/abis/funding-rate-vault-abi.json';
 
+export interface AssetData {
+  symbol: string;
+  decimals: number;
+}
+
 export interface FundingRateVaultMetadata {
   description: string;
   abi: ContractInterface;
   perpsMarket: string;
   deployedBlock: number;
+  assetData: Record<string, AssetData>;
 }
 
 export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadata> = {
@@ -16,6 +22,20 @@ export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadat
     abi,
     perpsMarket: 'ETH',
     deployedBlock: 29_014_954,
+    assetData: {
+      '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
+        symbol: 'USDC',
+        decimals: 6,
+      },
+      '0x4200000000000000000000000000000000000006': {
+        symbol: 'WETH',
+        decimals: 18,
+      },
+      '0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22': {
+        symbol: 'cbETH',
+        decimals: 18,
+      },
+    },
   },
 };
 
