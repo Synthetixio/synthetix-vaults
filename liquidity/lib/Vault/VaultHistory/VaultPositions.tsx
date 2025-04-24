@@ -1,120 +1,48 @@
-import { Table, Th, Thead, Tr, Tbody, Td } from '@chakra-ui/react';
+import {
+  FundingRateVaultData,
+  FundingRateVaultPositionEvent,
+} from '../../useFundingRateVaultData/useFundingRateVaultData';
+import { formatNumber, formatNumberShort, truncateAddress } from '@snx-v3/formatters';
+import { SortableTable } from './SortableTable';
+import { wei } from '@synthetixio/wei';
 
-export const VaultPositions = () => {
+interface Props {
+  vaultData: FundingRateVaultData;
+}
+
+export const VaultPositions = ({ vaultData }: Props) => {
   return (
-    <Table>
-      <Thead whiteSpace="nowrap">
-        <Tr>
-          <Th
-            py={2}
-            textTransform="unset"
-            color="gray.600"
-            border="none"
-            fontFamily="heading"
-            fontSize="12px"
-            lineHeight="16px"
-            fontWeight={400}
-          >
-            Venue
-          </Th>
-          <Th
-            py={2}
-            textTransform="unset"
-            color="gray.600"
-            border="none"
-            fontFamily="heading"
-            fontSize="12px"
-            lineHeight="16px"
-            fontWeight={400}
-          >
-            Market
-          </Th>
-
-          <Th
-            py={2}
-            textTransform="unset"
-            color="gray.600"
-            border="none"
-            fontFamily="heading"
-            fontSize="12px"
-            lineHeight="16px"
-            fontWeight={400}
-          >
-            Size
-          </Th>
-          <Th
-            py={2}
-            textTransform="unset"
-            color="gray.600"
-            border="none"
-            fontFamily="heading"
-            fontSize="12px"
-            lineHeight="16px"
-            fontWeight={400}
-          >
-            Position Value
-          </Th>
-          <Th
-            py={2}
-            textTransform="unset"
-            color="gray.600"
-            border="none"
-            fontFamily="heading"
-            fontSize="12px"
-            lineHeight="16px"
-            fontWeight={400}
-          >
-            PnL
-          </Th>
-        </Tr>
-      </Thead>
-
-      <Tbody>
-        <Tr border="none" borderTop="1px" borderTopColor="gray.900" width="100%" height="0px">
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-        </Tr>
-
-        <Tr>
-          <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-            Synthetix Perps v3
-          </Td>
-          <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-            wstETH
-          </Td>
-          <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-            1.488
-          </Td>
-          <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-            $1,200.0232
-          </Td>
-          <Td color="green.500" border="none" fontSize="12px" fontWeight={400} py={2}>
-            +$86.0485
-          </Td>
-        </Tr>
-        <Tr>
-          <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-            Synthetix Perps v3
-          </Td>
-          <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-            wstETH
-          </Td>
-          <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-            1.488
-          </Td>
-          <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-            $1,200.0232
-          </Td>
-          <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-            -
-          </Td>
-        </Tr>
-      </Tbody>
-    </Table>
+    <SortableTable
+      headers={[
+        {
+          label: 'Size Delta',
+          key: 'sizeDelta',
+          sortable: true,
+          sortFn: (a: any, b: any) => b.sizeDelta - a.sizeDelta,
+        },
+        {
+          label: 'Acceptable Price',
+          key: 'acceptablePrice',
+          sortable: true,
+          sortFn: (a: any, b: any) => b.acceptablePrice.toNumber() - a.acceptablePrice.toNumber(),
+        },
+        {
+          label: 'Referrer',
+          key: 'referrer',
+          sortable: true,
+          sortFn: (a: any, b: any) => a.referrer.localeCompare(b.referrer),
+        },
+      ]}
+      rows={vaultData.positionEvents.map((event: FundingRateVaultPositionEvent) => ({
+        date: event.timestamp,
+        data: event,
+        values: [
+          formatNumberShort(event.sizeDelta),
+          formatNumber(wei(event.acceptablePrice).toNumber()),
+          truncateAddress(event.referrer),
+        ],
+        transactionHash: event.transactionHash,
+      }))}
+    />
   );
 };

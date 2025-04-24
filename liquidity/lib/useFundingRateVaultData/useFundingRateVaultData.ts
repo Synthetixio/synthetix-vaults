@@ -48,6 +48,16 @@ export interface FundingRateVaultMarginEvent extends EventType {
   type: 'added' | 'removed';
 }
 
+export interface FundingRateVaultPositionEvent extends EventType {
+  marketId: string;
+  accountId: string;
+  sizeDelta: number;
+  settlementStrategyId: string;
+  acceptablePrice: BigNumber;
+  trackingCode: string;
+  referrer: string;
+}
+
 export interface FundingRateVaultData extends FundingRateVaultMetadata {
   address: string;
   totalSupply: BigNumber;
@@ -80,6 +90,7 @@ export interface FundingRateVaultData extends FundingRateVaultMetadata {
   withdrawals: FundingRateVaultWithdrawEvent[];
   trades: FundingRateVaultTradeEvent[];
   marginEvents: FundingRateVaultMarginEvent[];
+  positionEvents: FundingRateVaultPositionEvent[];
 }
 
 const getTimeFromBlockNumber = (currentBlock: number, blockNumber: number) => {
@@ -217,7 +228,7 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
       });
 
       // Get Vault Margin events
-      const marginAddedFilter = VaultContract.filters.MarginAdded(null, null);
+      const marginAddedFilter = VaultContract.filters.MarginAdded(null);
       const marginAddedEvents = await VaultContract.queryFilter(marginAddedFilter);
       const marginAdded: FundingRateVaultMarginEvent[] = marginAddedEvents.map((event) => {
         const { args, transactionHash, blockNumber } = event;
@@ -236,7 +247,7 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         };
       });
 
-      const marginRemovedFilter = VaultContract.filters.MarginRemoved(null, null);
+      const marginRemovedFilter = VaultContract.filters.MarginRemoved(null);
       const marginRemovedEvents = await VaultContract.queryFilter(marginRemovedFilter);
       const marginRemoved: FundingRateVaultMarginEvent[] = marginRemovedEvents.map((event) => {
         const { args, transactionHash, blockNumber } = event;
@@ -256,6 +267,33 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
       });
 
       const marginEvents = [...marginAdded, ...marginRemoved];
+
+      // Get Vault Position events
+      const positionFilter = VaultContract.filters.ModifiedPosition();
+      const positionEvents = await VaultContract.queryFilter(positionFilter);
+      const positions: FundingRateVaultPositionEvent[] = positionEvents.map((event) => {
+        const { args, transactionHash, blockNumber } = event;
+        const {
+          marketId,
+          accountId,
+          sizeDelta,
+          settlementStrategyId,
+          acceptablePrice,
+          trackingCode,
+          referrer,
+        } = args as any;
+        return {
+          marketId: marketId.toString(),
+          accountId: accountId.toString(),
+          sizeDelta: wei(sizeDelta).toNumber(),
+          settlementStrategyId: settlementStrategyId.toString(),
+          acceptablePrice: acceptablePrice,
+          trackingCode: trackingCode,
+          referrer,
+          timestamp: getTimeFromBlockNumber(currentBlock.number, blockNumber),
+          transactionHash,
+        };
+      });
 
       // Get PnL
       const userDeposits = deposits.filter(
@@ -288,6 +326,7 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         withdrawals,
         trades,
         marginEvents,
+        positionEvents: positions,
         pnl,
       };
 

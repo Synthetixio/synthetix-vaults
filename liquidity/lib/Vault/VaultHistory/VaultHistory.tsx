@@ -1,11 +1,12 @@
 import { BorderBox } from '@snx-v3/BorderBox';
-import { Tab, TabList, Tabs, Box } from '@chakra-ui/react';
+import { Tab, TabList, Tabs, TabPanel, TabPanels } from '@chakra-ui/react';
 import { useState } from 'react';
 import { VaultDeposits } from './VaultDeposits';
 import { VaultTradeHistory } from './VaultTradeHistory';
 import { VaultFunding } from './VaultFunding';
 import { VaultMargin } from './VaultMargin';
 import { FundingRateVaultData } from '../../useFundingRateVaultData';
+import { VaultPositions } from './VaultPositions';
 
 interface Props {
   vaultData: FundingRateVaultData;
@@ -86,21 +87,37 @@ export const VaultHistory = ({ vaultData }: Props) => {
           >
             Funding History
           </Tab>
+
+          <Tab
+            color={index === 4 ? 'white' : 'gray.500'}
+            fontWeight={400}
+            fontSize="sm"
+            whiteSpace="nowrap"
+            textDecoration="none"
+            _hover={{ textDecoration: 'none' }}
+            onClick={() => setIndex(4)}
+          >
+            Positions
+          </Tab>
         </TabList>
 
-        <Box
-          overflow="auto"
-          rounded="6px"
-          mt={4}
-          bg="whiteAlpha.50"
-          borderWidth="1px"
-          borderColor="whiteAlpha.200"
-        >
-          {index === 0 && <VaultDeposits vaultData={vaultData} />}
-          {index === 1 && <VaultTradeHistory vaultData={vaultData} />}
-          {index === 2 && <VaultMargin vaultData={vaultData} />}
-          {index === 3 && <VaultFunding />}
-        </Box>
+        <TabPanels>
+          <TabPanel>
+            <VaultDeposits vaultData={vaultData} />
+          </TabPanel>
+          <TabPanel>
+            <VaultTradeHistory vaultData={vaultData} />
+          </TabPanel>
+          <TabPanel>
+            <VaultMargin vaultData={vaultData} />
+          </TabPanel>
+          <TabPanel>
+            <VaultFunding />
+          </TabPanel>
+          <TabPanel>
+            <VaultPositions vaultData={vaultData} />
+          </TabPanel>
+        </TabPanels>
       </Tabs>
     </BorderBox>
   );
