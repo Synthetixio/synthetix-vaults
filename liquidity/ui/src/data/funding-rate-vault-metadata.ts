@@ -35,6 +35,10 @@ export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadat
         symbol: 'cbETH',
         decimals: 18,
       },
+      '0xc302f3f74ec19d0917C7F19Bca6775f7000a292a': {
+        symbol: 'scbETH',
+        decimals: 18,
+      },
     },
   },
 };

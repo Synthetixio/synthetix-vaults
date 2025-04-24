@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { VaultDeposits } from './VaultDeposits';
 import { VaultTradeHistory } from './VaultTradeHistory';
 import { VaultFunding } from './VaultFunding';
+import { VaultMargin } from './VaultMargin';
 import { FundingRateVaultData } from '../../useFundingRateVaultData';
 
 interface Props {
@@ -71,6 +72,18 @@ export const VaultHistory = ({ vaultData }: Props) => {
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(2)}
           >
+            Margin
+          </Tab>
+
+          <Tab
+            color={index === 3 ? 'white' : 'gray.500'}
+            fontWeight={400}
+            fontSize="sm"
+            whiteSpace="nowrap"
+            textDecoration="none"
+            _hover={{ textDecoration: 'none' }}
+            onClick={() => setIndex(3)}
+          >
             Funding History
           </Tab>
         </TabList>
@@ -85,7 +98,8 @@ export const VaultHistory = ({ vaultData }: Props) => {
         >
           {index === 0 && <VaultDeposits vaultData={vaultData} />}
           {index === 1 && <VaultTradeHistory vaultData={vaultData} />}
-          {index === 2 && <VaultFunding />}
+          {index === 2 && <VaultMargin vaultData={vaultData} />}
+          {index === 3 && <VaultFunding />}
         </Box>
       </Tabs>
     </BorderBox>

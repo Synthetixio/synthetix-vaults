@@ -41,6 +41,13 @@ export interface FundingRateVaultTradeEvent extends EventType {
   amountOut: number;
 }
 
+export interface FundingRateVaultMarginEvent extends EventType {
+  asset: string;
+  symbol: string;
+  amount: number;
+  type: 'added' | 'removed';
+}
+
 export interface FundingRateVaultData extends FundingRateVaultMetadata {
   address: string;
   totalSupply: BigNumber;
@@ -72,6 +79,7 @@ export interface FundingRateVaultData extends FundingRateVaultMetadata {
   deposits: FundingRateVaultDepositEvent[];
   withdrawals: FundingRateVaultWithdrawEvent[];
   trades: FundingRateVaultTradeEvent[];
+  marginEvents: FundingRateVaultMarginEvent[];
 }
 
 const getTimeFromBlockNumber = (currentBlock: number, blockNumber: number) => {
@@ -188,17 +196,66 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
       const trades: FundingRateVaultTradeEvent[] = tradeEvents.map((event) => {
         const { args, transactionHash, blockNumber } = event;
         const { fromAsset, toAsset, amountIn, amountOut } = args as any;
+        const fromAssetData = metadata.assetData[fromAsset];
+        const toAssetData = metadata.assetData[toAsset];
+        if (!fromAssetData) {
+          throw new Error(`No asset data found for asset ${fromAsset}`);
+        }
+        if (!toAssetData) {
+          throw new Error(`No asset data found for asset ${toAsset}`);
+        }
         return {
           fromAsset,
-          fromSymbol: metadata.assetData[fromAsset].symbol,
+          fromSymbol: fromAssetData.symbol,
           toAsset,
-          toSymbol: metadata.assetData[toAsset].symbol,
-          amountIn: wei(amountIn, metadata.assetData[fromAsset].decimals).toNumber(),
-          amountOut: wei(amountOut, metadata.assetData[toAsset].decimals).toNumber(),
+          toSymbol: toAssetData.symbol,
+          amountIn: wei(amountIn, fromAssetData.decimals).toNumber(),
+          amountOut: wei(amountOut, toAssetData.decimals).toNumber(),
           timestamp: getTimeFromBlockNumber(currentBlock.number, blockNumber),
           transactionHash,
         };
       });
+
+      // Get Vault Margin events
+      const marginAddedFilter = VaultContract.filters.MarginAdded(null, null);
+      const marginAddedEvents = await VaultContract.queryFilter(marginAddedFilter);
+      const marginAdded: FundingRateVaultMarginEvent[] = marginAddedEvents.map((event) => {
+        const { args, transactionHash, blockNumber } = event;
+        const { asset, amount } = args as any;
+        const assetData = metadata.assetData[asset];
+        if (!assetData) {
+          throw new Error(`No asset data found for asset ${asset}`);
+        }
+        return {
+          asset,
+          symbol: assetData.symbol,
+          amount: wei(amount, assetData.decimals).toNumber(),
+          type: 'added',
+          timestamp: getTimeFromBlockNumber(currentBlock.number, blockNumber),
+          transactionHash,
+        };
+      });
+
+      const marginRemovedFilter = VaultContract.filters.MarginRemoved(null, null);
+      const marginRemovedEvents = await VaultContract.queryFilter(marginRemovedFilter);
+      const marginRemoved: FundingRateVaultMarginEvent[] = marginRemovedEvents.map((event) => {
+        const { args, transactionHash, blockNumber } = event;
+        const { asset, amount } = args as any;
+        const assetData = metadata.assetData[asset];
+        if (!assetData) {
+          throw new Error(`No asset data found for asset ${asset}`);
+        }
+        return {
+          asset,
+          symbol: assetData.symbol,
+          amount: wei(amount, assetData.decimals).toNumber(),
+          type: 'removed',
+          timestamp: getTimeFromBlockNumber(currentBlock.number, blockNumber),
+          transactionHash,
+        };
+      });
+
+      const marginEvents = [...marginAdded, ...marginRemoved];
 
       // Get PnL
       const userDeposits = deposits.filter(
@@ -230,6 +287,7 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         deposits,
         withdrawals,
         trades,
+        marginEvents,
         pnl,
       };
 
