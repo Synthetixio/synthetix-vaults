@@ -64,8 +64,8 @@ export const SortableTable = ({ headers, rows }: Props) => {
 
   return (
     <Box maxHeight="300px" overflowY="auto">
-      <Table>
-        <Thead whiteSpace="nowrap" position="sticky" top={0} bg="navy.700" zIndex={1}>
+      <Table bg="whiteAlpha.50" borderColor="whiteAlpha.200" borderWidth="1px" borderRadius="4px">
+        <Thead whiteSpace="nowrap" position="sticky" top={0} zIndex={1}>
           <Tr>
             <Th
               py={2}
