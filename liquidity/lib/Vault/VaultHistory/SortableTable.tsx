@@ -1,4 +1,4 @@
-import { Table, Th, Thead, Tr, Tbody, Td, Text, Image } from '@chakra-ui/react';
+import { Table, Th, Thead, Tr, Tbody, Td, Text, Image, Box } from '@chakra-ui/react';
 import { truncateAddress } from '@snx-v3/formatters';
 import { etherscanLink } from '@snx-v3/etherscanLink';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -62,28 +62,43 @@ export const SortableTable = ({ headers, rows }: Props) => {
   };
 
   return (
-    <Table>
-      <Thead whiteSpace="nowrap">
-        <Tr>
-          <Th
-            py={2}
-            textTransform="unset"
-            color="gray.600"
-            border="none"
-            fontFamily="heading"
-            fontSize="12px"
-            lineHeight="16px"
-            fontWeight={400}
-            width="160px"
-            display="flex"
-            alignItems="center"
-          >
-            Date
-            <SortByColumn sortType="timestamp" />
-          </Th>
-          {headers.map((header) => (
+    <Box maxHeight="300px" overflowY="auto">
+      <Table>
+        <Thead whiteSpace="nowrap" position="sticky" top={0} bg="navy.700" zIndex={1}>
+          <Tr>
             <Th
-              key={header.key}
+              py={2}
+              textTransform="unset"
+              color="gray.600"
+              border="none"
+              fontFamily="heading"
+              fontSize="12px"
+              lineHeight="16px"
+              fontWeight={400}
+              width="160px"
+              display="flex"
+              alignItems="center"
+            >
+              Date
+              <SortByColumn sortType="timestamp" />
+            </Th>
+            {headers.map((header) => (
+              <Th
+                key={header.key}
+                py={2}
+                textTransform="unset"
+                color="gray.600"
+                border="none"
+                fontFamily="heading"
+                fontSize="12px"
+                lineHeight="16px"
+                fontWeight={400}
+              >
+                {header.label}
+                {header.sortable && header.key && <SortByColumn sortType={header.key} />}
+              </Th>
+            ))}
+            <Th
               py={2}
               textTransform="unset"
               color="gray.600"
@@ -93,69 +108,56 @@ export const SortableTable = ({ headers, rows }: Props) => {
               lineHeight="16px"
               fontWeight={400}
             >
-              {header.label}
-              {header.sortable && header.key && <SortByColumn sortType={header.key} />}
+              Transaction
             </Th>
-          ))}
-          <Th
-            py={2}
-            textTransform="unset"
-            color="gray.600"
-            border="none"
-            fontFamily="heading"
-            fontSize="12px"
-            lineHeight="16px"
-            fontWeight={400}
-          >
-            Transaction
-          </Th>
-        </Tr>
-      </Thead>
-
-      <Tbody>
-        <Tr border="none" borderTop="1px" borderTopColor="gray.900" width="100%" height="0px">
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-          <Td height="0px" border="none" px={0} pt={0} pb={0} />
-        </Tr>
-
-        {sortedRows.map((row, index) => (
-          <Tr key={`${row.transactionHash}-${index}`}>
-            <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-              {row.date.toLocaleDateString()}
-              <Text textColor="gray.500">{row.date.toLocaleTimeString()}</Text>
-            </Td>
-            {row.values.map((value, index) => (
-              <Td
-                key={`${row.transactionHash}-${value}-${index}`}
-                border="none"
-                fontSize="12px"
-                fontWeight={400}
-                py={2}
-              >
-                {value}
-              </Td>
-            ))}
-            <Td textDecoration="underline" border="none" fontSize="12px" fontWeight={400} py={2}>
-              <a
-                href={etherscanLink({
-                  chain: network?.name || '',
-                  address: row.transactionHash,
-                  isTx: true,
-                })}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {truncateAddress(row.transactionHash)}
-              </a>
-            </Td>
           </Tr>
-        ))}
-      </Tbody>
-    </Table>
+        </Thead>
+
+        <Tbody>
+          <Tr border="none" borderTop="1px" borderTopColor="gray.900" width="100%" height="0px">
+            <Td height="0px" border="none" px={0} pt={0} pb={0} />
+            <Td height="0px" border="none" px={0} pt={0} pb={0} />
+            <Td height="0px" border="none" px={0} pt={0} pb={0} />
+            <Td height="0px" border="none" px={0} pt={0} pb={0} />
+            <Td height="0px" border="none" px={0} pt={0} pb={0} />
+            <Td height="0px" border="none" px={0} pt={0} pb={0} />
+            <Td height="0px" border="none" px={0} pt={0} pb={0} />
+          </Tr>
+
+          {sortedRows.map((row, index) => (
+            <Tr key={`${row.transactionHash}-${index}`}>
+              <Td border="none" fontSize="12px" fontWeight={400} py={2}>
+                {row.date.toLocaleDateString()}
+                <Text textColor="gray.500">{row.date.toLocaleTimeString()}</Text>
+              </Td>
+              {row.values.map((value, index) => (
+                <Td
+                  key={`${row.transactionHash}-${value}-${index}`}
+                  border="none"
+                  fontSize="12px"
+                  fontWeight={400}
+                  py={2}
+                >
+                  {value}
+                </Td>
+              ))}
+              <Td textDecoration="underline" border="none" fontSize="12px" fontWeight={400} py={2}>
+                <a
+                  href={etherscanLink({
+                    chain: network?.name || '',
+                    address: row.transactionHash,
+                    isTx: true,
+                  })}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {truncateAddress(row.transactionHash)}
+                </a>
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </Box>
   );
 };
