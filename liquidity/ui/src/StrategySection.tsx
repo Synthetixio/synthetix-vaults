@@ -64,8 +64,16 @@ export const StrategySection = () => {
           <HeaderText width="260px" justifyContent="left">
             Vault
           </HeaderText>
-          <HeaderText width="180px">Vault TVL</HeaderText>
-          <Flex justifyContent="flex-end" alignItems="center" width="180px" color="gray.600">
+          <HeaderText width="180px" display={['none', 'flex']}>
+            Vault TVL
+          </HeaderText>
+          <Flex
+            justifyContent="flex-end"
+            alignItems="center"
+            width="180px"
+            color="gray.600"
+            display={['none', 'flex']}
+          >
             <HeaderText fontSize="xs" fontWeight="bold" mr={1}>
               APR
             </HeaderText>
@@ -80,7 +88,13 @@ export const StrategySection = () => {
               <InfoIcon w="10px" h="10px" />
             </Tooltip>
           </Flex>
-          <Flex justifyContent="flex-end" alignItems="center" width="180px" color="gray.600">
+          <Flex
+            justifyContent="flex-end"
+            alignItems="center"
+            width="180px"
+            color="gray.600"
+            display={['none', 'flex']}
+          >
             <HeaderText fontSize="xs" fontWeight="bold" mr={1}>
               Deposited
             </HeaderText>
@@ -207,7 +221,12 @@ export const StrategySection = () => {
                 </Text>
               </Flex>
             </Flex>
-            <Flex width="180px" alignItems="center" justifyContent="flex-end">
+            <Flex
+              width="180px"
+              alignItems="center"
+              justifyContent="flex-end"
+              display={['none', 'flex']}
+            >
               <Text
                 fontFamily="heading"
                 fontSize="14px"
@@ -224,6 +243,7 @@ export const StrategySection = () => {
               justifyContent="flex-end"
               textDecoration="none"
               _hover={{ textDecoration: 'none' }}
+              display={['none', 'flex']}
             >
               {`${formatNumberShort(pool.apr30d * 100)}%`}
             </Flex>
@@ -232,6 +252,7 @@ export const StrategySection = () => {
               justifyContent="flex-end"
               textDecoration="none"
               _hover={{ textDecoration: 'none' }}
+              display={['none', 'flex']}
             >
               {`$${currency(wei(pool.balanceOf).mul(pool.exchangeRate))}`}
             </Flex>
