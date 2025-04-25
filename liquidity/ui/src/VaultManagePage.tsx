@@ -11,6 +11,7 @@ import { BorderBox } from '@snx-v3/BorderBox';
 import { WithdrawVault } from '../../lib/Vault/WithdrawVault/WithdrawVault';
 import { VaultInfo } from '../../lib/Vault/VaultInfo/VaultInfo';
 import { VaultHistory } from '../../lib/Vault/VaultHistory/VaultHistory';
+import { VaultFees } from '../../lib/Vault/VaultFees';
 import { useFundingRateVaultData } from '../../lib/useFundingRateVaultData';
 // import { TvlChart } from '../../lib/Vault/TVLChart/TVLChart';
 
@@ -114,6 +115,7 @@ export const VaultManagePage = () => {
         </Flex>
 
         {vaultData && <VaultHistory vaultData={vaultData} />}
+        {vaultData && <VaultFees vaultData={vaultData} />}
       </Box>
     </ManagePositionProvider>
   );
