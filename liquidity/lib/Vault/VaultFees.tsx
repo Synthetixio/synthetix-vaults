@@ -18,6 +18,7 @@ const FeeRow = ({ title, description, value, isLast }: FeeRowProps) => (
   <Flex
     flexDirection="column"
     py={4}
+    px={4}
     borderBottom={isLast ? 'none' : '1px solid'}
     borderColor="whiteAlpha.200"
   >
@@ -56,7 +57,7 @@ export const VaultFees = ({ vaultData }: Props) => {
       <Heading fontSize="xl" fontWeight="medium" color="white">
         Vault Fees
       </Heading>
-      <Flex direction="column" bg="whiteAlpha.50" borderRadius="md" p={4}>
+      <Flex direction="column" bg="whiteAlpha.50" borderRadius="md">
         <FeeRow
           title="Management Fee"
           description="An annual percentage fee charged to all depositors"
