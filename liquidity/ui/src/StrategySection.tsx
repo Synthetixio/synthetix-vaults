@@ -7,6 +7,7 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { makeSearch, useParams } from '@snx-v3/useParams';
 import { currency } from '@snx-v3/format';
 import { wei } from '@synthetixio/wei';
+import { formatNumberShort } from '@snx-v3/formatters';
 
 function HeaderText({ ...props }) {
   return (
@@ -63,8 +64,8 @@ export const StrategySection = () => {
           <HeaderText width="260px" justifyContent="left">
             Vault
           </HeaderText>
-          <HeaderText width="140px">Vault TVL</HeaderText>
-          <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
+          <HeaderText width="180px">Vault TVL</HeaderText>
+          <Flex justifyContent="flex-end" alignItems="center" width="180px" color="gray.600">
             <HeaderText fontSize="xs" fontWeight="bold" mr={1}>
               APR
             </HeaderText>
@@ -79,21 +80,11 @@ export const StrategySection = () => {
               <InfoIcon w="10px" h="10px" />
             </Tooltip>
           </Flex>
-          <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
+          <Flex justifyContent="flex-end" alignItems="center" width="180px" color="gray.600">
             <HeaderText fontSize="xs" fontWeight="bold" mr={1}>
               Deposited
             </HeaderText>
-            <Tooltip
-              label={
-                <Text textAlign="left">
-                  Deposits can be withdrawn 24h after unlocking or any subsequent account activity
-                </Text>
-              }
-            >
-              <InfoIcon w="10px" h="10px" />
-            </Tooltip>
           </Flex>
-          <HeaderText width="260px">Performance</HeaderText>
           <Flex minW="120px" flex="1" />
         </Flex>
         <Flex
@@ -216,7 +207,7 @@ export const StrategySection = () => {
                 </Text>
               </Flex>
             </Flex>
-            <Flex width="140px" alignItems="center" justifyContent="flex-end">
+            <Flex width="180px" alignItems="center" justifyContent="flex-end">
               <Text
                 fontFamily="heading"
                 fontSize="14px"
@@ -225,32 +216,24 @@ export const StrategySection = () => {
                 color="white"
                 textAlign="right"
               >
-                {pool.totalAssets !== undefined ? `$${currency(wei(pool.totalAssets, 6))}` : '-'}
+                {`$${currency(wei(pool.totalAssets, 6))}`}
               </Text>
             </Flex>
             <Flex
-              width="140px"
+              width="180px"
               justifyContent="flex-end"
               textDecoration="none"
               _hover={{ textDecoration: 'none' }}
             >
-              -
+              {`${formatNumberShort(pool.apr30d * 100)}%`}
             </Flex>
             <Flex
-              width="140px"
+              width="180px"
               justifyContent="flex-end"
               textDecoration="none"
               _hover={{ textDecoration: 'none' }}
             >
-              -
-            </Flex>
-            <Flex
-              width="260px"
-              justifyContent="flex-end"
-              textDecoration="none"
-              _hover={{ textDecoration: 'none' }}
-            >
-              -
+              {`$${currency(wei(pool.balanceOf).mul(pool.exchangeRate))}`}
             </Flex>
 
             <Flex width={['100%', '120px']} flex="auto" justifyContent="flex-end">
