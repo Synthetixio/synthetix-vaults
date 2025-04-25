@@ -17,21 +17,21 @@ interface FeeRowProps {
 const FeeRow = ({ title, description, value, isLast }: FeeRowProps) => (
   <Flex
     flexDirection="column"
-    py={4}
+    py={3}
     px={4}
     borderBottom={isLast ? 'none' : '1px solid'}
     borderColor="whiteAlpha.200"
   >
     <Flex justifyContent="space-between" alignItems="center">
       <Flex flexDirection="column" flex={1}>
-        <Text color="white" fontSize="md" fontWeight={500}>
+        <Text color="white" fontSize="14px" fontWeight={500}>
           {title}
         </Text>
-        <Text color="gray.500" fontSize="sm" mt={1}>
+        <Text color="gray.500" fontSize="12px" mt="1px">
           {description}
         </Text>
       </Flex>
-      <Text color="white" fontSize="md" fontWeight={500} ml={4}>
+      <Text color="white" fontSize="14px" fontWeight={500} ml={4}>
         {value}
       </Text>
     </Flex>
