@@ -298,7 +298,8 @@ export const StrategySection = () => {
                   opacity: 0.5,
                   cursor: 'not-allowed',
                 }}
-                minWidth="96px"
+                minWidth={['100%', '96px']}
+                width={['100%', 'auto']}
               >
                 Deposit
               </Button>
