@@ -60,7 +60,7 @@ export const StrategySection = () => {
         backgroundColor="navy.700"
         borderRadius="md"
       >
-        <Flex flexDir="row" minW="800px" gap={4} py={3} px={4} whiteSpace="nowrap">
+        <Flex flexDir="row" gap={4} py={3} px={4} whiteSpace="nowrap">
           <HeaderText width="260px" justifyContent="left">
             Vault
           </HeaderText>
