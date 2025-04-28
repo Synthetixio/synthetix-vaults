@@ -7,7 +7,7 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { Amount } from '@snx-v3/Amount';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ZEROWEI } from '@snx-v3/constants';
 import { useUSDC } from '@snx-v3/useUSDC';
 import { useApprove } from '@snx-v3/useApprove';
@@ -36,6 +36,8 @@ export const DepositVault = ({ vaultData }: Props) => {
   const { data: USDCToken } = useUSDC();
   const errorParser = useContractErrorParser();
   const [simulatedOut, setSimulatedOut] = useState<BigNumber | null>(null);
+  console.log('simulatedOut', simulatedOut);
+  const latestRequestIdRef = useRef<number>(0);
 
   const { data: usdcBalance, refetch: refetchUSDCBalance } = useTokenBalance(USDCToken?.address);
 
@@ -57,15 +59,28 @@ export const DepositVault = ({ vaultData }: Props) => {
         return;
       }
 
-      const contract = new ethers.Contract(vaultAddress, vaultAbi, signer);
-      const walletAddress = await signer.getAddress();
+      // Generate a new request ID for this simulation
+      const currentRequestId = ++latestRequestIdRef.current;
 
-      const simulatedOut_ = await contract.callStatic['deposit(uint256,address)'](
-        parseUnits(amount.toString(), 6).toString(),
-        walletAddress
-      );
+      try {
+        const contract = new ethers.Contract(vaultAddress, vaultAbi, signer);
+        const walletAddress = await signer.getAddress();
 
-      setSimulatedOut(simulatedOut_);
+        const simulatedOut_ = await contract.callStatic['deposit(uint256,address)'](
+          parseUnits(amount.toString(), 6).toString(),
+          walletAddress
+        );
+
+        // Only update state if this is still the latest request
+        if (currentRequestId === latestRequestIdRef.current) {
+          setSimulatedOut(simulatedOut_);
+        }
+      } catch (error) {
+        // Only log errors if this is still the latest request
+        if (currentRequestId === latestRequestIdRef.current) {
+          console.error('Simulation error:', error);
+        }
+      }
     };
 
     simulate();
