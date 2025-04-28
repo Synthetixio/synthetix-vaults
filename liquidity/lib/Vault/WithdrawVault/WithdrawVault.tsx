@@ -196,6 +196,43 @@ export const WithdrawVault = ({ vaultData }: Props) => {
         </Flex>
       </BorderBox>
 
+      {/* Price Impact Section */}
+      {!!amount && amount.gt(0) && simulatedOut ? (
+        <Flex
+          w="100%"
+          justifyContent="space-between"
+          alignItems="center"
+          px={4}
+          py={3}
+          mb={4}
+          borderRadius="md"
+          bg="whiteAlpha.50"
+          border="1px solid"
+          borderColor="whiteAlpha.200"
+        >
+          <Text color="whiteAlpha.700" fontWeight="500">
+            Price Impact
+          </Text>
+          {(() => {
+            if (!amount) return;
+            if (amount === ZEROWEI) return;
+            const inValue = wei(amount).toNumber() * wei(vaultData.exchangeRate).toNumber();
+            const outValue = wei(simulatedOut, 6).toNumber();
+            const withdrawFee = wei(vaultData.redemptionFee || 0).toNumber();
+            const keeperFee = wei(vaultData.keeperFee || 0).toNumber();
+            const inValueAfterFees = inValue * (1 - withdrawFee) - keeperFee;
+            const priceImpact = ((outValue - inValueAfterFees) / inValueAfterFees) * 100;
+            const isNegative = priceImpact < 0;
+            return (
+              <Text fontWeight="bold" color={isNegative ? 'red.400' : 'green.400'} fontSize="lg">
+                {priceImpact > 0 ? '+' : ''}
+                {priceImpact.toFixed(2)}%
+              </Text>
+            );
+          })()}
+        </Flex>
+      ) : null}
+
       <Button
         type="submit"
         isDisabled={
