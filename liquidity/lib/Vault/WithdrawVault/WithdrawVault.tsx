@@ -1,4 +1,4 @@
-import { Text, Flex, Button, useToast } from '@chakra-ui/react';
+import { Text, Flex, Button, useToast, Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
 import { TokenIcon } from '@snx-v3/TokenIcon';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams, VaultPositionPageSchemaType } from '@snx-v3/useParams';
@@ -16,12 +16,15 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
 import { wei } from '@synthetixio/wei';
 import { FundingRateVaultData } from '../../useFundingRateVaultData';
+import { formatNumberShort } from '@snx-v3/formatters';
 
 const log = debug('snx:WithdrawVault');
 
 interface Props {
   vaultData: FundingRateVaultData;
 }
+
+type ValidationType = 'error' | 'info';
 
 export const WithdrawVault = ({ vaultData }: Props) => {
   const [params] = useParams<VaultPositionPageSchemaType>();
@@ -35,8 +38,8 @@ export const WithdrawVault = ({ vaultData }: Props) => {
   const { data: lpBalance, refetch: refetchLpBalance } = useTokenBalance(vaultData.address);
   const [simulatedOut, setSimulatedOut] = useState<BigNumber | null>(null);
   const latestRequestIdRef = useRef<number>(0);
+  const [touched, setTouched] = useState(false);
 
-  const overAvailableBalance = amount.gt(lpBalance || ZEROWEI);
   const toast = useToast({ isClosable: true, duration: 9000 });
 
   const maxAmount = wei(vaultData.balanceOf || '0');
@@ -134,6 +137,69 @@ export const WithdrawVault = ({ vaultData }: Props) => {
 
     setIsLoading(false);
   };
+
+  function getWithdrawValidation({
+    amount,
+    touched,
+    vaultData,
+    lpBalance,
+  }: {
+    amount: any;
+    touched: boolean;
+    vaultData: FundingRateVaultData;
+    lpBalance: any;
+  }): { type: ValidationType; message: string } | null {
+    if (!touched || !amount) return null;
+
+    // Exceeds LP balance
+    if (lpBalance && wei(amount).gt(wei(lpBalance))) {
+      return {
+        type: 'error',
+        message: 'The withdraw amount exceeds your available balance.',
+      };
+    }
+
+    // Max
+    if (wei(amount).gt(wei(vaultData.maxAssetTransactionSize, 6))) {
+      return {
+        type: 'error',
+        message: `The withdraw amount exceeds the maximum transaction size of $${formatNumberShort(
+          wei(vaultData.maxAssetTransactionSize, 6).toNumber()
+        )}. Please split your withdrawal into smaller amounts.`,
+      };
+    }
+
+    // Min
+    if (wei(amount).lt(wei(vaultData.minAssetTransactionSize, 6))) {
+      return {
+        type: 'error',
+        message: `The minimum withdraw amount is $${formatNumberShort(
+          wei(vaultData.minAssetTransactionSize, 6).toNumber()
+        )} per withdrawal.`,
+      };
+    }
+
+    // Max Redemption Percent
+    if (wei(amount).gt(wei(vaultData.maxRedemptionPercent).mul(wei(vaultData.totalSupply)))) {
+      return {
+        type: 'error',
+        message: `The withdraw amount exceeds the maximum redemption percent of ${formatNumberShort(
+          wei(vaultData.maxRedemptionPercent).toNumber() * 100
+        )}%`,
+      };
+    }
+
+    // Must be > 0
+    if (wei(amount).eq(0)) {
+      return {
+        type: 'error',
+        message: 'Please enter an amount greater than zero to withdraw.',
+      };
+    }
+
+    return null;
+  }
+
   return (
     <>
       <BorderBox
@@ -176,10 +242,12 @@ export const WithdrawVault = ({ vaultData }: Props) => {
             InputProps={{
               'data-max': maxAmount?.toString(),
               min: 0,
+              onBlur: () => setTouched(true),
             }}
             value={amount}
             onChange={(value) => {
               setAmount(value);
+              if (!touched) setTouched(true);
             }}
             max={maxAmount}
             min={ZEROWEI}
@@ -233,16 +301,23 @@ export const WithdrawVault = ({ vaultData }: Props) => {
         </Flex>
       ) : null}
 
+      {/* Validation Section */}
+      {(() => {
+        const validation = getWithdrawValidation({ amount, touched, vaultData, lpBalance });
+        if (!validation) return null;
+        return (
+          <Alert mb={6} status={validation.type} borderRadius="6px">
+            <AlertIcon />
+            <AlertDescription>{validation.message}</AlertDescription>
+          </Alert>
+        );
+      })()}
+
       <Button
         type="submit"
         isDisabled={
-          !(
-            amount.gt(0) &&
-            !overAvailableBalance &&
-            collateralType &&
-            amount.lte(maxAmount) &&
-            simulatedOut
-          )
+          !(amount.gt(0) && collateralType && amount.lte(maxAmount) && simulatedOut) ||
+          !!getWithdrawValidation({ amount, touched, vaultData, lpBalance })
         }
         onClick={handleSubmit}
         isLoading={isLoading}
