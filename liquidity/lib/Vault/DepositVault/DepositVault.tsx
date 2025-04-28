@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Text, Flex, Button, useToast } from '@chakra-ui/react';
+import { Text, Flex, Button, useToast, Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
 import { TokenIcon } from '@snx-v3/TokenIcon';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { useParams, VaultPositionPageSchemaType } from '@snx-v3/useParams';
@@ -19,6 +19,7 @@ import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
 import { FundingRateVaultData } from '../../useFundingRateVaultData';
 import { wei } from '@synthetixio/wei';
+import { formatNumberShort } from '@snx-v3/formatters';
 
 const log = debug('snx:DepositVault');
 
@@ -26,9 +27,12 @@ interface Props {
   vaultData: FundingRateVaultData;
 }
 
+type ValidationType = 'error' | 'info';
+
 export const DepositVault = ({ vaultData }: Props) => {
   const [params] = useParams<VaultPositionPageSchemaType>();
   const [amount, setAmount] = useState(ZEROWEI);
+  const [touched, setTouched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { network } = useNetwork();
@@ -37,7 +41,6 @@ export const DepositVault = ({ vaultData }: Props) => {
   const { data: USDCToken } = useUSDC();
   const errorParser = useContractErrorParser();
   const [simulatedOut, setSimulatedOut] = useState<BigNumber | null>(null);
-  console.log('simulatedOut', simulatedOut);
   const latestRequestIdRef = useRef<number>(0);
 
   const { data: usdcBalance, refetch: refetchUSDCBalance } = useTokenBalance(USDCToken?.address);
@@ -149,6 +152,59 @@ export const DepositVault = ({ vaultData }: Props) => {
     setIsLoading(false);
   };
 
+  // Validation helper
+  function getDepositValidation({
+    amount,
+    touched,
+    vaultData,
+  }: {
+    amount: any;
+    touched: boolean;
+    vaultData: FundingRateVaultData;
+  }): { type: ValidationType; message: string } | null {
+    if (!touched || !amount) return null;
+
+    // Paused
+    if (vaultData.paused) {
+      return {
+        type: 'info',
+        message: 'Vault deposits are temporarily paused. Please check back soon.',
+      };
+    }
+
+    // Cap
+    if (wei(amount).add(wei(vaultData.totalAssets, 6)).gt(wei(vaultData.totalAssetsCap, 6))) {
+      return {
+        type: 'info',
+        message: `This vault has reached its maximum deposit cap of $${formatNumberShort(
+          wei(vaultData.totalAssetsCap, 6).toNumber()
+        )}. No additional deposits are allowed at this time.`,
+      };
+    }
+
+    // Max
+    if (wei(amount).gt(wei(vaultData.maxAssetTransactionSize, 6))) {
+      return {
+        type: 'error',
+        message: `The deposit amount exceeds the maximum transaction size of $${formatNumberShort(
+          wei(vaultData.maxAssetTransactionSize, 6).toNumber()
+        )}. Please split your deposit into smaller amounts.`,
+      };
+    }
+
+    // Min
+    if (wei(amount).lt(wei(vaultData.minAssetTransactionSize, 6))) {
+      return {
+        type: 'error',
+        message: `The minimum deposit amount is $${formatNumberShort(
+          wei(vaultData.minAssetTransactionSize, 6).toNumber()
+        )} per deposit.`,
+      };
+    }
+
+    return null;
+  }
+
   return (
     <>
       <BorderBox
@@ -191,10 +247,12 @@ export const DepositVault = ({ vaultData }: Props) => {
             InputProps={{
               'data-max': usdcBalance?.toString(),
               min: 0,
+              onBlur: () => setTouched(true),
             }}
             value={amount}
             onChange={(value) => {
               setAmount(value);
+              if (!touched) setTouched(true);
             }}
             max={usdcBalance}
             min={ZEROWEI}
@@ -205,6 +263,19 @@ export const DepositVault = ({ vaultData }: Props) => {
         </Flex>
       </BorderBox>
 
+      {/* Validation Section */}
+      {(() => {
+        const validation = getDepositValidation({ amount, touched, vaultData });
+        if (!validation) return null;
+        return (
+          <Alert mb={6} status={validation.type} borderRadius="6px">
+            <AlertIcon />
+            <AlertDescription>{validation.message}</AlertDescription>
+          </Alert>
+        );
+      })()}
+
+      {/* Price Impact Section */}
       {!!amount && amount.gt(0) && simulatedOut ? (
         <Flex
           w="100%"
@@ -241,10 +312,15 @@ export const DepositVault = ({ vaultData }: Props) => {
         </Flex>
       ) : null}
 
+      {/* Submit Button */}
       <Button
         data-cy="deposit submit"
         type="submit"
-        isDisabled={!(amount.gt(0) && !overAvailableBalance && collateralType)}
+        isDisabled={
+          amount.eq(0) ||
+          !(amount.gt(0) && !overAvailableBalance && collateralType) ||
+          !!getDepositValidation({ amount, touched, vaultData })
+        }
         onClick={handleSubmit}
         isLoading={isLoading}
       >
