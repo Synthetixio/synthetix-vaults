@@ -6,11 +6,10 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { Amount } from '@snx-v3/Amount';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ZEROWEI } from '@snx-v3/constants';
-import { useUSDC } from '@snx-v3/useUSDC';
 import { parseUnits } from '@snx-v3/format';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import debug from 'debug';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
@@ -32,14 +31,49 @@ export const WithdrawVault = ({ vaultData }: Props) => {
   const { network } = useNetwork();
   const signer = useSigner();
   const provider = useProvider();
-  const { data: USDCToken } = useUSDC();
   const errorParser = useContractErrorParser();
-  const { data: usdcBalance, refetch: refetchUSDCBalance } = useTokenBalance(USDCToken?.address);
+  const { data: lpBalance, refetch: refetchLpBalance } = useTokenBalance(vaultData.address);
+  const [simulatedOut, setSimulatedOut] = useState<BigNumber | null>(null);
+  const latestRequestIdRef = useRef<number>(0);
 
-  const overAvailableBalance = amount.gt(usdcBalance || ZEROWEI);
+  const overAvailableBalance = amount.gt(lpBalance || ZEROWEI);
   const toast = useToast({ isClosable: true, duration: 9000 });
 
   const maxAmount = wei(vaultData.balanceOf || '0');
+
+  useEffect(() => {
+    const simulate = async () => {
+      if (!provider || !signer || !amount || amount === ZEROWEI) {
+        return;
+      }
+
+      // Generate a new request ID for this simulation
+      const currentRequestId = ++latestRequestIdRef.current;
+
+      try {
+        const contract = new ethers.Contract(vaultData.address, vaultData.abi, signer);
+        const walletAddress = await signer.getAddress();
+
+        const simulatedOut_ = await contract.callStatic['redeem(uint256,address,address)'](
+          parseUnits(amount.toString(), 18).toString(),
+          walletAddress,
+          walletAddress
+        );
+
+        // Only update state if this is still the latest request
+        if (currentRequestId === latestRequestIdRef.current) {
+          setSimulatedOut(simulatedOut_);
+        }
+      } catch (error) {
+        // Only log errors if this is still the latest request
+        if (currentRequestId === latestRequestIdRef.current) {
+          console.error('Simulation error:', error);
+        }
+      }
+    };
+
+    simulate();
+  }, [amount, provider, signer, vaultData.address, vaultData.abi]);
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -48,13 +82,23 @@ export const WithdrawVault = ({ vaultData }: Props) => {
         return;
       }
 
+      if (!simulatedOut) {
+        return;
+      }
+
       const contract = new ethers.Contract(vaultData.address, vaultData.abi, signer);
       const walletAddress = await signer.getAddress();
 
-      const withdrawTx = await contract.populateTransaction['redeem(uint256,address,address)'](
+      // Add 1% markup to the simulated amount for minAmountOut
+      const minAmountOut = simulatedOut.mul(99).div(100);
+
+      const withdrawTx = await contract.populateTransaction[
+        'redeem(uint256,address,address,uint256)'
+      ](
         parseUnits(amount.toString(), 18).toString(),
         walletAddress,
-        walletAddress
+        walletAddress,
+        minAmountOut.toString()
       );
 
       const txn = await signer.sendTransaction({
@@ -65,7 +109,7 @@ export const WithdrawVault = ({ vaultData }: Props) => {
 
       const receipt = await provider.waitForTransaction(txn.hash);
 
-      refetchUSDCBalance();
+      refetchLpBalance();
 
       log('receipt', receipt);
     } catch (error) {
@@ -155,7 +199,13 @@ export const WithdrawVault = ({ vaultData }: Props) => {
       <Button
         type="submit"
         isDisabled={
-          !(amount.gt(0) && !overAvailableBalance && collateralType && amount.lte(maxAmount))
+          !(
+            amount.gt(0) &&
+            !overAvailableBalance &&
+            collateralType &&
+            amount.lte(maxAmount) &&
+            simulatedOut
+          )
         }
         onClick={handleSubmit}
         isLoading={isLoading}
