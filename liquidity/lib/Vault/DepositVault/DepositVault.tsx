@@ -7,12 +7,12 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { Amount } from '@snx-v3/Amount';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ZEROWEI } from '@snx-v3/constants';
 import { useUSDC } from '@snx-v3/useUSDC';
 import { useApprove } from '@snx-v3/useApprove';
 import { parseUnits } from '@snx-v3/format';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import debug from 'debug';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
@@ -35,6 +35,7 @@ export const DepositVault = ({ vaultData }: Props) => {
   const provider = useProvider();
   const { data: USDCToken } = useUSDC();
   const errorParser = useContractErrorParser();
+  const [simulatedOut, setSimulatedOut] = useState<BigNumber | null>(null);
 
   const { data: usdcBalance, refetch: refetchUSDCBalance } = useTokenBalance(USDCToken?.address);
 
@@ -47,24 +48,54 @@ export const DepositVault = ({ vaultData }: Props) => {
     spender: vaultData.address,
   });
 
+  const vaultAddress = vaultData.address;
+  const vaultAbi = vaultData.abi;
+
+  useEffect(() => {
+    const simulate = async () => {
+      if (!provider || requireApproval || !signer || !amount || amount === ZEROWEI) {
+        return;
+      }
+
+      const contract = new ethers.Contract(vaultAddress, vaultAbi, signer);
+      const walletAddress = await signer.getAddress();
+
+      const simulatedOut_ = await contract.callStatic['deposit(uint256,address)'](
+        parseUnits(amount.toString(), 6).toString(),
+        walletAddress
+      );
+
+      setSimulatedOut(simulatedOut_);
+    };
+
+    simulate();
+  }, [amount, provider, requireApproval, signer, vaultAddress, vaultAbi]);
+
   const handleSubmit = async () => {
-    setIsLoading(true);
     try {
       if (!(provider && network && signer)) {
         return;
       }
 
       if (requireApproval) {
-        await approve(false);
+        setIsLoading(true);
+        await approve(true);
 
         refetchAllowance();
       } else {
+        if (!simulatedOut) {
+          return;
+        }
+
+        setIsLoading(true);
+
         const contract = new ethers.Contract(vaultData.address, vaultData.abi, signer);
         const walletAddress = await signer.getAddress();
 
-        const depositTx = await contract.populateTransaction['deposit(uint256,address)'](
+        const depositTx = await contract.populateTransaction['deposit(uint256,address,uint256)'](
           parseUnits(amount.toString(), 6).toString(),
-          walletAddress
+          walletAddress,
+          simulatedOut.mul(99).div(100).toString()
         );
 
         const txn = await signer.sendTransaction({
