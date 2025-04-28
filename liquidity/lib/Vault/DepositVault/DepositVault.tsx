@@ -45,7 +45,6 @@ export const DepositVault = ({ vaultData }: Props) => {
 
   const { data: usdcBalance, refetch: refetchUSDCBalance } = useTokenBalance(USDCToken?.address);
 
-  const overAvailableBalance = amount.gt(usdcBalance || ZEROWEI);
   const toast = useToast({ isClosable: true, duration: 9000 });
 
   const { approve, requireApproval, refetchAllowance } = useApprove({
@@ -157,10 +156,12 @@ export const DepositVault = ({ vaultData }: Props) => {
     amount,
     touched,
     vaultData,
+    usdcBalance,
   }: {
     amount: any;
     touched: boolean;
     vaultData: FundingRateVaultData;
+    usdcBalance: any;
   }): { type: ValidationType; message: string } | null {
     if (!touched || !amount) return null;
 
@@ -199,6 +200,14 @@ export const DepositVault = ({ vaultData }: Props) => {
         message: `The minimum deposit amount is $${formatNumberShort(
           wei(vaultData.minAssetTransactionSize, 6).toNumber()
         )} per deposit.`,
+      };
+    }
+
+    // Exceeds balance
+    if (usdcBalance && wei(amount).gt(wei(usdcBalance, 6))) {
+      return {
+        type: 'error',
+        message: 'The deposit amount exceeds your available balance.',
       };
     }
 
@@ -265,7 +274,7 @@ export const DepositVault = ({ vaultData }: Props) => {
 
       {/* Validation Section */}
       {(() => {
-        const validation = getDepositValidation({ amount, touched, vaultData });
+        const validation = getDepositValidation({ amount, touched, vaultData, usdcBalance });
         if (!validation) return null;
         return (
           <Alert mb={6} status={validation.type} borderRadius="6px">
@@ -318,8 +327,8 @@ export const DepositVault = ({ vaultData }: Props) => {
         type="submit"
         isDisabled={
           amount.eq(0) ||
-          !(amount.gt(0) && !overAvailableBalance && collateralType) ||
-          !!getDepositValidation({ amount, touched, vaultData })
+          !(amount.gt(0) && collateralType) ||
+          !!getDepositValidation({ amount, touched, vaultData, usdcBalance })
         }
         onClick={handleSubmit}
         isLoading={isLoading}
