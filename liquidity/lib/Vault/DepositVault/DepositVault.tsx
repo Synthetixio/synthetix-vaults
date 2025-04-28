@@ -18,6 +18,7 @@ import debug from 'debug';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
 import { FundingRateVaultData } from '../../useFundingRateVaultData';
+import { wei } from '@synthetixio/wei';
 
 const log = debug('snx:DepositVault');
 
@@ -203,6 +204,42 @@ export const DepositVault = ({ vaultData }: Props) => {
           </Flex>
         </Flex>
       </BorderBox>
+
+      {!!amount && amount.gt(0) && simulatedOut ? (
+        <Flex
+          w="100%"
+          justifyContent="space-between"
+          alignItems="center"
+          px={4}
+          py={3}
+          mb={4}
+          borderRadius="md"
+          bg="whiteAlpha.50"
+          border="1px solid"
+          borderColor="whiteAlpha.200"
+        >
+          <Text color="whiteAlpha.700" fontWeight="500">
+            Price Impact
+          </Text>
+          {(() => {
+            if (!amount) return;
+            if (amount === ZEROWEI) return;
+            const inValue = wei(amount).toNumber();
+            const outValue = wei(simulatedOut).toNumber() * wei(vaultData.exchangeRate).toNumber();
+            const depositFee = wei(vaultData.depositFee).toNumber();
+            const keeperFee = wei(vaultData.keeperFee).toNumber();
+            const inValueAfterFees = inValue * (1 - depositFee) - keeperFee;
+            const priceImpact = ((outValue - inValueAfterFees) / inValueAfterFees) * 100;
+            const isNegative = priceImpact < 0;
+            return (
+              <Text fontWeight="bold" color={isNegative ? 'red.400' : 'green.400'} fontSize="lg">
+                {priceImpact > 0 ? '+' : ''}
+                {priceImpact.toFixed(2)}%
+              </Text>
+            );
+          })()}
+        </Flex>
+      ) : null}
 
       <Button
         data-cy="deposit submit"
