@@ -6046,6 +6046,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useFundingRateVaultData@workspace:liquidity/lib/useFundingRateVaultData":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useFundingRateVaultData@workspace:liquidity/lib/useFundingRateVaultData"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useFundingRateVaultHelper@workspace:liquidity/lib/contracts/useFundingRateVaultHelper":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useFundingRateVaultHelper@workspace:liquidity/lib/contracts/useFundingRateVaultHelper"
+  dependencies:
+    "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useGetUSDTokens@workspace:*, @snx-v3/useGetUSDTokens@workspace:liquidity/lib/useGetUSDTokens":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useGetUSDTokens@workspace:liquidity/lib/useGetUSDTokens"
@@ -6488,30 +6510,6 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useStaticAaveUSDC": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
-    ethers: "npm:^5.7.2"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useStrategyPoolInfo@workspace:liquidity/lib/useStrategyPoolInfo":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useStrategyPoolInfo@workspace:liquidity/lib/useStrategyPoolInfo"
-  dependencies:
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    debug: "npm:^4.4.0"
-    ethers: "npm:^5.7.2"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useStrategyPoolPositionuseStrategyPoolPosition@workspace:liquidity/lib/useStrategyPoolPosition":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useStrategyPoolPositionuseStrategyPoolPosition@workspace:liquidity/lib/useStrategyPoolPosition"
-  dependencies:
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    debug: "npm:^4.4.0"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown
