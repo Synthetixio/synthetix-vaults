@@ -1,4 +1,4 @@
-# Synthetix Liquidity UI
+# Synthetix Liquidity UI Test
 
 This repo uses Yarn workspaces to manage multiple packages in the same repo. To prepare the repository for use, run:
 
