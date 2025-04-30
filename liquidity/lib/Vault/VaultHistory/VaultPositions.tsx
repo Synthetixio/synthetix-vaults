@@ -7,7 +7,7 @@ import { SortableTable } from './SortableTable';
 import { wei } from '@synthetixio/wei';
 
 interface Props {
-  vaultData: FundingRateVaultData;
+  vaultData?: FundingRateVaultData;
 }
 
 export const VaultPositions = ({ vaultData }: Props) => {
@@ -33,16 +33,20 @@ export const VaultPositions = ({ vaultData }: Props) => {
           sortFn: (a: any, b: any) => a.referrer.localeCompare(b.referrer),
         },
       ]}
-      rows={vaultData.positionEvents.map((event: FundingRateVaultPositionEvent) => ({
-        date: event.timestamp,
-        data: event,
-        values: [
-          formatNumberShort(event.sizeDelta),
-          formatNumber(wei(event.acceptablePrice).toNumber()),
-          truncateAddress(event.referrer),
-        ],
-        transactionHash: event.transactionHash,
-      }))}
+      rows={
+        vaultData
+          ? vaultData.positionEvents.map((event: FundingRateVaultPositionEvent) => ({
+              date: event.timestamp,
+              data: event,
+              values: [
+                formatNumberShort(event.sizeDelta),
+                formatNumber(wei(event.acceptablePrice).toNumber()),
+                truncateAddress(event.referrer),
+              ],
+              transactionHash: event.transactionHash,
+            }))
+          : undefined
+      }
     />
   );
 };

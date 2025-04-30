@@ -1,6 +1,6 @@
 import { BorderBox } from '@snx-v3/BorderBox';
 import { PositionTitle } from '@snx-v3/Manage';
-import { Text, Flex, Skeleton } from '@chakra-ui/react';
+import { Text, Flex, Skeleton, Box } from '@chakra-ui/react';
 import { StatsCard } from '../VaultPositionStats/StatsCard';
 import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
@@ -22,18 +22,20 @@ export const VaultInfo = ({ vaultData }: Props) => {
     >
       <Flex direction="column" gap={6}>
         <PositionTitle isVault name={vaultData?.name || null} />
-        <Text color="gray.500" fontSize="14px" fontWeight={400}>
-          {vaultData ? (
-            vaultData.description
-          ) : (
+        {vaultData ? (
+          <Text color="gray.500" fontSize="14px" fontWeight={400}>
+            {vaultData.description}
+          </Text>
+        ) : (
+          <Box>
             <Flex gap={2} flexWrap="wrap">
               <Skeleton height="14px" width="100%" />
               <Skeleton height="14px" width="90%" />
               <Skeleton height="14px" width="100%" />
               <Skeleton height="14px" width="70%" />
             </Flex>
-          )}
-        </Text>
+          </Box>
+        )}
         <Flex gap={['4', '6']}>
           <StatsCard
             label="Total Value Locked"

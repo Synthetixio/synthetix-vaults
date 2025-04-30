@@ -110,7 +110,7 @@ export const VaultManagePage = () => {
           </Flex>
         </Flex>
 
-        {vaultData && <VaultHistory vaultData={vaultData} />}
+        <VaultHistory vaultData={vaultData} />
         {vaultData && <VaultFees vaultData={vaultData} />}
       </Box>
     </ManagePositionProvider>

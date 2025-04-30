@@ -6,7 +6,7 @@ import { truncateAddress } from '@snx-v3/formatters';
 import { SortableTable } from './SortableTable';
 
 interface Props {
-  vaultData: FundingRateVaultData;
+  vaultData?: FundingRateVaultData;
 }
 
 interface DepositOrWithdrawalEvent extends EventType {
@@ -16,7 +16,7 @@ interface DepositOrWithdrawalEvent extends EventType {
 }
 
 export const VaultDeposits = ({ vaultData }: Props) => {
-  const { deposits, withdrawals } = vaultData;
+  const { deposits, withdrawals } = vaultData || { deposits: [], withdrawals: [] };
 
   const events: DepositOrWithdrawalEvent[] = [
     ...deposits.map((deposit) => {
@@ -65,16 +65,20 @@ export const VaultDeposits = ({ vaultData }: Props) => {
           sortFn: (a: any, b: any) => b.assets.toNumber() - a.assets.toNumber(),
         },
       ]}
-      rows={events.map((event) => ({
-        date: event.timestamp,
-        data: event,
-        values: [
-          event.type === 'deposit' ? 'Deposit' : 'Withdrawal',
-          truncateAddress(event.user),
-          formatNumberToUsdShort(wei(event.assets, 6).toNumber()),
-        ],
-        transactionHash: event.transactionHash,
-      }))}
+      rows={
+        vaultData
+          ? events.map((event) => ({
+              date: event.timestamp,
+              data: event,
+              values: [
+                event.type === 'deposit' ? 'Deposit' : 'Withdrawal',
+                truncateAddress(event.user),
+                formatNumberToUsdShort(wei(event.assets, 6).toNumber()),
+              ],
+              transactionHash: event.transactionHash,
+            }))
+          : undefined
+      }
     />
   );
 };

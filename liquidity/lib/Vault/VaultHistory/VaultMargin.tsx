@@ -7,7 +7,7 @@ import { SortableTable } from './SortableTable';
 import { wei } from '@synthetixio/wei';
 
 interface Props {
-  vaultData: FundingRateVaultData;
+  vaultData?: FundingRateVaultData;
 }
 
 export const VaultMargin = ({ vaultData }: Props) => {
@@ -33,16 +33,20 @@ export const VaultMargin = ({ vaultData }: Props) => {
           sortFn: (a: any, b: any) => b.amount.toNumber() - a.amount.toNumber(),
         },
       ]}
-      rows={vaultData.marginEvents.map((event: FundingRateVaultMarginEvent) => ({
-        date: event.timestamp,
-        data: event,
-        values: [
-          event.type === 'added' ? 'Added' : 'Removed',
-          event.symbol,
-          formatNumberShort(wei(event.amount, 6).toNumber()),
-        ],
-        transactionHash: event.transactionHash,
-      }))}
+      rows={
+        vaultData
+          ? vaultData.marginEvents.map((event: FundingRateVaultMarginEvent) => ({
+              date: event.timestamp,
+              data: event,
+              values: [
+                event.type === 'added' ? 'Added' : 'Removed',
+                event.symbol,
+                formatNumberShort(wei(event.amount, 6).toNumber()),
+              ],
+              transactionHash: event.transactionHash,
+            }))
+          : undefined
+      }
     />
   );
 };

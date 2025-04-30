@@ -6,7 +6,7 @@ import { formatNumberShort } from '@snx-v3/formatters';
 import { SortableTable } from './SortableTable';
 
 interface Props {
-  vaultData: FundingRateVaultData;
+  vaultData?: FundingRateVaultData;
 }
 
 export const VaultTradeHistory = ({ vaultData }: Props) => {
@@ -38,17 +38,21 @@ export const VaultTradeHistory = ({ vaultData }: Props) => {
           sortFn: (a: any, b: any) => b.amountOut - a.amountOut,
         },
       ]}
-      rows={vaultData.trades.map((trade: FundingRateVaultTradeEvent) => ({
-        date: trade.timestamp,
-        data: trade,
-        values: [
-          trade.fromSymbol,
-          trade.toSymbol,
-          formatNumberShort(trade.amountIn),
-          formatNumberShort(trade.amountOut),
-        ],
-        transactionHash: trade.transactionHash,
-      }))}
+      rows={
+        vaultData
+          ? vaultData.trades.map((trade: FundingRateVaultTradeEvent) => ({
+              date: trade.timestamp,
+              data: trade,
+              values: [
+                trade.fromSymbol,
+                trade.toSymbol,
+                formatNumberShort(trade.amountIn),
+                formatNumberShort(trade.amountOut),
+              ],
+              transactionHash: trade.transactionHash,
+            }))
+          : undefined
+      }
     />
   );
 };

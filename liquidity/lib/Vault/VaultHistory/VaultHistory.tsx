@@ -8,7 +8,7 @@ import { FundingRateVaultData } from '../../useFundingRateVaultData';
 import { VaultPositions } from './VaultPositions';
 
 interface Props {
-  vaultData: FundingRateVaultData;
+  vaultData?: FundingRateVaultData;
 }
 
 export const VaultHistory = ({ vaultData }: Props) => {
