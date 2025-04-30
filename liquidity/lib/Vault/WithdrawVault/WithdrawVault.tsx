@@ -21,7 +21,7 @@ import { formatNumberShort } from '@snx-v3/formatters';
 const log = debug('snx:WithdrawVault');
 
 interface Props {
-  vaultData: FundingRateVaultData;
+  vaultData?: FundingRateVaultData;
 }
 
 type ValidationType = 'error' | 'info';
@@ -35,18 +35,29 @@ export const WithdrawVault = ({ vaultData }: Props) => {
   const signer = useSigner();
   const provider = useProvider();
   const errorParser = useContractErrorParser();
-  const { data: lpBalance, refetch: refetchLpBalance } = useTokenBalance(vaultData.address);
+  const { data: lpBalance, refetch: refetchLpBalance } = useTokenBalance(vaultData?.address);
   const [simulatedOut, setSimulatedOut] = useState<BigNumber | null>(null);
   const latestRequestIdRef = useRef<number>(0);
   const [touched, setTouched] = useState(false);
 
   const toast = useToast({ isClosable: true, duration: 9000 });
 
-  const maxAmount = wei(vaultData.balanceOf || '0');
+  const maxAmount = wei(vaultData?.balanceOf || '0');
+
+  const vaultAddress = vaultData?.address;
+  const vaultAbi = vaultData?.abi;
 
   useEffect(() => {
     const simulate = async () => {
-      if (!provider || !signer || !amount || amount.eq(0) || amount.eq(ZEROWEI)) {
+      if (
+        !provider ||
+        !signer ||
+        !amount ||
+        amount.eq(0) ||
+        amount.eq(ZEROWEI) ||
+        !vaultAddress ||
+        !vaultAbi
+      ) {
         return;
       }
 
@@ -54,7 +65,7 @@ export const WithdrawVault = ({ vaultData }: Props) => {
       const currentRequestId = ++latestRequestIdRef.current;
 
       try {
-        const contract = new ethers.Contract(vaultData.address, vaultData.abi, signer);
+        const contract = new ethers.Contract(vaultAddress, vaultAbi, signer);
         const walletAddress = await signer.getAddress();
 
         const simulatedOut_ = await contract.callStatic['redeem(uint256,address,address)'](
@@ -76,12 +87,12 @@ export const WithdrawVault = ({ vaultData }: Props) => {
     };
 
     simulate();
-  }, [amount, provider, signer, vaultData.address, vaultData.abi]);
+  }, [amount, provider, signer, vaultAddress, vaultAbi]);
 
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      if (!(provider && network && signer)) {
+      if (!(provider && network && signer && vaultAddress && vaultAbi)) {
         return;
       }
 
@@ -89,7 +100,7 @@ export const WithdrawVault = ({ vaultData }: Props) => {
         return;
       }
 
-      const contract = new ethers.Contract(vaultData.address, vaultData.abi, signer);
+      const contract = new ethers.Contract(vaultAddress, vaultAbi, signer);
       const walletAddress = await signer.getAddress();
 
       // Add 1% markup to the simulated amount for minAmountOut
@@ -146,10 +157,10 @@ export const WithdrawVault = ({ vaultData }: Props) => {
   }: {
     amount: any;
     touched: boolean;
-    vaultData: FundingRateVaultData;
+    vaultData?: FundingRateVaultData;
     lpBalance: any;
   }): { type: ValidationType; message: string } | null {
-    if (!touched || !amount || amount.eq(0) || amount.eq(ZEROWEI)) return null;
+    if (!touched || !amount || amount.eq(0) || amount.eq(ZEROWEI) || !vaultData) return null;
 
     // Exceeds LP balance
     if (lpBalance && wei(amount).gt(wei(lpBalance))) {
@@ -257,7 +268,7 @@ export const WithdrawVault = ({ vaultData }: Props) => {
               prefix="$"
               value={amount
                 .abs()
-                .mul(vaultData.exchangeRate || '1')
+                .mul(vaultData?.exchangeRate || '1')
                 .mul(1)}
             />
           </Flex>
@@ -284,6 +295,7 @@ export const WithdrawVault = ({ vaultData }: Props) => {
           {(() => {
             if (!amount) return;
             if (amount === ZEROWEI) return;
+            if (!vaultData) return;
             const inValue = wei(amount).toNumber() * wei(vaultData.exchangeRate).toNumber();
             const outValue = wei(simulatedOut, 6).toNumber();
             const withdrawFee = wei(vaultData.redemptionFee || 0).toNumber();
