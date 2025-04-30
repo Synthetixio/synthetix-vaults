@@ -2,7 +2,6 @@ import { Flex, Heading, Text, Button, Image, Tooltip, Link } from '@chakra-ui/re
 import { BASE_ANDROMEDA, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { useStrategyPoolsList } from '@snx-v3/useStrategyPoolsList';
 
-import DeltaNeutralIcon from './assets/delta-neutral.svg';
 import { InfoIcon } from '@chakra-ui/icons';
 import { makeSearch, useParams } from '@snx-v3/useParams';
 import { currency } from '@snx-v3/format';
