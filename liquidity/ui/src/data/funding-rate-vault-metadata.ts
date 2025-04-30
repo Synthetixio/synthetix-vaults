@@ -41,6 +41,31 @@ export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadat
       },
     },
   },
+  '0x00C95df398f5bcD9d9d5eDA23c3cD996cBb2F785': {
+    description:
+      'A BTC-denominated vault on Base. Deposits are swapped for cbBTC on Aerodrome, then deposited onto Synthetix Perps V3 to collateralise a short BTC perpetual derivative position of the equivalent size. The strategy therefore earns both the Coinbase staking yield (always positive) and the BTC perpetual funding rate on Perps V3.',
+    abi,
+    perpsMarket: 'BTC',
+    deployedBlock: 29_014_954,
+    assetData: {
+      '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
+        symbol: 'USDC',
+        decimals: 6,
+      },
+      '0x4200000000000000000000000000000000000006': {
+        symbol: 'WETH',
+        decimals: 18,
+      },
+      '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf': {
+        symbol: 'cbBTC',
+        decimals: 18,
+      },
+      '0xEDE1d04C864EeEC40393ED4cb454B85A5ABD071C': {
+        symbol: 'scbBTC',
+        decimals: 18,
+      },
+    },
+  },
 };
 
 const getFundingRateVaultMetadata = (
