@@ -104,12 +104,8 @@ export const VaultManagePage = () => {
                 </TabList>
               </Tabs>
 
-              {vaultData && params.manageAction === 'deposit' && (
-                <DepositVault vaultData={vaultData} />
-              )}
-              {vaultData && params.manageAction === 'withdraw' && (
-                <WithdrawVault vaultData={vaultData} />
-              )}
+              {params.manageAction === 'deposit' && <DepositVault vaultData={vaultData} />}
+              {params.manageAction === 'withdraw' && <WithdrawVault vaultData={vaultData} />}
             </BorderBox>
           </Flex>
         </Flex>
