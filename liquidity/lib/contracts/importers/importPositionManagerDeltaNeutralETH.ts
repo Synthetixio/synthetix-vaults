@@ -9,7 +9,6 @@ export async function importPositionManagerDeltaNeutralETH(
 
   switch (deployment) {
     case '8453-andromeda': {
-      // https://basescan.org/address/0x038c33792237F1575136110480142073129bB7e6#code
       return {
         address: '0xE51cc84D89b01dD3189458f5bDc69d9877f77119',
         abi: formatHumanReadableAbi(fundingRateVaultAbi),
