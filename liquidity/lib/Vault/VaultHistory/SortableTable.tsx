@@ -1,4 +1,16 @@
-import { Table, Th, Thead, Tr, Tbody, Td, Text, Image, Box, Flex } from '@chakra-ui/react';
+import {
+  Table,
+  Th,
+  Thead,
+  Tr,
+  Tbody,
+  Td,
+  Text,
+  Image,
+  Box,
+  Flex,
+  Skeleton,
+} from '@chakra-ui/react';
 import { truncateAddress } from '@snx-v3/formatters';
 import { etherscanLink } from '@snx-v3/etherscanLink';
 import { useNetwork } from '@snx-v3/useBlockchain';
@@ -22,7 +34,7 @@ interface RowType {
 
 interface Props {
   headers: HeaderType[];
-  rows: RowType[];
+  rows?: RowType[];
 }
 
 export const SortableTable = ({ headers, rows }: Props) => {
@@ -30,7 +42,7 @@ export const SortableTable = ({ headers, rows }: Props) => {
   const [sort, setSort] = useState<string>('timestamp');
   const [inverse, setInverse] = useState(true);
 
-  const sortedRows = rows.sort((a: RowType, b: RowType) => {
+  const sortedRows = rows?.sort((a: RowType, b: RowType) => {
     if (sort === 'timestamp') {
       return a.date.getTime() - b.date.getTime();
     }
@@ -41,7 +53,7 @@ export const SortableTable = ({ headers, rows }: Props) => {
     return sortFn(a.data, b.data);
   });
 
-  if (inverse) {
+  if (sortedRows && inverse) {
     sortedRows.reverse();
   }
 
@@ -125,41 +137,59 @@ export const SortableTable = ({ headers, rows }: Props) => {
             <Td height="0px" border="none" px={0} pt={0} pb={0} />
           </Tr>
 
-          {sortedRows.map((row, index) => (
-            <Tr key={`${row.transactionHash}-${index}`}>
-              <Td border="none" fontSize="12px" fontWeight={400} py={2}>
-                {row.date.toLocaleDateString()}
-                <Text textColor="gray.500">{row.date.toLocaleTimeString()}</Text>
-              </Td>
-              {row.values.map((value, index) => (
+          {!sortedRows &&
+            Array.from({ length: 10 }).map((_, index) => (
+              <Tr key={`${index}`}>
+                {Array.from({ length: headers.length + 2 }).map((_, index) => (
+                  <Td key={`${index}`}>
+                    <Skeleton height="14px" width="80px" />
+                  </Td>
+                ))}
+              </Tr>
+            ))}
+
+          {sortedRows &&
+            sortedRows.map((row, index) => (
+              <Tr key={`${row.transactionHash}-${index}`}>
+                <Td border="none" fontSize="12px" fontWeight={400} py={2}>
+                  {row.date.toLocaleDateString()}
+                  <Text textColor="gray.500">{row.date.toLocaleTimeString()}</Text>
+                </Td>
+                {row.values.map((value, index) => (
+                  <Td
+                    key={`${row.transactionHash}-${value}-${index}`}
+                    border="none"
+                    fontSize="12px"
+                    fontWeight={400}
+                    py={2}
+                  >
+                    {value}
+                  </Td>
+                ))}
                 <Td
-                  key={`${row.transactionHash}-${value}-${index}`}
+                  textDecoration="underline"
                   border="none"
                   fontSize="12px"
                   fontWeight={400}
                   py={2}
                 >
-                  {value}
+                  <Flex alignItems="center">
+                    <a
+                      href={etherscanLink({
+                        chain: network?.name || '',
+                        address: row.transactionHash,
+                        isTx: true,
+                      })}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {truncateAddress(row.transactionHash)}
+                    </a>
+                    <Image src={externalLinkIcon} width="14px" height="14px" marginLeft="4px" />
+                  </Flex>
                 </Td>
-              ))}
-              <Td textDecoration="underline" border="none" fontSize="12px" fontWeight={400} py={2}>
-                <Flex alignItems="center">
-                  <a
-                    href={etherscanLink({
-                      chain: network?.name || '',
-                      address: row.transactionHash,
-                      isTx: true,
-                    })}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {truncateAddress(row.transactionHash)}
-                  </a>
-                  <Image src={externalLinkIcon} width="14px" height="14px" marginLeft="4px" />
-                </Flex>
-              </Td>
-            </Tr>
-          ))}
+              </Tr>
+            ))}
         </Tbody>
       </Table>
     </Box>
