@@ -46,7 +46,7 @@ export const WithdrawVault = ({ vaultData }: Props) => {
 
   useEffect(() => {
     const simulate = async () => {
-      if (!provider || !signer || !amount || amount === ZEROWEI) {
+      if (!provider || !signer || !amount || amount.eq(0) || amount.eq(ZEROWEI)) {
         return;
       }
 
@@ -149,7 +149,7 @@ export const WithdrawVault = ({ vaultData }: Props) => {
     vaultData: FundingRateVaultData;
     lpBalance: any;
   }): { type: ValidationType; message: string } | null {
-    if (!touched || !amount) return null;
+    if (!touched || !amount || amount.eq(0) || amount.eq(ZEROWEI)) return null;
 
     // Exceeds LP balance
     if (lpBalance && wei(amount).gt(wei(lpBalance))) {

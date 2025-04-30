@@ -163,7 +163,7 @@ export const DepositVault = ({ vaultData }: Props) => {
     vaultData: FundingRateVaultData;
     usdcBalance: any;
   }): { type: ValidationType; message: string } | null {
-    if (!touched || !amount) return null;
+    if (!touched || !amount || amount.eq(0)) return null;
 
     // Paused
     if (vaultData.paused) {
