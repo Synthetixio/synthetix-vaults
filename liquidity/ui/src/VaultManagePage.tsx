@@ -35,7 +35,7 @@ export const VaultManagePage = () => {
       <Box mb={12} mt={6}>
         <Flex mt={['0', '6']} flexDirection={['column', 'column', 'row']} gap={4}>
           <Flex width="100%" flex={1} alignSelf="flex-start" flexDirection="column" gap={6}>
-            {vaultData && <VaultInfo vaultData={vaultData} />}
+            <VaultInfo vaultData={vaultData} />
             {/* <TvlChart /> */}
           </Flex>
 

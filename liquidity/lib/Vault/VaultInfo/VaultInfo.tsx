@@ -1,13 +1,13 @@
 import { BorderBox } from '@snx-v3/BorderBox';
 import { PositionTitle } from '@snx-v3/Manage';
-import { Text, Flex } from '@chakra-ui/react';
+import { Text, Flex, Skeleton } from '@chakra-ui/react';
 import { StatsCard } from '../VaultPositionStats/StatsCard';
 import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
 import { FundingRateVaultData } from '../../useFundingRateVaultData';
 
 interface Props {
-  vaultData: FundingRateVaultData;
+  vaultData?: FundingRateVaultData;
 }
 
 export const VaultInfo = ({ vaultData }: Props) => {
@@ -21,9 +21,18 @@ export const VaultInfo = ({ vaultData }: Props) => {
       gap={6}
     >
       <Flex direction="column" gap={6}>
-        <PositionTitle isVault name={vaultData.name} />
+        <PositionTitle isVault name={vaultData?.name || null} />
         <Text color="gray.500" fontSize="14px" fontWeight={400}>
-          {vaultData.description}
+          {vaultData ? (
+            vaultData.description
+          ) : (
+            <Flex gap={2} flexWrap="wrap">
+              <Skeleton height="14px" width="100%" />
+              <Skeleton height="14px" width="90%" />
+              <Skeleton height="14px" width="100%" />
+              <Skeleton height="14px" width="70%" />
+            </Flex>
+          )}
         </Text>
         <Flex gap={['4', '6']}>
           <StatsCard
@@ -33,7 +42,7 @@ export const VaultInfo = ({ vaultData }: Props) => {
                 fontSize={['xl', '2xl']}
                 fontWeight="medium"
                 prefix="$"
-                value={wei(vaultData.totalAssets || '0', 6)}
+                value={vaultData ? wei(vaultData.totalAssets || '0', 6) : undefined}
               />
             }
             justifyContent="center"
@@ -47,7 +56,11 @@ export const VaultInfo = ({ vaultData }: Props) => {
                 fontSize={['xl', '2xl']}
                 fontWeight="medium"
                 prefix="$"
-                value={wei(vaultData.balanceOf || '0', 18).mul(vaultData.exchangeRate || '1')}
+                value={
+                  vaultData
+                    ? wei(vaultData.balanceOf || '0', 18).mul(vaultData.exchangeRate || '1')
+                    : undefined
+                }
               />
             }
             justifyContent="center"
@@ -58,11 +71,11 @@ export const VaultInfo = ({ vaultData }: Props) => {
             label="My PnL"
             value={
               <Amount
-                color={vaultData.pnl > 0 ? 'green.500' : undefined}
+                color={vaultData && vaultData.pnl > 0 ? 'green.500' : undefined}
                 fontSize={['xl', '2xl']}
                 fontWeight="medium"
                 prefix="$"
-                value={wei(vaultData.pnl)}
+                value={vaultData ? wei(vaultData.pnl || '0') : undefined}
               />
             }
             justifyContent="center"
@@ -79,7 +92,7 @@ export const VaultInfo = ({ vaultData }: Props) => {
                 fontSize={['xl', '2xl']}
                 fontWeight="medium"
                 suffix="%"
-                value={wei(vaultData.apr7d * 100)}
+                value={vaultData ? wei((vaultData.apr7d || 0) * 100) : undefined}
               />
             }
             justifyContent="center"
@@ -93,7 +106,7 @@ export const VaultInfo = ({ vaultData }: Props) => {
                 fontSize={['xl', '2xl']}
                 fontWeight="medium"
                 suffix="%"
-                value={wei(vaultData.apr30d * 100)}
+                value={vaultData ? wei((vaultData.apr30d || 0) * 100) : undefined}
               />
             }
             justifyContent="center"
@@ -107,7 +120,7 @@ export const VaultInfo = ({ vaultData }: Props) => {
                 fontSize={['xl', '2xl']}
                 fontWeight="medium"
                 suffix="%"
-                value={wei(vaultData.apr90d * 100)}
+                value={vaultData ? wei((vaultData.apr90d || 0) * 100) : undefined}
               />
             }
             justifyContent="center"
@@ -121,8 +134,7 @@ export const VaultInfo = ({ vaultData }: Props) => {
                 fontSize={['xl', '2xl']}
                 fontWeight="medium"
                 suffix="%"
-                // value={vaultData.apr1y === 0 ? undefined : wei(vaultData.apr1y * 100)}
-                value={wei(vaultData.apr1y * 100)}
+                value={vaultData ? wei((vaultData.apr1y || 0) * 100) : undefined}
               />
             }
             justifyContent="center"
