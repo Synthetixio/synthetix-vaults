@@ -13,6 +13,7 @@ import { VaultInfo } from '../../lib/Vault/VaultInfo/VaultInfo';
 import { VaultHistory } from '../../lib/Vault/VaultHistory/VaultHistory';
 import { VaultFees } from '../../lib/Vault/VaultFees';
 import { useFundingRateVaultData } from '../../lib/useFundingRateVaultData';
+import { VaultUserInfo } from '../../lib/Vault/VaultUserInfo/VaultUserInfo';
 // import { TvlChart } from '../../lib/Vault/TVLChart/TVLChart';
 
 export const VaultManagePage = () => {
@@ -107,6 +108,7 @@ export const VaultManagePage = () => {
               {params.manageAction === 'deposit' && <DepositVault vaultData={vaultData} />}
               {params.manageAction === 'withdraw' && <WithdrawVault vaultData={vaultData} />}
             </BorderBox>
+            <VaultUserInfo vaultData={vaultData} />
           </Flex>
         </Flex>
 

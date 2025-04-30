@@ -1,6 +1,5 @@
 import { BorderBox } from '@snx-v3/BorderBox';
-import { PositionTitle } from '@snx-v3/Manage';
-import { Text, Flex, Skeleton, Box } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { StatsCard } from '../VaultPositionStats/StatsCard';
 import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
@@ -10,7 +9,7 @@ interface Props {
   vaultData?: FundingRateVaultData;
 }
 
-export const VaultInfo = ({ vaultData }: Props) => {
+export const VaultUserInfo = ({ vaultData }: Props) => {
   return (
     <BorderBox
       alignSelf="self-start"
@@ -19,32 +18,22 @@ export const VaultInfo = ({ vaultData }: Props) => {
       flexDir="column"
       p={['4', '6']}
       gap={6}
+      width="100%"
     >
-      <Flex direction="column" gap={6}>
-        <PositionTitle isVault name={vaultData?.name || null} />
-        {vaultData ? (
-          <Text color="gray.500" fontSize="14px" fontWeight={400}>
-            {vaultData.description}
-          </Text>
-        ) : (
-          <Box>
-            <Flex gap={2} flexWrap="wrap">
-              <Skeleton height="14px" width="100%" />
-              <Skeleton height="14px" width="90%" />
-              <Skeleton height="14px" width="100%" />
-              <Skeleton height="14px" width="70%" />
-            </Flex>
-          </Box>
-        )}
+      <Flex direction="column" gap={6} width="100%">
         <Flex gap={['4', '6']}>
           <StatsCard
-            label="Total Value Locked"
+            label="My deposits"
             value={
               <Amount
                 fontSize={['xl', '2xl']}
                 fontWeight="medium"
                 prefix="$"
-                value={vaultData ? wei(vaultData.totalAssets || '0', 6) : undefined}
+                value={
+                  vaultData
+                    ? wei(vaultData.balanceOf || '0', 18).mul(vaultData.exchangeRate || '1')
+                    : undefined
+                }
               />
             }
             justifyContent="center"
@@ -52,13 +41,14 @@ export const VaultInfo = ({ vaultData }: Props) => {
             textAlign="center"
           />
           <StatsCard
-            label="APR"
+            label="My PnL"
             value={
               <Amount
+                color={vaultData && vaultData.pnl > 0 ? 'green.500' : undefined}
                 fontSize={['xl', '2xl']}
                 fontWeight="medium"
-                suffix="%"
-                value={vaultData ? wei((vaultData.apr || 0) * 100) : undefined}
+                prefix="$"
+                value={vaultData ? wei(vaultData.pnl || '0') : undefined}
               />
             }
             justifyContent="center"

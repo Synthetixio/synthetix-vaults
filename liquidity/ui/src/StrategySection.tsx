@@ -181,7 +181,7 @@ export const StrategySection = () => {
                 _hover={{ textDecoration: 'none' }}
                 display={['none', 'flex']}
               >
-                {`${formatNumberShort(pool.apr30d * 100)}%`}
+                {`${formatNumberShort(pool.apr * 100)}%`}
               </Flex>
               <Flex
                 width="180px"

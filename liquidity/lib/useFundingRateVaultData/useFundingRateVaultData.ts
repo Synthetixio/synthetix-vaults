@@ -81,10 +81,7 @@ export interface FundingRateVaultData extends FundingRateVaultMetadata {
   paused: boolean;
   accountId: BigNumber;
   slippageBuffer: BigNumber;
-  apr7d: number;
-  apr30d: number;
-  apr90d: number;
-  apr1y: number;
+  apr: number;
   pnl: number;
   deposits: FundingRateVaultDepositEvent[];
   withdrawals: FundingRateVaultWithdrawEvent[];
@@ -142,30 +139,18 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
       // Get Vault APRs
       const currentBlock = await provider.getBlock('latest');
       const VaultContract = new ethers.Contract(fundingRateVaultAddress, vaultAbi, provider);
-      // TODO: Change these back to 7, 30, 90, 365
-      const aprs = await Promise.all(
-        [1, 2, 3, 7].map(async (days) => {
-          const seconds = days * SECONDS_PER_DAY;
-          const blocks = seconds / SECONDS_PER_BLOCK;
-          const blockNumber = currentBlock.number - blocks;
-          if (blockNumber < metadata.deployedBlock) {
-            return 0;
-          }
+      const seconds = 28 * SECONDS_PER_DAY;
+      const blocks = seconds / SECONDS_PER_BLOCK;
+      let blockNumber = currentBlock.number - blocks;
+      if (blockNumber < metadata.deployedBlock) {
+        blockNumber = metadata.deployedBlock;
+      }
 
-          try {
-            const exchangeRate: BigNumber = await VaultContract.exchangeRate({
-              blockTag: blockNumber,
-            });
-            const exchangeRateIncrease =
-              wei(data.exchangeRate).toNumber() - wei(exchangeRate).toNumber();
-            const apr = (1 + exchangeRateIncrease) ** (SECONDS_PER_YEAR / seconds) - 1;
-            return apr;
-          } catch (e) {
-            console.error('Error fetching block data:', e);
-            return 0;
-          }
-        })
-      );
+      const exchangeRate: BigNumber = await VaultContract.exchangeRate({
+        blockTag: blockNumber,
+      });
+      const exchangeRateIncrease = wei(data.exchangeRate).toNumber() - wei(exchangeRate).toNumber();
+      const apr = (1 + exchangeRateIncrease) ** (SECONDS_PER_YEAR / seconds) - 1;
 
       // Get Vault Deposit events
       const filter = VaultContract.filters.Deposit(null, null);
@@ -318,10 +303,7 @@ export const useFundingRateVaultData = (fundingRateVaultAddress?: string) => {
         ...data,
         address: fundingRateVaultAddress,
         ...metadata,
-        apr7d: aprs[0],
-        apr30d: aprs[1],
-        apr90d: aprs[2],
-        apr1y: aprs[3],
+        apr,
         deposits,
         withdrawals,
         trades,
