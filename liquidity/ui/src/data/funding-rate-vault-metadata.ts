@@ -46,7 +46,7 @@ export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadat
       'A BTC-denominated vault on Base. Deposits are swapped for cbBTC on Aerodrome, then deposited onto Synthetix Perps V3 to collateralise a short BTC perpetual derivative position of the equivalent size. The strategy therefore earns both the Coinbase staking yield (always positive) and the BTC perpetual funding rate on Perps V3.',
     abi,
     perpsMarket: 'BTC',
-    deployedBlock: 29_014_954,
+    deployedBlock: 29_608_610,
     assetData: {
       '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
         symbol: 'USDC',
