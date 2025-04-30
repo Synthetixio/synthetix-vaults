@@ -1,5 +1,5 @@
 import { ArrowUpIcon } from '@chakra-ui/icons';
-import { Flex, Heading, Link, Text } from '@chakra-ui/react';
+import { Flex, Heading, Link, Skeleton, Text } from '@chakra-ui/react';
 import { formatNumberToUsd } from '@snx-v3/formatters';
 import { getStatsUrl } from '@snx-v3/getStatsUrl';
 import { TokenIcon } from '@snx-v3/TokenIcon';
@@ -11,7 +11,7 @@ import React from 'react';
 
 // import { useApr } from '@snx-v3/useApr';
 
-export function PositionTitle({ isVault, name }: { isVault?: boolean; name?: string }) {
+export function PositionTitle({ isVault, name }: { isVault?: boolean; name?: string | null }) {
   const { network } = useNetwork();
 
   const [params] = useParams<LiquidityPositionPageSchemaType>();
@@ -71,9 +71,15 @@ export function PositionTitle({ isVault, name }: { isVault?: boolean; name?: str
           alignItems="center"
           letterSpacing="tight"
         >
-          {name
-            ? name
-            : `${collateralType?.displaySymbol ?? params.collateralSymbol} Liquidity Position`}
+          {name !== undefined ? (
+            name !== null ? (
+              name
+            ) : (
+              <Skeleton height="33px" width="350px" />
+            )
+          ) : (
+            `${collateralType?.displaySymbol ?? params.collateralSymbol} Liquidity Position`
+          )}
         </Heading>
         <Flex
           ml={4}
