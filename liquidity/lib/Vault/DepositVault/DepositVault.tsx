@@ -24,7 +24,7 @@ import { formatNumberShort } from '@snx-v3/formatters';
 const log = debug('snx:DepositVault');
 
 interface Props {
-  vaultData: FundingRateVaultData;
+  vaultData?: FundingRateVaultData;
 }
 
 type ValidationType = 'error' | 'info';
@@ -50,15 +50,23 @@ export const DepositVault = ({ vaultData }: Props) => {
   const { approve, requireApproval, refetchAllowance } = useApprove({
     contractAddress: USDCToken?.address,
     amount: parseUnits(amount.toString(), 6),
-    spender: vaultData.address,
+    spender: vaultData?.address,
   });
 
-  const vaultAddress = vaultData.address;
-  const vaultAbi = vaultData.abi;
+  const vaultAddress = vaultData?.address;
+  const vaultAbi = vaultData?.abi;
 
   useEffect(() => {
     const simulate = async () => {
-      if (!provider || requireApproval || !signer || !amount || amount === ZEROWEI) {
+      if (
+        !provider ||
+        requireApproval ||
+        !signer ||
+        !amount ||
+        amount === ZEROWEI ||
+        !vaultAddress ||
+        !vaultAbi
+      ) {
         return;
       }
 
@@ -91,7 +99,7 @@ export const DepositVault = ({ vaultData }: Props) => {
 
   const handleSubmit = async () => {
     try {
-      if (!(provider && network && signer)) {
+      if (!(provider && network && signer && vaultAddress && vaultAbi)) {
         return;
       }
 
@@ -107,7 +115,7 @@ export const DepositVault = ({ vaultData }: Props) => {
 
         setIsLoading(true);
 
-        const contract = new ethers.Contract(vaultData.address, vaultData.abi, signer);
+        const contract = new ethers.Contract(vaultAddress, vaultAbi, signer);
         const walletAddress = await signer.getAddress();
 
         const depositTx = await contract.populateTransaction['deposit(uint256,address,uint256)'](
@@ -160,10 +168,10 @@ export const DepositVault = ({ vaultData }: Props) => {
   }: {
     amount: any;
     touched: boolean;
-    vaultData: FundingRateVaultData;
+    vaultData?: FundingRateVaultData;
     usdcBalance: any;
   }): { type: ValidationType; message: string } | null {
-    if (!touched || !amount || amount.eq(0)) return null;
+    if (!touched || !amount || amount.eq(0) || amount.eq(ZEROWEI) || !vaultData) return null;
 
     // Paused
     if (vaultData.paused) {
@@ -274,6 +282,7 @@ export const DepositVault = ({ vaultData }: Props) => {
 
       {/* Validation Section */}
       {(() => {
+        if (!vaultData) return null;
         const validation = getDepositValidation({ amount, touched, vaultData, usdcBalance });
         if (!validation) return null;
         return (
@@ -304,6 +313,7 @@ export const DepositVault = ({ vaultData }: Props) => {
           {(() => {
             if (!amount) return;
             if (amount === ZEROWEI) return;
+            if (!vaultData) return;
             const inValue = wei(amount).toNumber();
             const outValue = wei(simulatedOut).toNumber() * wei(vaultData.exchangeRate).toNumber();
             const depositFee = wei(vaultData.depositFee).toNumber();
