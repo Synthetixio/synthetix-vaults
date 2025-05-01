@@ -47,7 +47,7 @@ export const FundingRateVaultPage = () => {
                   <Tab
                     as={Link}
                     href={`?${makeSearch({
-                      page: 'vault-position',
+                      page: 'funding-rate-vault',
                       collateralSymbol: params.collateralSymbol,
                       vaultAddress: params.vaultAddress,
                       manageAction: 'deposit',
@@ -56,7 +56,7 @@ export const FundingRateVaultPage = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       setParams({
-                        page: 'vault-position',
+                        page: 'funding-rate-vault',
                         collateralSymbol: params.collateralSymbol,
                         vaultAddress: params.vaultAddress,
                         manageAction: 'deposit',
@@ -76,7 +76,7 @@ export const FundingRateVaultPage = () => {
                   <Tab
                     as={Link}
                     href={`?${makeSearch({
-                      page: 'vault-position',
+                      page: 'funding-rate-vault',
                       collateralSymbol: params.collateralSymbol,
                       vaultAddress: params.vaultAddress,
                       manageAction: 'withdraw',
@@ -85,7 +85,7 @@ export const FundingRateVaultPage = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       setParams({
-                        page: 'vault-position',
+                        page: 'funding-rate-vault',
                         collateralSymbol: params.collateralSymbol,
                         vaultAddress: params.vaultAddress,
                         manageAction: 'withdraw',

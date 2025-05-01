@@ -16,7 +16,7 @@ function Content() {
   if (params.page === 'position') {
     return <LiquidityManagePage />;
   }
-  if (params.page === 'vault-position') {
+  if (params.page === 'funding-rate-vault') {
     return <FundingRateVaultPage />;
   }
   return <DashboardPage />;

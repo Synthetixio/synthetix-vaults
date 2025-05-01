@@ -122,7 +122,7 @@ export const StrategySection = () => {
                 _hover={{ textDecoration: 'none' }}
                 as={Link}
                 href={`?${makeSearch({
-                  page: 'vault-position',
+                  page: 'funding-rate-vault',
                   collateralSymbol: 'USDC',
                   manageAction: 'deposit',
                   accountId: params.accountId,
@@ -197,7 +197,7 @@ export const StrategySection = () => {
                 <Button
                   as={Link}
                   href={`?${makeSearch({
-                    page: 'vault-position',
+                    page: 'funding-rate-vault',
                     vaultAddress: pool.address,
                     collateralSymbol: 'USDC',
                     manageAction: 'deposit',
@@ -206,7 +206,7 @@ export const StrategySection = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     setParams({
-                      page: 'vault-position',
+                      page: 'funding-rate-vault',
                       vaultAddress: pool.address,
                       collateralSymbol: 'USDC',
                       manageAction: 'deposit',
