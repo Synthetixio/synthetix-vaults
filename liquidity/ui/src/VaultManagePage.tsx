@@ -10,7 +10,7 @@ import { FundingRateVaultDeposit } from './components/FundingRateVaultDeposit';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { WithdrawVault } from './components/Vault/WithdrawVault/WithdrawVault';
 import { VaultInfo } from './components/Vault/VaultInfo/VaultInfo';
-import { VaultHistory } from './components/Vault/VaultHistory/VaultHistory';
+import { FundingRateVaultTransactions } from './components/FundingRateVaultTransactions';
 import { VaultFees } from './components/Vault/VaultFees';
 import { useFundingRateVaultData } from '../../lib/useFundingRateVaultData';
 import { VaultUserInfo } from './components/Vault/VaultUserInfo/VaultUserInfo';
@@ -114,7 +114,7 @@ export const VaultManagePage = () => {
           </Flex>
         </Flex>
 
-        <VaultHistory vaultData={vaultData} />
+        <FundingRateVaultTransactions vaultData={vaultData} />
         {vaultData && <VaultFees vaultData={vaultData} />}
       </Box>
     </ManagePositionProvider>
