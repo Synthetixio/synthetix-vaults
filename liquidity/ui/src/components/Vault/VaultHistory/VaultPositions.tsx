@@ -1,9 +1,9 @@
 import {
   FundingRateVaultData,
   FundingRateVaultPositionEvent,
-} from '../../useFundingRateVaultData/useFundingRateVaultData';
+} from '../../../../../lib/useFundingRateVaultData/useFundingRateVaultData';
 import { formatNumber, formatNumberShort, truncateAddress } from '@snx-v3/formatters';
-import { SortableTable } from './SortableTable';
+import { TransactionTable } from '@snx-v3/TransactionTable';
 import { wei } from '@synthetixio/wei';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 
 export const VaultPositions = ({ vaultData }: Props) => {
   return (
-    <SortableTable
+    <TransactionTable
       headers={[
         {
           label: 'Size Delta',

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { VaultDeposits } from './VaultDeposits';
 import { VaultTradeHistory } from './VaultTradeHistory';
 import { VaultMargin } from './VaultMargin';
-import { FundingRateVaultData } from '../../useFundingRateVaultData';
+import { FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
 import { VaultPositions } from './VaultPositions';
 
 interface Props {

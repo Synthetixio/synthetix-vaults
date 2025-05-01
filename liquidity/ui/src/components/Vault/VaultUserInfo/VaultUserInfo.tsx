@@ -3,7 +3,7 @@ import { Flex } from '@chakra-ui/react';
 import { StatsCard } from '../VaultPositionStats/StatsCard';
 import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
-import { FundingRateVaultData } from '../../useFundingRateVaultData';
+import { FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
 
 interface Props {
   vaultData?: FundingRateVaultData;

@@ -1,9 +1,6 @@
-import {
-  FundingRateVaultData,
-  FundingRateVaultTradeEvent,
-} from '../../useFundingRateVaultData/useFundingRateVaultData';
+import { FundingRateVaultData, FundingRateVaultTradeEvent } from '@snx-v3/useFundingRateVaultData';
 import { formatNumberShort } from '@snx-v3/formatters';
-import { SortableTable } from './SortableTable';
+import { TransactionTable } from '@snx-v3/TransactionTable';
 
 interface Props {
   vaultData?: FundingRateVaultData;
@@ -11,7 +8,7 @@ interface Props {
 
 export const VaultTradeHistory = ({ vaultData }: Props) => {
   return (
-    <SortableTable
+    <TransactionTable
       headers={[
         {
           label: 'From',

@@ -1,9 +1,6 @@
-import {
-  FundingRateVaultData,
-  FundingRateVaultMarginEvent,
-} from '../../useFundingRateVaultData/useFundingRateVaultData';
+import { FundingRateVaultData, FundingRateVaultMarginEvent } from '@snx-v3/useFundingRateVaultData';
 import { formatNumberShort } from '@snx-v3/formatters';
-import { SortableTable } from './SortableTable';
+import { TransactionTable } from '@snx-v3/TransactionTable';
 import { wei } from '@synthetixio/wei';
 
 interface Props {
@@ -12,7 +9,7 @@ interface Props {
 
 export const VaultMargin = ({ vaultData }: Props) => {
   return (
-    <SortableTable
+    <TransactionTable
       headers={[
         {
           label: 'Type',

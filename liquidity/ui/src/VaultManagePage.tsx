@@ -6,14 +6,14 @@ import { Box, Flex, Link, Tab, TabList, Tabs } from '@chakra-ui/react';
 import { type VaultPositionPageSchemaType, makeSearch, useParams } from '@snx-v3/useParams';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { DepositVault } from '../../lib/Vault/DepositVault/DepositVault';
+import { DepositVault } from './components/Vault/DepositVault/DepositVault';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { WithdrawVault } from '../../lib/Vault/WithdrawVault/WithdrawVault';
-import { VaultInfo } from '../../lib/Vault/VaultInfo/VaultInfo';
-import { VaultHistory } from '../../lib/Vault/VaultHistory/VaultHistory';
-import { VaultFees } from '../../lib/Vault/VaultFees';
+import { WithdrawVault } from './components/Vault/WithdrawVault/WithdrawVault';
+import { VaultInfo } from './components/Vault/VaultInfo/VaultInfo';
+import { VaultHistory } from './components/Vault/VaultHistory/VaultHistory';
+import { VaultFees } from './components/Vault/VaultFees';
 import { useFundingRateVaultData } from '../../lib/useFundingRateVaultData';
-import { VaultUserInfo } from '../../lib/Vault/VaultUserInfo/VaultUserInfo';
+import { VaultUserInfo } from './components/Vault/VaultUserInfo/VaultUserInfo';
 // import { TvlChart } from '../../lib/Vault/TVLChart/TVLChart';
 
 export const VaultManagePage = () => {

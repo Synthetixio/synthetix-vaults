@@ -1,6 +1,6 @@
 import { BorderBox } from '@snx-v3/BorderBox';
 import { Flex, Text, Heading } from '@chakra-ui/react';
-import { FundingRateVaultData } from '../useFundingRateVaultData';
+import { FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
 import { wei } from '@synthetixio/wei';
 import { BigNumber } from 'ethers';
 interface Props {

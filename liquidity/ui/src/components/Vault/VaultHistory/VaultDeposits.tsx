@@ -1,9 +1,9 @@
-import { EventType, FundingRateVaultData } from '../../useFundingRateVaultData';
+import { EventType, FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
 import { BigNumber } from 'ethers';
 import { formatNumberToUsdShort } from '@snx-v3/formatters';
 import { wei } from '@synthetixio/wei';
 import { truncateAddress } from '@snx-v3/formatters';
-import { SortableTable } from './SortableTable';
+import { TransactionTable } from '@snx-v3/TransactionTable';
 
 interface Props {
   vaultData?: FundingRateVaultData;
@@ -44,7 +44,7 @@ export const VaultDeposits = ({ vaultData }: Props) => {
   ];
 
   return (
-    <SortableTable
+    <TransactionTable
       headers={[
         {
           label: 'Type',

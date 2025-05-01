@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Text, Flex, Button, useToast, Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
 import { TokenIcon } from '@snx-v3/TokenIcon';
 import { BorderBox } from '@snx-v3/BorderBox';
@@ -6,19 +7,21 @@ import { useCollateralType } from '@snx-v3/useCollateralTypes';
 import { NumberInput } from '@snx-v3/NumberInput';
 import { Amount } from '@snx-v3/Amount';
 import { useTokenBalance } from '@snx-v3/useTokenBalance';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ZEROWEI } from '@snx-v3/constants';
+import { useUSDC } from '@snx-v3/useUSDC';
+import { useApprove } from '@snx-v3/useApprove';
 import { parseUnits } from '@snx-v3/format';
-import { ethers, BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { useNetwork, useProvider, useSigner } from '@snx-v3/useBlockchain';
 import debug from 'debug';
 import { useContractErrorParser } from '@snx-v3/useContractErrorParser';
 import { ContractError } from '@snx-v3/ContractError';
+import { FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
 import { wei } from '@synthetixio/wei';
-import { FundingRateVaultData } from '../../useFundingRateVaultData';
 import { formatNumberShort } from '@snx-v3/formatters';
 
-const log = debug('snx:WithdrawVault');
+const log = debug('snx:DepositVault');
 
 interface Props {
   vaultData?: FundingRateVaultData;
@@ -26,23 +29,29 @@ interface Props {
 
 type ValidationType = 'error' | 'info';
 
-export const WithdrawVault = ({ vaultData }: Props) => {
+export const DepositVault = ({ vaultData }: Props) => {
   const [params] = useParams<VaultPositionPageSchemaType>();
   const [amount, setAmount] = useState(ZEROWEI);
+  const [touched, setTouched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: collateralType } = useCollateralType(params.collateralSymbol);
   const { network } = useNetwork();
   const signer = useSigner();
   const provider = useProvider();
+  const { data: USDCToken } = useUSDC();
   const errorParser = useContractErrorParser();
-  const { data: lpBalance, refetch: refetchLpBalance } = useTokenBalance(vaultData?.address);
   const [simulatedOut, setSimulatedOut] = useState<BigNumber | null>(null);
   const latestRequestIdRef = useRef<number>(0);
-  const [touched, setTouched] = useState(false);
+
+  const { data: usdcBalance, refetch: refetchUSDCBalance } = useTokenBalance(USDCToken?.address);
 
   const toast = useToast({ isClosable: true, duration: 9000 });
 
-  const maxAmount = wei(vaultData?.balanceOf || '0');
+  const { approve, requireApproval, refetchAllowance } = useApprove({
+    contractAddress: USDCToken?.address,
+    amount: parseUnits(amount.toString(), 6),
+    spender: vaultData?.address,
+  });
 
   const vaultAddress = vaultData?.address;
   const vaultAbi = vaultData?.abi;
@@ -51,10 +60,10 @@ export const WithdrawVault = ({ vaultData }: Props) => {
     const simulate = async () => {
       if (
         !provider ||
+        requireApproval ||
         !signer ||
         !amount ||
-        amount.eq(0) ||
-        amount.eq(ZEROWEI) ||
+        amount === ZEROWEI ||
         !vaultAddress ||
         !vaultAbi
       ) {
@@ -68,9 +77,8 @@ export const WithdrawVault = ({ vaultData }: Props) => {
         const contract = new ethers.Contract(vaultAddress, vaultAbi, signer);
         const walletAddress = await signer.getAddress();
 
-        const simulatedOut_ = await contract.callStatic['redeem(uint256,address,address)'](
-          parseUnits(amount.toString(), 18).toString(),
-          walletAddress,
+        const simulatedOut_ = await contract.callStatic['deposit(uint256,address)'](
+          parseUnits(amount.toString(), 6).toString(),
           walletAddress
         );
 
@@ -87,45 +95,47 @@ export const WithdrawVault = ({ vaultData }: Props) => {
     };
 
     simulate();
-  }, [amount, provider, signer, vaultAddress, vaultAbi]);
+  }, [amount, provider, requireApproval, signer, vaultAddress, vaultAbi]);
 
   const handleSubmit = async () => {
-    setIsLoading(true);
     try {
       if (!(provider && network && signer && vaultAddress && vaultAbi)) {
         return;
       }
 
-      if (!simulatedOut) {
-        return;
+      if (requireApproval) {
+        setIsLoading(true);
+        await approve(true);
+
+        refetchAllowance();
+      } else {
+        if (!simulatedOut) {
+          return;
+        }
+
+        setIsLoading(true);
+
+        const contract = new ethers.Contract(vaultAddress, vaultAbi, signer);
+        const walletAddress = await signer.getAddress();
+
+        const depositTx = await contract.populateTransaction['deposit(uint256,address,uint256)'](
+          parseUnits(amount.toString(), 6).toString(),
+          walletAddress,
+          simulatedOut.mul(99).div(100).toString()
+        );
+
+        const txn = await signer.sendTransaction({
+          ...depositTx,
+          gasLimit: depositTx?.gasLimit?.mul(3),
+        });
+        log('txn', txn);
+
+        const receipt = await provider.waitForTransaction(txn.hash);
+
+        refetchUSDCBalance();
+
+        log('receipt', receipt);
       }
-
-      const contract = new ethers.Contract(vaultAddress, vaultAbi, signer);
-      const walletAddress = await signer.getAddress();
-
-      // Add 1% markup to the simulated amount for minAmountOut
-      const minAmountOut = simulatedOut.mul(99).div(100);
-
-      const withdrawTx = await contract.populateTransaction[
-        'redeem(uint256,address,address,uint256)'
-      ](
-        parseUnits(amount.toString(), 18).toString(),
-        walletAddress,
-        walletAddress,
-        minAmountOut.toString()
-      );
-
-      const txn = await signer.sendTransaction({
-        ...withdrawTx,
-        gasLimit: withdrawTx?.gasLimit?.mul(3),
-      });
-      log('txn', txn);
-
-      const receipt = await provider.waitForTransaction(txn.hash);
-
-      refetchLpBalance();
-
-      log('receipt', receipt);
     } catch (error) {
       const contractError = errorParser(error);
       if (contractError) {
@@ -134,7 +144,7 @@ export const WithdrawVault = ({ vaultData }: Props) => {
 
       toast.closeAll();
       toast({
-        title: 'Withdraw',
+        title: 'Deposit',
         description: contractError ? (
           <ContractError contractError={contractError} />
         ) : (
@@ -149,24 +159,35 @@ export const WithdrawVault = ({ vaultData }: Props) => {
     setIsLoading(false);
   };
 
-  function getWithdrawValidation({
+  // Validation helper
+  function getDepositValidation({
     amount,
     touched,
     vaultData,
-    lpBalance,
+    usdcBalance,
   }: {
     amount: any;
     touched: boolean;
     vaultData?: FundingRateVaultData;
-    lpBalance: any;
+    usdcBalance: any;
   }): { type: ValidationType; message: string } | null {
     if (!touched || !amount || amount.eq(0) || amount.eq(ZEROWEI) || !vaultData) return null;
 
-    // Exceeds LP balance
-    if (lpBalance && wei(amount).gt(wei(lpBalance))) {
+    // Paused
+    if (vaultData.paused) {
       return {
-        type: 'error',
-        message: 'The withdraw amount exceeds your available balance.',
+        type: 'info',
+        message: 'Vault deposits are temporarily paused. Please check back soon.',
+      };
+    }
+
+    // Cap
+    if (wei(amount).add(wei(vaultData.totalAssets, 6)).gt(wei(vaultData.totalAssetsCap, 6))) {
+      return {
+        type: 'info',
+        message: `This vault has reached its maximum deposit cap of $${formatNumberShort(
+          wei(vaultData.totalAssetsCap, 6).toNumber()
+        )}. No additional deposits are allowed at this time.`,
       };
     }
 
@@ -174,9 +195,9 @@ export const WithdrawVault = ({ vaultData }: Props) => {
     if (wei(amount).gt(wei(vaultData.maxAssetTransactionSize, 6))) {
       return {
         type: 'error',
-        message: `The withdraw amount exceeds the maximum transaction size of $${formatNumberShort(
+        message: `The deposit amount exceeds the maximum transaction size of $${formatNumberShort(
           wei(vaultData.maxAssetTransactionSize, 6).toNumber()
-        )}. Please split your withdrawal into smaller amounts.`,
+        )}. Please split your deposit into smaller amounts.`,
       };
     }
 
@@ -184,27 +205,17 @@ export const WithdrawVault = ({ vaultData }: Props) => {
     if (wei(amount).lt(wei(vaultData.minAssetTransactionSize, 6))) {
       return {
         type: 'error',
-        message: `The minimum withdraw amount is $${formatNumberShort(
+        message: `The minimum deposit amount is $${formatNumberShort(
           wei(vaultData.minAssetTransactionSize, 6).toNumber()
-        )} per withdrawal.`,
+        )} per deposit.`,
       };
     }
 
-    // Max Redemption Percent
-    if (wei(amount).gt(wei(vaultData.maxRedemptionPercent).mul(wei(vaultData.totalSupply)))) {
+    // Exceeds balance
+    if (usdcBalance && wei(amount).gt(wei(usdcBalance, 6))) {
       return {
         type: 'error',
-        message: `The withdraw amount exceeds the maximum redemption percent of ${formatNumberShort(
-          wei(vaultData.maxRedemptionPercent).toNumber() * 100
-        )}%`,
-      };
-    }
-
-    // Must be > 0
-    if (wei(amount).eq(0)) {
-      return {
-        type: 'error',
-        message: 'Please enter an amount greater than zero to withdraw.',
+        message: 'The deposit amount exceeds your available balance.',
       };
     }
 
@@ -234,12 +245,12 @@ export const WithdrawVault = ({ vaultData }: Props) => {
             </Text>
           </BorderBox>
           <Flex minW="110px" fontSize="xs" color="whiteAlpha.700">
-            <Amount prefix="Balance: " value={maxAmount} />
+            <Amount prefix="Balance: " value={usdcBalance || ZEROWEI} />
             &nbsp;
             <Text
               as="span"
               cursor="pointer"
-              onClick={() => setAmount(maxAmount)}
+              onClick={() => setAmount(usdcBalance || ZEROWEI)}
               color="cyan.500"
               fontWeight={700}
             >
@@ -251,7 +262,7 @@ export const WithdrawVault = ({ vaultData }: Props) => {
         <Flex flexDir="column" flexGrow={1}>
           <NumberInput
             InputProps={{
-              'data-max': maxAmount?.toString(),
+              'data-max': usdcBalance?.toString(),
               min: 0,
               onBlur: () => setTouched(true),
             }}
@@ -260,20 +271,27 @@ export const WithdrawVault = ({ vaultData }: Props) => {
               setAmount(value);
               if (!touched) setTouched(true);
             }}
-            max={maxAmount}
+            max={usdcBalance}
             min={ZEROWEI}
           />
           <Flex fontSize="xs" color="whiteAlpha.700" alignSelf="flex-end" gap="1">
-            <Amount
-              prefix="$"
-              value={amount
-                .abs()
-                .mul(vaultData?.exchangeRate || '1')
-                .mul(1)}
-            />
+            <Amount prefix="$" value={amount.abs().mul(1)} />
           </Flex>
         </Flex>
       </BorderBox>
+
+      {/* Validation Section */}
+      {(() => {
+        if (!vaultData) return null;
+        const validation = getDepositValidation({ amount, touched, vaultData, usdcBalance });
+        if (!validation) return null;
+        return (
+          <Alert mb={6} status={validation.type} borderRadius="6px">
+            <AlertIcon />
+            <AlertDescription>{validation.message}</AlertDescription>
+          </Alert>
+        );
+      })()}
 
       {/* Price Impact Section */}
       {!!amount && amount.gt(0) && simulatedOut ? (
@@ -296,11 +314,11 @@ export const WithdrawVault = ({ vaultData }: Props) => {
             if (!amount) return;
             if (amount === ZEROWEI) return;
             if (!vaultData) return;
-            const inValue = wei(amount).toNumber() * wei(vaultData.exchangeRate).toNumber();
-            const outValue = wei(simulatedOut, 6).toNumber();
-            const withdrawFee = wei(vaultData.redemptionFee || 0).toNumber();
-            const keeperFee = wei(vaultData.keeperFee || 0).toNumber();
-            const inValueAfterFees = inValue * (1 - withdrawFee) - keeperFee;
+            const inValue = wei(amount).toNumber();
+            const outValue = wei(simulatedOut).toNumber() * wei(vaultData.exchangeRate).toNumber();
+            const depositFee = wei(vaultData.depositFee).toNumber();
+            const keeperFee = wei(vaultData.keeperFee).toNumber();
+            const inValueAfterFees = inValue * (1 - depositFee) - keeperFee;
             const priceImpact = ((outValue - inValueAfterFees) / inValueAfterFees) * 100;
             const isNegative = priceImpact < 0;
             return (
@@ -313,28 +331,19 @@ export const WithdrawVault = ({ vaultData }: Props) => {
         </Flex>
       ) : null}
 
-      {/* Validation Section */}
-      {(() => {
-        const validation = getWithdrawValidation({ amount, touched, vaultData, lpBalance });
-        if (!validation) return null;
-        return (
-          <Alert mb={6} status={validation.type} borderRadius="6px">
-            <AlertIcon />
-            <AlertDescription>{validation.message}</AlertDescription>
-          </Alert>
-        );
-      })()}
-
+      {/* Submit Button */}
       <Button
+        data-cy="deposit submit"
         type="submit"
         isDisabled={
-          !(amount.gt(0) && collateralType && amount.lte(maxAmount) && simulatedOut) ||
-          !!getWithdrawValidation({ amount, touched, vaultData, lpBalance })
+          amount.eq(0) ||
+          !(amount.gt(0) && collateralType) ||
+          !!getDepositValidation({ amount, touched, vaultData, usdcBalance })
         }
         onClick={handleSubmit}
         isLoading={isLoading}
       >
-        {amount.lte(0) ? 'Enter Amount' : 'Withdraw'}
+        {amount.lte(0) ? 'Enter Amount' : requireApproval ? 'Approve USDC' : 'Deposit into Vault'}
       </Button>
     </>
   );
