@@ -5300,6 +5300,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/TransactionTable@workspace:*, @snx-v3/TransactionTable@workspace:liquidity/lib/TransactionTable":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/TransactionTable@workspace:liquidity/lib/TransactionTable"
+  dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/parseContractError": "workspace:*"
+    date-fns: "npm:^2.30.0"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/Undelegate@workspace:*, @snx-v3/Undelegate@workspace:liquidity/lib/Undelegate":
   version: 0.0.0-use.local
   resolution: "@snx-v3/Undelegate@workspace:liquidity/lib/Undelegate"
@@ -5549,6 +5560,7 @@ __metadata:
     "@snx-v3/Synths": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/Tooltip": "workspace:*"
+    "@snx-v3/TransactionTable": "workspace:*"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@snx-v3/formatters": "workspace:*"
