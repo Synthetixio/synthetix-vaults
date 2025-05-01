@@ -12,11 +12,11 @@ import { FundingRateVaultWithdraw } from './components/FundingRateVaultWithdraw'
 import { FundingRateVaultInfo } from './components/FundingRateVaultInfo';
 import { FundingRateVaultTransactions } from './components/FundingRateVaultTransactions';
 import { FundingRateVaultFees } from './components/FundingRateVaultFees';
-import { useFundingRateVaultData } from '../../lib/useFundingRateVaultData';
+import { useFundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
 import { FundingRateVaultUserInfo } from './components/FundingRateVaultUserInfo';
 // import { TvlChart } from '../../lib/Vault/TVLChart/TVLChart';
 
-export const VaultManagePage = () => {
+export const FundingRateVaultPage = () => {
   const [params, setParams] = useParams<VaultPositionPageSchemaType>();
 
   const { data: vaultData } = useFundingRateVaultData(params.vaultAddress);
