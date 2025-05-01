@@ -130,10 +130,7 @@ export const StrategySection = () => {
                 })}`}
               >
                 <Flex position="relative" flexShrink={0}>
-                  <Image
-                    src={`https://assets.synthetix.io/markets/${pool.perpsMarket}.svg`}
-                    style={{ width: 40, height: 40 }}
-                  />
+                  <Image src={pool.collateralImage} style={{ width: 40, height: 40 }} />
                   <NetworkIcon
                     position="absolute"
                     right={0}
