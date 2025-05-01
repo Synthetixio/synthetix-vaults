@@ -26,6 +26,7 @@
     "@snx-v3/Pools": "workspace:*",
     "@snx-v3/Positions": "workspace:*",
     "@snx-v3/StatsBox": "workspace:*",
+    "@snx-v3/StatsCard": "workspace:*",
     "@snx-v3/Synths": "workspace:*",
     "@snx-v3/TermsModal": "workspace:*",
     "@snx-v3/Tooltip": "workspace:*",
