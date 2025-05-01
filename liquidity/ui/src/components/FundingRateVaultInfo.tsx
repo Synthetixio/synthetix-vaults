@@ -1,7 +1,7 @@
 import { BorderBox } from '@snx-v3/BorderBox';
 import { PositionTitle } from '@snx-v3/Manage';
 import { Text, Flex, Skeleton, Box } from '@chakra-ui/react';
-import { StatsCard } from '../VaultPositionStats/StatsCard';
+import { StatsCard } from './Vault/VaultPositionStats/StatsCard';
 import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
 import { FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
@@ -10,7 +10,7 @@ interface Props {
   vaultData?: FundingRateVaultData;
 }
 
-export const VaultInfo = ({ vaultData }: Props) => {
+export const FundingRateVaultInfo = ({ vaultData }: Props) => {
   return (
     <BorderBox
       alignSelf="self-start"

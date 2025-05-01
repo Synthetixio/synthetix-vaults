@@ -9,7 +9,7 @@ import { Helmet } from 'react-helmet';
 import { FundingRateVaultDeposit } from './components/FundingRateVaultDeposit';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { WithdrawVault } from './components/Vault/WithdrawVault/WithdrawVault';
-import { VaultInfo } from './components/Vault/VaultInfo/VaultInfo';
+import { FundingRateVaultInfo } from './components/FundingRateVaultInfo';
 import { FundingRateVaultTransactions } from './components/FundingRateVaultTransactions';
 import { VaultFees } from './components/Vault/VaultFees';
 import { useFundingRateVaultData } from '../../lib/useFundingRateVaultData';
@@ -36,7 +36,7 @@ export const VaultManagePage = () => {
       <Box mb={12} mt={6}>
         <Flex mt={['0', '6']} flexDirection={['column', 'column', 'row']} gap={4}>
           <Flex width="100%" flex={1} alignSelf="flex-start" flexDirection="column" gap={6}>
-            <VaultInfo vaultData={vaultData} />
+            <FundingRateVaultInfo vaultData={vaultData} />
             {/* <TvlChart /> */}
           </Flex>
 
