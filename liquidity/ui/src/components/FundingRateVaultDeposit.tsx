@@ -29,7 +29,7 @@ interface Props {
 
 type ValidationType = 'error' | 'info';
 
-export const DepositVault = ({ vaultData }: Props) => {
+export const FundingRateVaultDeposit = ({ vaultData }: Props) => {
   const [params] = useParams<VaultPositionPageSchemaType>();
   const [amount, setAmount] = useState(ZEROWEI);
   const [touched, setTouched] = useState(false);

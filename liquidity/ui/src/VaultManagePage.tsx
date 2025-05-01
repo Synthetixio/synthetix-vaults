@@ -6,7 +6,7 @@ import { Box, Flex, Link, Tab, TabList, Tabs } from '@chakra-ui/react';
 import { type VaultPositionPageSchemaType, makeSearch, useParams } from '@snx-v3/useParams';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { DepositVault } from './components/Vault/DepositVault/DepositVault';
+import { FundingRateVaultDeposit } from './components/FundingRateVaultDeposit';
 import { BorderBox } from '@snx-v3/BorderBox';
 import { WithdrawVault } from './components/Vault/WithdrawVault/WithdrawVault';
 import { VaultInfo } from './components/Vault/VaultInfo/VaultInfo';
@@ -105,7 +105,9 @@ export const VaultManagePage = () => {
                 </TabList>
               </Tabs>
 
-              {params.manageAction === 'deposit' && <DepositVault vaultData={vaultData} />}
+              {params.manageAction === 'deposit' && (
+                <FundingRateVaultDeposit vaultData={vaultData} />
+              )}
               {params.manageAction === 'withdraw' && <WithdrawVault vaultData={vaultData} />}
             </BorderBox>
             <VaultUserInfo vaultData={vaultData} />
