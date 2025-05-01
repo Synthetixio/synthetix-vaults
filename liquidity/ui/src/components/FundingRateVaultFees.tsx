@@ -38,7 +38,7 @@ const FeeRow = ({ title, description, value, isLast }: FeeRowProps) => (
   </Flex>
 );
 
-export const VaultFees = ({ vaultData }: Props) => {
+export const FundingRateVaultFees = ({ vaultData }: Props) => {
   const formatPercentage = (value: BigNumber) => {
     const weiValue = wei(value);
     return `${weiValue.mul(100).toString(2)}%`; // Convert to percentage and show 2 decimal places
