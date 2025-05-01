@@ -1,6 +1,8 @@
 import { ContractInterface } from 'ethers';
 
 import abi from '../contracts/abis/funding-rate-vault-abi.json';
+import btcUsdc from './btc-usdc.svg';
+import ethUsdc from './eth-usdc.svg';
 
 export interface AssetData {
   symbol: string;
@@ -13,6 +15,7 @@ export interface FundingRateVaultMetadata {
   perpsMarket: string;
   deployedBlock: number;
   assetData: Record<string, AssetData>;
+  collateralImage: string;
 }
 
 export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadata> = {
@@ -22,6 +25,7 @@ export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadat
     abi,
     perpsMarket: 'ETH',
     deployedBlock: 29_014_954,
+    collateralImage: ethUsdc,
     assetData: {
       '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
         symbol: 'USDC',
@@ -47,6 +51,7 @@ export const FUNDING_RATE_VAULT_METADATA: Record<string, FundingRateVaultMetadat
     abi,
     perpsMarket: 'BTC',
     deployedBlock: 29_608_610,
+    collateralImage: btcUsdc,
     assetData: {
       '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
         symbol: 'USDC',
