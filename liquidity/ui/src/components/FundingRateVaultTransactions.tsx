@@ -5,7 +5,6 @@ import { FundingRateVaultDepositsAndWithdrawals } from './FundingRateVaultDeposi
 import { FundingRateVaultTrades } from './FundingRateVaultTrades';
 import { FundingRateVaultMargin } from './FundingRateVaultMargin';
 import { FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
-import { FundingRateVaultPositions } from './FundingRateVaultPositions';
 
 interface Props {
   vaultData?: FundingRateVaultData;
@@ -62,7 +61,7 @@ export const FundingRateVaultTransactions = ({ vaultData }: Props) => {
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(1)}
           >
-            Trades
+            Trade History
           </Tab>
 
           <Tab
@@ -75,20 +74,7 @@ export const FundingRateVaultTransactions = ({ vaultData }: Props) => {
             _hover={{ textDecoration: 'none' }}
             onClick={() => setIndex(2)}
           >
-            Margin
-          </Tab>
-
-          <Tab
-            color={index === 3 ? 'white' : 'gray.500'}
-            fontWeight={400}
-            fontSize="sm"
-            px={6}
-            whiteSpace="nowrap"
-            textDecoration="none"
-            _hover={{ textDecoration: 'none' }}
-            onClick={() => setIndex(3)}
-          >
-            Positions
+            Margin History
           </Tab>
         </TabList>
 
@@ -101,9 +87,6 @@ export const FundingRateVaultTransactions = ({ vaultData }: Props) => {
           </TabPanel>
           <TabPanel>
             <FundingRateVaultMargin vaultData={vaultData} />
-          </TabPanel>
-          <TabPanel>
-            <FundingRateVaultPositions vaultData={vaultData} />
           </TabPanel>
         </TabPanels>
       </Tabs>
