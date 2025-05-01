@@ -3,7 +3,7 @@ import { Tab, TabList, Tabs, TabPanel, TabPanels } from '@chakra-ui/react';
 import { useState } from 'react';
 import { FundingRateVaultDepositsAndWithdrawals } from './FundingRateVaultDepositsAndWithdrawals';
 import { VaultTradeHistory } from './Vault/VaultHistory/VaultTradeHistory';
-import { VaultMargin } from './Vault/VaultHistory/VaultMargin';
+import { FundingRateVaultMargin } from './FundingRateVaultMargin';
 import { FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
 import { VaultPositions } from './Vault/VaultHistory/VaultPositions';
 
@@ -100,7 +100,7 @@ export const FundingRateVaultTransactions = ({ vaultData }: Props) => {
             <VaultTradeHistory vaultData={vaultData} />
           </TabPanel>
           <TabPanel>
-            <VaultMargin vaultData={vaultData} />
+            <FundingRateVaultMargin vaultData={vaultData} />
           </TabPanel>
           <TabPanel>
             <VaultPositions vaultData={vaultData} />
