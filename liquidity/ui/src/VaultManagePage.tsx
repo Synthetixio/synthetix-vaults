@@ -13,7 +13,7 @@ import { FundingRateVaultInfo } from './components/FundingRateVaultInfo';
 import { FundingRateVaultTransactions } from './components/FundingRateVaultTransactions';
 import { VaultFees } from './components/Vault/VaultFees';
 import { useFundingRateVaultData } from '../../lib/useFundingRateVaultData';
-import { VaultUserInfo } from './components/Vault/VaultUserInfo/VaultUserInfo';
+import { FundingRateVaultUserInfo } from './components/FundingRateVaultUserInfo';
 // import { TvlChart } from '../../lib/Vault/TVLChart/TVLChart';
 
 export const VaultManagePage = () => {
@@ -110,7 +110,7 @@ export const VaultManagePage = () => {
               )}
               {params.manageAction === 'withdraw' && <WithdrawVault vaultData={vaultData} />}
             </BorderBox>
-            <VaultUserInfo vaultData={vaultData} />
+            <FundingRateVaultUserInfo vaultData={vaultData} />
           </Flex>
         </Flex>
 

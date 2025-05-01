@@ -9,7 +9,7 @@ interface Props {
   vaultData?: FundingRateVaultData;
 }
 
-export const VaultUserInfo = ({ vaultData }: Props) => {
+export const FundingRateVaultUserInfo = ({ vaultData }: Props) => {
   return (
     <BorderBox
       alignSelf="self-start"
