@@ -6,7 +6,7 @@ interface Props {
   vaultData?: FundingRateVaultData;
 }
 
-export const VaultTradeHistory = ({ vaultData }: Props) => {
+export const FundingRateVaultTrades = ({ vaultData }: Props) => {
   return (
     <TransactionTable
       headers={[
