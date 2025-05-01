@@ -1,6 +1,6 @@
 import { BorderBox } from '@snx-v3/BorderBox';
 import { Flex } from '@chakra-ui/react';
-import { StatsCard } from '../VaultPositionStats/StatsCard';
+import { StatsCard } from '@snx-v3/StatsCard';
 import { Amount } from '@snx-v3/Amount';
 import { wei } from '@synthetixio/wei';
 import { FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
