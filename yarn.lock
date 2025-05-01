@@ -5229,6 +5229,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/StatsCard@workspace:*, @snx-v3/StatsCard@workspace:liquidity/lib/StatsCard":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/StatsCard@workspace:liquidity/lib/StatsCard"
+  dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/BorderBox": "workspace:*"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/SynthSkeleton@workspace:*, @snx-v3/SynthSkeleton@workspace:liquidity/lib/SynthSkeleton":
   version: 0.0.0-use.local
   resolution: "@snx-v3/SynthSkeleton@workspace:liquidity/lib/SynthSkeleton"
@@ -5557,6 +5567,7 @@ __metadata:
     "@snx-v3/Pools": "workspace:*"
     "@snx-v3/Positions": "workspace:*"
     "@snx-v3/StatsBox": "workspace:*"
+    "@snx-v3/StatsCard": "workspace:*"
     "@snx-v3/Synths": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/Tooltip": "workspace:*"
