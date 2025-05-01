@@ -8,7 +8,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { FundingRateVaultDeposit } from './components/FundingRateVaultDeposit';
 import { BorderBox } from '@snx-v3/BorderBox';
-import { WithdrawVault } from './components/Vault/WithdrawVault/WithdrawVault';
+import { FundingRateVaultWithdraw } from './components/FundingRateVaultWithdraw';
 import { FundingRateVaultInfo } from './components/FundingRateVaultInfo';
 import { FundingRateVaultTransactions } from './components/FundingRateVaultTransactions';
 import { VaultFees } from './components/Vault/VaultFees';
@@ -108,7 +108,9 @@ export const VaultManagePage = () => {
               {params.manageAction === 'deposit' && (
                 <FundingRateVaultDeposit vaultData={vaultData} />
               )}
-              {params.manageAction === 'withdraw' && <WithdrawVault vaultData={vaultData} />}
+              {params.manageAction === 'withdraw' && (
+                <FundingRateVaultWithdraw vaultData={vaultData} />
+              )}
             </BorderBox>
             <FundingRateVaultUserInfo vaultData={vaultData} />
           </Flex>

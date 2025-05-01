@@ -26,7 +26,7 @@ interface Props {
 
 type ValidationType = 'error' | 'info';
 
-export const WithdrawVault = ({ vaultData }: Props) => {
+export const FundingRateVaultWithdraw = ({ vaultData }: Props) => {
   const [params] = useParams<VaultPositionPageSchemaType>();
   const [amount, setAmount] = useState(ZEROWEI);
   const [isLoading, setIsLoading] = useState(false);
