@@ -4,7 +4,7 @@ import { BigNumber, ethers } from 'ethers';
 import { useFundingRateVaultHelper } from '../contracts/useFundingRateVaultHelper';
 import getFundingRateVaultMetadata, {
   FundingRateVaultMetadata,
-} from '../../ui/src/data/funding-rate-vault-metadata';
+} from './funding-rate-vault-metadata';
 import vaultAbi from '../contracts/abis/funding-rate-vault-abi.json';
 import { wei } from '@synthetixio/wei';
 
