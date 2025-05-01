@@ -21,7 +21,7 @@ export const LockedCollateral: React.FC<{
 
   return (
     <div>
-      <Text color="gray.50" fontSize="20px" fontWeight={700}>
+      <Text color="white" fontSize="20px" fontWeight={700}>
         <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
         Escrowed SNX
       </Text>
@@ -74,7 +74,7 @@ export const LockedCollateral: React.FC<{
             {locks.map((lock) => (
               <Tr key={lock.timestamp.toString()} borderBottom="1px solid #2D2D38">
                 <Td px={4} py={5} border="none">
-                  <Text fontWeight={500} color="white" fontSize="14px">
+                  <Text fontWeight="medium" color="white" fontSize="14px">
                     {intlFormat(lock.expirationDate, {
                       year: 'numeric',
                       month: 'short',
@@ -83,7 +83,7 @@ export const LockedCollateral: React.FC<{
                   </Text>
                 </Td>
                 <Td px={4} py={5} textAlign="right" border="none">
-                  <Text fontWeight={500} color="white" fontSize="14px">
+                  <Text fontWeight="medium" color="white" fontSize="14px">
                     <Amount value={wei(lock.amount, Number(collateralType.decimals), true)} />
                   </Text>
                 </Td>
@@ -99,7 +99,7 @@ export const LockedCollateral: React.FC<{
           width="100%"
           textAlign="center"
           color="gray.500"
-          fontWeight={500}
+          fontWeight="medium"
           fontSize="14px"
           my="4"
           pl="3"

@@ -332,7 +332,7 @@ export function DepositModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div data-cy="deposit multistep">
-      <Text color="gray.50" fontSize="20px" fontWeight={700}>
+      <Text color="white" fontSize="20px" fontWeight={700}>
         <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
         Manage Collateral
       </Text>

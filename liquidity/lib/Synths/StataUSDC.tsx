@@ -143,7 +143,13 @@ export function StataUSDC() {
         </Flex>
       </Flex>
       <Flex width={['100px', '100px', '160px']} direction="column" alignItems="flex-end">
-        <Text color="white" fontSize="14px" fontFamily="heading" fontWeight={500} lineHeight="20px">
+        <Text
+          color="white"
+          fontSize="14px"
+          fontFamily="heading"
+          fontWeight="medium"
+          lineHeight="20px"
+        >
           <Amount prefix="$" value={wei(stataBalance.previewRedeem, 6)} />
         </Text>
       </Flex>

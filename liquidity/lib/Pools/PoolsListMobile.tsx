@@ -16,10 +16,10 @@ import { AutoCompoundingRow } from './AutoCompoundingRow';
 function HeaderText({ ...props }) {
   return (
     <Flex
-      color="gray.600"
+      color="gray.500"
       fontFamily="heading"
       fontSize="12px"
-      lineHeight="16px"
+      lineHeight="120%"
       letterSpacing={0.6}
       fontWeight={700}
       alignItems="center"
@@ -35,7 +35,7 @@ export interface PoolWithPosition extends EnrichedPool {
 
 export function PoolsListMobile({ pools }: { pools: PoolWithPosition[] }) {
   return (
-    <Flex direction="column" gap={4} mt={4}>
+    <Flex direction="column" gap={4} mt={4} p={4} rounded="md" bg="navy.700">
       {pools.map(({ network, position, collateral, rewardsValue, totalValue }) => {
         const collateralValue = position?.collateralValue.mul(position.collateralPrice);
         return (
@@ -43,10 +43,8 @@ export function PoolsListMobile({ pools }: { pools: PoolWithPosition[] }) {
             key={`${network.id}-${collateral.address}`}
             flexDir="column"
             w="100%"
-            border="1px solid"
-            borderColor="gray.900"
-            rounded="base"
-            bg="navy.700"
+            rounded="md"
+            bg="whiteAlpha.50"
             py={4}
             px={4}
             gap={4}
@@ -58,7 +56,7 @@ export function PoolsListMobile({ pools }: { pools: PoolWithPosition[] }) {
                 fontFamily="heading"
                 fontSize="14px"
                 lineHeight="20px"
-                fontWeight={500}
+                fontWeight="medium"
                 color="white"
               >
                 {formatNumberToUsdShort(totalValue, {
@@ -106,7 +104,7 @@ export function PoolsListMobile({ pools }: { pools: PoolWithPosition[] }) {
                   <Text
                     fontFamily="heading"
                     fontSize="14px"
-                    fontWeight={500}
+                    fontWeight="medium"
                     lineHeight="28px"
                     color="white"
                   >

@@ -2,10 +2,12 @@ import { Flex, Heading, Text, Button, Image, Tooltip, Link } from '@chakra-ui/re
 import { BASE_ANDROMEDA, NetworkIcon, useNetwork } from '@snx-v3/useBlockchain';
 import { useStrategyPoolsList } from '@snx-v3/useStrategyPoolsList';
 
-import DeltaNeutralIcon from './assets/delta-neutral.svg';
 import { InfoIcon } from '@chakra-ui/icons';
 import { makeSearch, useParams } from '@snx-v3/useParams';
-import { formatNumberToUsdShort } from '@snx-v3/formatters';
+import { currency } from '@snx-v3/format';
+import { wei } from '@synthetixio/wei';
+import { formatNumberShort } from '@snx-v3/formatters';
+import { PoolCardsLoading } from '@snx-v3/Pools/PoolCardsLoading';
 
 function HeaderText({ ...props }) {
   return (
@@ -27,10 +29,10 @@ export const StrategySection = () => {
   const { network } = useNetwork();
   const targetNetwork = network || BASE_ANDROMEDA;
 
-  const [params] = useParams();
+  const [params, setParams] = useParams();
   const btnDisabled = !network;
 
-  const { data: pools } = useStrategyPoolsList();
+  const pools = useStrategyPoolsList();
 
   return (
     <Flex mt={16} flexDirection="column" gap={4}>
@@ -49,13 +51,29 @@ export const StrategySection = () => {
           yield
         </Text>
       </Flex>
-      <Flex mt={6} maxW="100%" overflowX="auto" direction="column" gap={4}>
-        <Flex flexDir="row" minW="800px" gap={4} py={3} px={4} whiteSpace="nowrap">
+      <Flex
+        maxW="100%"
+        overflowX="auto"
+        direction="column"
+        gap={4}
+        p={['4', '6']}
+        backgroundColor="navy.700"
+        borderRadius="md"
+      >
+        <Flex flexDir="row" gap={4} py={3} px={4} whiteSpace="nowrap">
           <HeaderText width="260px" justifyContent="left">
             Vault
           </HeaderText>
-          <HeaderText width="140px">Vault TVL</HeaderText>
-          <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
+          <HeaderText width="180px" display={['none', 'flex']}>
+            Vault TVL
+          </HeaderText>
+          <Flex
+            justifyContent="flex-end"
+            alignItems="center"
+            width="180px"
+            color="gray.600"
+            display={['none', 'flex']}
+          >
             <HeaderText fontSize="xs" fontWeight="bold" mr={1}>
               APR
             </HeaderText>
@@ -70,222 +88,158 @@ export const StrategySection = () => {
               <InfoIcon w="10px" h="10px" />
             </Tooltip>
           </Flex>
-          <Flex justifyContent="flex-end" alignItems="center" width="140px" color="gray.600">
+          <Flex
+            justifyContent="flex-end"
+            alignItems="center"
+            width="180px"
+            color="gray.600"
+            display={['none', 'flex']}
+          >
             <HeaderText fontSize="xs" fontWeight="bold" mr={1}>
               Deposited
             </HeaderText>
-            <Tooltip
-              label={
-                <Text textAlign="left">
-                  Deposits can be withdrawn 24h after unlocking or any subsequent account activity
-                </Text>
-              }
-            >
-              <InfoIcon w="10px" h="10px" />
-            </Tooltip>
           </Flex>
-          <HeaderText width="260px">Performance</HeaderText>
           <Flex minW="120px" flex="1" />
         </Flex>
-      </Flex>
-      <Flex
-        w="100%"
-        border="1px solid"
-        borderColor="gray.900"
-        rounded="base"
-        bg="navy.700"
-        py={4}
-        px={4}
-        gap={4}
-        flexDirection={['column', 'row']}
-        alignItems={['flex-start', 'center']}
-      >
-        <Flex
-          alignItems="center"
-          flex="1"
-          textDecoration="none"
-          _hover={{ textDecoration: 'none' }}
-        >
-          <Flex position="relative">
-            <Image
-              src={DeltaNeutralIcon}
-              fallbackSrc="https://assets.synthetix.io/collateral/UNKNOWN.svg"
-              style={{ width: 40, height: 40 }}
-            />
-            <NetworkIcon
-              position="absolute"
-              right={0}
-              bottom={0}
-              networkId={network?.id ?? 8453}
-              size="14px"
-            />
-          </Flex>
-          <Flex flexDirection="column" ml={3} mr="auto">
-            <Text fontSize="md" color="white" fontWeight={700} fontFamily="heading">
-              Mega Vault
-            </Text>
-            <Text
-              textTransform="capitalize"
-              fontSize="xs"
-              color="gray.500"
-              fontFamily="heading"
-              lineHeight="20px"
+        {!pools && <PoolCardsLoading />}
+        {pools &&
+          pools.map((pool) => (
+            <Flex
+              key={`${pool.symbol}`}
+              w="100%"
+              rounded="md"
+              bg="whiteAlpha.50"
+              py={4}
+              px={4}
+              gap={4}
+              flexDirection={['column', 'row']}
+              alignItems={['flex-start', 'center']}
             >
-              {targetNetwork?.name} Network
-            </Text>
-          </Flex>
-        </Flex>
-
-        <Flex width={['100%', 'auto']} justifyContent="flex-end">
-          <Button
-            variant="solid"
-            width="100%"
-            isDisabled
-            _disabled={{
-              bg: 'gray.900',
-              backgroundImage: 'none',
-              color: 'gray.500',
-              opacity: 0.5,
-              cursor: 'not-allowed',
-            }}
-            color="gray.500"
-            size="sm"
-            minWidth="124px"
-          >
-            Coming Soon
-          </Button>
-        </Flex>
-      </Flex>
-      {pools?.map((pool) => (
-        <Flex
-          key={pool.name}
-          w="100%"
-          border="1px solid"
-          borderColor="gray.900"
-          rounded="base"
-          bg="navy.700"
-          py={4}
-          px={4}
-          gap={4}
-          flexDirection={['column', 'row']}
-          alignItems={['flex-start', 'center']}
-        >
-          <Flex
-            alignItems="center"
-            width="260px"
-            textDecoration="none"
-            _hover={{ textDecoration: 'none' }}
-            as={Link}
-            href={`?${makeSearch({
-              page: 'vault-position',
-              collateralSymbol: 'USDC',
-              symbol: pool.displaySymbol,
-              manageAction: 'deposit',
-              accountId: params.accountId,
-            })}`}
-          >
-            <Flex position="relative">
-              <Image
-                src={`https://assets.synthetix.io/markets/${pool.token}.svg`}
-                style={{ width: 40, height: 40 }}
-              />
-              <NetworkIcon
-                position="absolute"
-                right={0}
-                bottom={0}
-                networkId={network?.id ?? 8453}
-                size="14px"
-              />
-            </Flex>
-            <Flex flexDirection="column" ml={3} mr="auto">
-              <Text fontSize="md" color="white" fontWeight={700} fontFamily="heading">
-                {pool.displaySymbol}
-              </Text>
-              <Text
-                textTransform="capitalize"
-                fontSize="xs"
-                color="gray.500"
-                fontFamily="heading"
-                lineHeight="20px"
+              <Flex
+                alignItems="center"
+                width="260px"
+                textDecoration="none"
+                _hover={{ textDecoration: 'none' }}
+                as={Link}
+                href={`?${makeSearch({
+                  page: 'funding-rate-vault',
+                  collateralSymbol: 'USDC',
+                  manageAction: 'deposit',
+                  accountId: params.accountId,
+                  vaultAddress: pool.address,
+                })}`}
               >
-                {targetNetwork?.name} Network
-              </Text>
-            </Flex>
-          </Flex>
-          <Flex
-            width="140px"
-            justifyContent="flex-end"
-            textDecoration="none"
-            _hover={{ textDecoration: 'none' }}
-          >
-            {formatNumberToUsdShort(pool.totalAssets, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-          </Flex>
-          <Flex
-            width="140px"
-            justifyContent="flex-end"
-            textDecoration="none"
-            _hover={{ textDecoration: 'none' }}
-          >
-            -
-          </Flex>
-          <Flex
-            width="140px"
-            justifyContent="flex-end"
-            textDecoration="none"
-            _hover={{ textDecoration: 'none' }}
-          >
-            -
-          </Flex>
-          <Flex
-            width="260px"
-            justifyContent="flex-end"
-            textDecoration="none"
-            _hover={{ textDecoration: 'none' }}
-          >
-            -
-          </Flex>
+                <Flex position="relative" flexShrink={0}>
+                  <Image src={pool.collateralImage} style={{ width: 40, height: 40 }} />
+                  <NetworkIcon
+                    position="absolute"
+                    right={0}
+                    bottom={0}
+                    networkId={network?.id ?? 8453}
+                    size="14px"
+                  />
+                </Flex>
+                <Flex flexDirection="column" ml={3} mr="auto">
+                  <Text fontSize="md" color="white" fontWeight={700} fontFamily="heading">
+                    {pool.name}
+                  </Text>
+                  <Text
+                    textTransform="capitalize"
+                    fontSize="xs"
+                    color="gray.500"
+                    fontFamily="heading"
+                    lineHeight="20px"
+                  >
+                    {targetNetwork?.name} Network
+                  </Text>
+                </Flex>
+              </Flex>
+              <Flex
+                width="180px"
+                alignItems="center"
+                justifyContent="flex-end"
+                display={['none', 'flex']}
+              >
+                <Text
+                  fontFamily="heading"
+                  fontSize="14px"
+                  lineHeight="20px"
+                  fontWeight="medium"
+                  color="white"
+                  textAlign="right"
+                >
+                  {`$${currency(wei(pool.totalAssets, 6))}`}
+                </Text>
+              </Flex>
+              <Flex
+                width="180px"
+                justifyContent="flex-end"
+                textDecoration="none"
+                _hover={{ textDecoration: 'none' }}
+                display={['none', 'flex']}
+              >
+                {`${formatNumberShort(pool.apr * 100)}%`}
+              </Flex>
+              <Flex
+                width="180px"
+                justifyContent="flex-end"
+                textDecoration="none"
+                _hover={{ textDecoration: 'none' }}
+                display={['none', 'flex']}
+              >
+                {`$${currency(wei(pool.balanceOf).mul(pool.exchangeRate))}`}
+              </Flex>
 
-          <Flex width={['100%', '120px']} flex="auto" justifyContent="flex-end">
-            <Button
-              as={Link}
-              href={`?${makeSearch({
-                page: 'vault-position',
-                collateralSymbol: 'USDC',
-                symbol: pool.displaySymbol,
-                manageAction: 'deposit',
-                accountId: params.accountId,
-              })}`}
-              size="sm"
-              height="32px"
-              py="10px"
-              px={2}
-              whiteSpace="nowrap"
-              borderRadius="4px"
-              fontFamily="heading"
-              fontWeight={700}
-              fontSize="14px"
-              lineHeight="20px"
-              color="black"
-              textDecoration="none"
-              _hover={{ textDecoration: 'none', color: 'black' }}
-              isDisabled={btnDisabled}
-              _disabled={{
-                bg: 'gray.900',
-                backgroundImage: 'none',
-                color: 'gray.500',
-                opacity: 0.5,
-                cursor: 'not-allowed',
-              }}
-              minWidth="96px"
-            >
-              Deposit
-            </Button>
-          </Flex>
-        </Flex>
-      ))}
+              <Flex width={['100%', '120px']} flex="auto" justifyContent="flex-end">
+                <Button
+                  as={Link}
+                  href={`?${makeSearch({
+                    page: 'funding-rate-vault',
+                    vaultAddress: pool.address,
+                    collateralSymbol: 'USDC',
+                    manageAction: 'deposit',
+                    accountId: params.accountId,
+                  })}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setParams({
+                      page: 'funding-rate-vault',
+                      vaultAddress: pool.address,
+                      collateralSymbol: 'USDC',
+                      manageAction: 'deposit',
+                      accountId: params.accountId,
+                    });
+                  }}
+                  size="sm"
+                  height="32px"
+                  py="10px"
+                  px={2}
+                  whiteSpace="nowrap"
+                  borderRadius="4px"
+                  fontFamily="heading"
+                  fontWeight={700}
+                  fontSize="14px"
+                  lineHeight="20px"
+                  color="black"
+                  textDecoration="none"
+                  _hover={{ textDecoration: 'none', color: 'black' }}
+                  isDisabled={btnDisabled}
+                  _disabled={{
+                    bg: 'gray.900',
+                    backgroundImage: 'none',
+                    color: 'gray.500',
+                    opacity: 0.5,
+                    cursor: 'not-allowed',
+                  }}
+                  minWidth={['100%', '96px']}
+                  width={['100%', 'auto']}
+                >
+                  Deposit
+                </Button>
+              </Flex>
+            </Flex>
+          ))}
+      </Flex>
     </Flex>
   );
 };

@@ -104,21 +104,28 @@ export function NetworkController() {
           <NetworkIcon
             filter={currentNetwork?.isTestnet ? 'grayscale(1)' : ''}
             networkId={notConnected ? 8453 : notSupported ? 0 : currentNetwork?.id}
-            mr={2}
+            size="20px"
           />
-          <Text variant="nav" display={{ base: 'none', md: 'inline-block' }}>
+          <Text
+            variant="nav"
+            display={{ base: 'none', md: 'inline-block' }}
+            ml={2}
+            fontSize="xs"
+            fontWeight="bold"
+          >
             {notSupported ? '' : currentNetwork?.label}
           </Text>
         </MenuButton>
-        <MenuList border="1px" borderColor="gray.900">
+        <MenuList border="1px" borderColor="whiteAlpha.200" backgroundColor="navy.700">
           {mainnets.map(({ id, preset, label }) => (
             <MenuItem
               key={`${id}-${preset}`}
               onClick={() => setNetwork(id)}
               isDisabled={window.$chainId ? window.$chainId !== id : false}
+              backgroundColor="transparent"
             >
               <NetworkIcon networkId={id} size="20px" />
-              <Text variant="nav" ml={2}>
+              <Text variant="nav" ml={2} fontSize="sm">
                 {label}
               </Text>
             </MenuItem>
@@ -154,8 +161,8 @@ export function NetworkController() {
           <Flex
             border="1px solid"
             rounded="base"
-            borderColor="gray.900"
-            w="370px"
+            borderColor="whiteAlpha.200"
+            w="320px"
             _hover={{ bg: 'navy.700' }}
             backgroundColor="navy.700"
             opacity={1}
@@ -180,7 +187,16 @@ export function NetworkController() {
                   Disconnect
                 </Button>
               </Flex>
-              <Flex fontWeight={700} color="white" fontSize="16px" alignItems="center">
+              <Flex
+                p={3}
+                bg="whiteAlpha.50"
+                rounded="md"
+                fontWeight={700}
+                color="white"
+                fontSize="16px"
+                alignItems="center"
+                justifyContent="center"
+              >
                 <Tooltip label={activeWallet.address} fontFamily="monospace" fontSize="0.9em">
                   <Text>{prettyString(activeWallet.address)}</Text>
                 </Tooltip>
@@ -199,16 +215,9 @@ export function NetworkController() {
               </Flex>
 
               {accounts && accounts.length > 0 ? (
-                <Flex
-                  flexDir="column"
-                  p="2"
-                  border="1px solid"
-                  borderColor="gray.900"
-                  rounded="base"
-                  gap="2"
-                >
+                <Flex flexDir="column" p={3} rounded="base" gap={3} backgroundColor="whiteAlpha.50">
                   <Flex w="100%" justifyContent="space-between">
-                    <Text fontWeight={400} fontSize="14px">
+                    <Text fontWeight={400} fontSize="14px" color="gray.500">
                       {accounts.length > 1 ? 'Accounts' : 'Account'}
                     </Text>
                     <Link
@@ -234,10 +243,8 @@ export function NetworkController() {
                         display="flex"
                         alignItems="center"
                         color="white"
-                        fontWeight={700}
                         fontSize="16px"
                         cursor="pointer"
-                        p="3"
                         data-cy="account id"
                         data-account-id={accountId}
                         _hover={{ bg: 'whiteAlpha.300' }}

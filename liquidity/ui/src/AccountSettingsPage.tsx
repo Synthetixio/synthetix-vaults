@@ -16,7 +16,7 @@ export function AccountSettingsPage() {
             sm: 8,
           }}
           mb={6}
-          color="gray.50"
+          color="white"
           fontSize="1.5rem"
           data-cy="account settings"
         >

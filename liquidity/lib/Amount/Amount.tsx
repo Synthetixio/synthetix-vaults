@@ -1,4 +1,4 @@
-import { Text, TextProps } from '@chakra-ui/react';
+import { Skeleton, Text, TextProps } from '@chakra-ui/react';
 import { currency } from '@snx-v3/format';
 import { wei, Wei } from '@synthetixio/wei';
 import { constants } from 'ethers';
@@ -20,6 +20,10 @@ export function Amount({
 } & TextProps) {
   const isMaxUint = value && wei(constants.MaxInt256).lte(value);
   const formattedValue = React.useMemo(() => currency(value, { average }), [value, average]);
+
+  if (value === undefined) {
+    return <Skeleton height="24px" width="100px" />;
+  }
 
   return (
     <Text as="span" data-cy={testId} {...props}>

@@ -317,7 +317,7 @@ export function Deposit() {
             collateralType &&
             collateralChange
               .add(liquidityPosition?.collateralAmount ?? ZEROWEI)
-              .gt(collateralType.minDelegationD18)
+              .gte(collateralType.minDelegationD18)
           )
         }
         onClick={() => {

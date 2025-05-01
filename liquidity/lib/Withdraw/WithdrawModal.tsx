@@ -72,7 +72,7 @@ export function WithdrawModal({
         minWidth="384px"
       >
         <ModalBody data-cy="withdraw dialog" p={6}>
-          <Text color="gray.50" fontSize="20px" fontWeight={700}>
+          <Text color="white" fontSize="20px" fontWeight={700}>
             {isDebtWithdrawal ? 'Withdrawing' : 'Withdrawing Collateral'}
           </Text>
 

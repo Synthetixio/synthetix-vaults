@@ -12,7 +12,7 @@ export const SynthsLoading = () => (
     </Td>
     <Td pl="16px" border="none">
       <Skeleton startColor="whiteAlpha.500" endColor="whiteAlpha.200" height="30px">
-        <Text fontSize="14px" fontFamily="heading" fontWeight={500} lineHeight="20px">
+        <Text fontSize="14px" fontFamily="heading" fontWeight="medium" lineHeight="20px">
           &nbsp;
         </Text>
       </Skeleton>

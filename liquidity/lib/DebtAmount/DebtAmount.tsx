@@ -5,7 +5,7 @@ import { Wei } from '@synthetixio/wei';
 
 export function getDebtColor(debt?: Wei) {
   if (!debt) {
-    return 'gray.50';
+    return 'white';
   }
   if (debt.gt(0)) {
     return 'red.300';

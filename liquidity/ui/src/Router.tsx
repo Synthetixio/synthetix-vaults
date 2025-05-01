@@ -6,7 +6,7 @@ import { DashboardPage } from './DashboardPage';
 import { Footer } from './Footer';
 import Header from './Header';
 import { LiquidityManagePage } from './LiquidityManagePage';
-import { VaultManagePage } from './VaultManagePage';
+import { FundingRateVaultPage } from './FundingRateVaultPage';
 
 function Content() {
   const [params] = useParams();
@@ -16,8 +16,8 @@ function Content() {
   if (params.page === 'position') {
     return <LiquidityManagePage />;
   }
-  if (params.page === 'vault-position') {
-    return <VaultManagePage />;
+  if (params.page === 'funding-rate-vault') {
+    return <FundingRateVaultPage />;
   }
   return <DashboardPage />;
 }

@@ -1,0 +1,11 @@
+{
+  "name": "@snx-v3/StatsCard",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@snx-v3/BorderBox": "workspace:*",
+    "react": "^18.2.0"
+  }
+}

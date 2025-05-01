@@ -5229,6 +5229,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/StatsCard@workspace:*, @snx-v3/StatsCard@workspace:liquidity/lib/StatsCard":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/StatsCard@workspace:liquidity/lib/StatsCard"
+  dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/BorderBox": "workspace:*"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/SynthSkeleton@workspace:*, @snx-v3/SynthSkeleton@workspace:liquidity/lib/SynthSkeleton":
   version: 0.0.0-use.local
   resolution: "@snx-v3/SynthSkeleton@workspace:liquidity/lib/SynthSkeleton"
@@ -5296,6 +5306,17 @@ __metadata:
   resolution: "@snx-v3/TransactionSummary@workspace:liquidity/lib/TransactionSummary"
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/TransactionTable@workspace:*, @snx-v3/TransactionTable@workspace:liquidity/lib/TransactionTable":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/TransactionTable@workspace:liquidity/lib/TransactionTable"
+  dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/parseContractError": "workspace:*"
+    date-fns: "npm:^2.30.0"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
@@ -5546,9 +5567,11 @@ __metadata:
     "@snx-v3/Pools": "workspace:*"
     "@snx-v3/Positions": "workspace:*"
     "@snx-v3/StatsBox": "workspace:*"
+    "@snx-v3/StatsCard": "workspace:*"
     "@snx-v3/Synths": "workspace:*"
     "@snx-v3/TermsModal": "workspace:*"
     "@snx-v3/Tooltip": "workspace:*"
+    "@snx-v3/TransactionTable": "workspace:*"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/format": "workspace:*"
     "@snx-v3/formatters": "workspace:*"
@@ -5560,6 +5583,7 @@ __metadata:
     "@snx-v3/useClaimedRewards": "workspace:*"
     "@snx-v3/useCollateralPrices": "workspace:*"
     "@snx-v3/useCollateralTypes": "workspace:*"
+    "@snx-v3/useFundingRateVaultData": "workspace:*"
     "@snx-v3/useIsAndromedaStataUSDC": "workspace:*"
     "@snx-v3/useIssuedDebt": "workspace:*"
     "@snx-v3/useLiquidityPosition": "workspace:*"
@@ -6046,6 +6070,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/useFundingRateVaultData@workspace:*, @snx-v3/useFundingRateVaultData@workspace:liquidity/lib/useFundingRateVaultData":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useFundingRateVaultData@workspace:liquidity/lib/useFundingRateVaultData"
+  dependencies:
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@synthetixio/wei": "npm:^2.74.4"
+    "@tanstack/react-query": "npm:^5.8.3"
+    ethers: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/useFundingRateVaultHelper@workspace:liquidity/lib/contracts/useFundingRateVaultHelper":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/useFundingRateVaultHelper@workspace:liquidity/lib/contracts/useFundingRateVaultHelper"
+  dependencies:
+    "@snx-v3/contracts": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
+    "@tanstack/react-query": "npm:^5.8.3"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/useGetUSDTokens@workspace:*, @snx-v3/useGetUSDTokens@workspace:liquidity/lib/useGetUSDTokens":
   version: 0.0.0-use.local
   resolution: "@snx-v3/useGetUSDTokens@workspace:liquidity/lib/useGetUSDTokens"
@@ -6498,8 +6544,6 @@ __metadata:
   resolution: "@snx-v3/useStrategyPoolsList@workspace:liquidity/lib/useStrategyPoolsList"
   dependencies:
     "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    debug: "npm:^4.4.0"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown

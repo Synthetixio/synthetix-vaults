@@ -68,12 +68,12 @@ export function PoolHeader({
       textDecoration="none"
       _hover={{ textDecoration: 'none' }}
     >
-      <Flex position="relative">
+      <Flex position="relative" flexShrink={0}>
         <TokenIcon width={40} height={40} symbol={collateral.symbol} />
         <NetworkIcon position="absolute" right={0} bottom={0} networkId={network.id} size="14px" />
       </Flex>
       <Flex flexDirection="column" ml={3} mr="auto">
-        <Flex gap={1} alignItems="center">
+        <Flex gap={2} alignItems="center">
           <Text
             fontSize="16px"
             color="white"
@@ -93,6 +93,7 @@ export function PoolHeader({
             borderRadius="4px"
             color="gray.500"
             variant="solid"
+            minW="fit-content"
           >
             LEGACY
           </Tag>
@@ -134,7 +135,7 @@ export function PoolAPR({ network, collateral }: PoolAPRProps) {
   });
 
   return (
-    <Text fontFamily="heading" fontSize="14px" lineHeight="20px" fontWeight={500} color="white">
+    <Text fontFamily="heading" fontSize="14px" lineHeight="20px" fontWeight="medium" color="white">
       {isPendingApr ? '~' : null}
       {!isPendingApr && positionApr && positionApr.apr28d > 0
         ? (
@@ -206,23 +207,22 @@ export function PoolPerformance({
   return (
     <>
       {position.debt.gt(0) && (
-        <Text
-          fontFamily="heading"
-          fontSize="14px"
-          fontWeight={500}
-          lineHeight="20px"
-          color="gray.500"
-        >
+        <Text fontFamily="heading" fontSize="xs" color="gray.500">
           Debt{' '}
-          <Text color="white" as="span">
+          <Text color="white" as="span" fontSize="sm" fontWeight="medium">
             {formatNumberToUsd(position.debt.toNumber())}
           </Text>
         </Text>
       )}
 
-      <Text color="gray.500" fontFamily="heading" fontSize="sm">
+      <Text color="gray.500" fontFamily="heading" fontSize="xs">
         Rewards{' '}
-        <Text color={totalRewards.gt(0) ? 'green.500' : 'gray.500'} as="span">
+        <Text
+          color={totalRewards.gt(0) ? 'green.500' : 'gray.500'}
+          as="span"
+          fontSize="sm"
+          fontWeight="medium"
+        >
           {totalRewards.gt(0) ? formatNumberToUsd(totalRewards.toNumber()) : '-'}
         </Text>
       </Text>
@@ -241,7 +241,7 @@ export function PoolUnlockedCollateralValue({
 
   return (
     <>
-      <Text fontFamily="heading" fontSize="14px" fontWeight={500} color="white">
+      <Text fontFamily="heading" fontSize="14px" fontWeight="medium" color="white">
         {unlockedCollateralValue ? formatNumberToUsd(unlockedCollateralValue.toNumber()) : '-'}
       </Text>
       {position && unlockedCollateralValue?.gt(0) ? (
@@ -249,6 +249,7 @@ export function PoolUnlockedCollateralValue({
           color="cyan.500"
           fontFamily="heading"
           fontSize="xs"
+          lineHeight="21px"
           href={`?${makeSearch({
             page: 'position',
             collateralSymbol: position.collateralType.symbol,

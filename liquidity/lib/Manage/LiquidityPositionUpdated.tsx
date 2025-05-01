@@ -19,7 +19,7 @@ export function LiquidityPositionUpdated({
     <Flex flexDir="column" gap="6" borderColor="gray.900" rounded="base" height="fit-content">
       {title && (
         <>
-          <Heading color="gray.50" fontSize="20px" fontWeight={700}>
+          <Heading color="white" fontSize="20px" fontWeight={700}>
             {title}
           </Heading>
           <Divider />

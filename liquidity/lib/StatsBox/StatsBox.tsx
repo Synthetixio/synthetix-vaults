@@ -17,10 +17,8 @@ export function StatsBox({
 }) {
   return (
     <Flex
-      bg="navy.700"
-      border="1px solid"
-      borderColor="gray.900"
-      rounded="base"
+      bg="whiteAlpha.50"
+      rounded="md"
       flexDir="column"
       alignItems="center"
       justifyContent="center"
@@ -30,7 +28,7 @@ export function StatsBox({
       px={6}
       py={4}
     >
-      <Flex alignItems="center" mb={1} color="gray.500">
+      <Flex alignItems="center" mb={1} color="gray.500" textAlign="center">
         <Text fontSize="14px" mr={1}>
           {title}
         </Text>

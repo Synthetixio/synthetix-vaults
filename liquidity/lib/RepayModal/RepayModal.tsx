@@ -201,7 +201,7 @@ export function RepayModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div data-cy="repay multistep">
-      <Text color="gray.50" fontSize="20px" fontWeight={700}>
+      <Text color="white" fontSize="20px" fontWeight={700}>
         <ArrowBackIcon
           cursor="pointer"
           onClick={() => {

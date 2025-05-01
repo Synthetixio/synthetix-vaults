@@ -14,7 +14,7 @@ export function ClaimSuccessBanner({ onClose }: { onClose: () => void }) {
       rounded="base"
       height="fit-content"
     >
-      <Heading color="gray.50" fontSize="20px" fontWeight={700}>
+      <Heading color="white" fontSize="20px" fontWeight={700}>
         What can you do with your {systemToken?.displaySymbol}?
       </Heading>
       <Divider />

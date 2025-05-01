@@ -52,14 +52,14 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
 
   return (
     <Flex data-cy="close position multistep" flexDirection="column">
-      <Text color="gray.50" fontSize="20px" fontWeight={700}>
+      <Text color="white" fontSize="20px" fontWeight={700}>
         <ArrowBackIcon cursor="pointer" onClick={onClose} mr={2} />
         Close Position
       </Text>
 
       <Divider my={5} bg="gray.900" />
 
-      <Text color="gray.50" fontSize="sm" fontWeight="700" mb={2}>
+      <Text color="white" fontSize="sm" fontWeight="700" mb={2}>
         {!isPendingLiquidityPosition && liquidityPosition ? (
           <>{liquidityPosition.debt.gt(0) ? 'Repay Debt' : 'Claim Profit'}</>
         ) : (
@@ -115,7 +115,7 @@ function ClosePositionUi({ onSubmit, onClose }: { onClose: () => void; onSubmit:
         </Flex>
       </BorderBox>
 
-      <Text color="gray.50" fontSize="sm" fontWeight="700" mb={2}>
+      <Text color="white" fontSize="sm" fontWeight="700" mb={2}>
         Unlock Collateral
       </Text>
       <BorderBox display="flex" flexDirection="column" p={3} mb="6">
