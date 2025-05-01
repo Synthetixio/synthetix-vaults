@@ -1,7 +1,7 @@
 import { BorderBox } from '@snx-v3/BorderBox';
 import { Tab, TabList, Tabs, TabPanel, TabPanels } from '@chakra-ui/react';
 import { useState } from 'react';
-import { VaultDeposits } from './VaultDeposits';
+import { FundingRateVaultDepositsAndWithdrawals } from '../../FundingRateVaultDepositsAndWithdrawals';
 import { VaultTradeHistory } from './VaultTradeHistory';
 import { VaultMargin } from './VaultMargin';
 import { FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
@@ -94,7 +94,7 @@ export const VaultHistory = ({ vaultData }: Props) => {
 
         <TabPanels>
           <TabPanel>
-            <VaultDeposits vaultData={vaultData} />
+            <FundingRateVaultDepositsAndWithdrawals vaultData={vaultData} />
           </TabPanel>
           <TabPanel>
             <VaultTradeHistory vaultData={vaultData} />

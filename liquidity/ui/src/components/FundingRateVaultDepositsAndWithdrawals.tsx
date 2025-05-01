@@ -15,7 +15,7 @@ interface DepositOrWithdrawalEvent extends EventType {
   assets: BigNumber;
 }
 
-export const VaultDeposits = ({ vaultData }: Props) => {
+export const FundingRateVaultDepositsAndWithdrawals = ({ vaultData }: Props) => {
   const { deposits, withdrawals } = vaultData || { deposits: [], withdrawals: [] };
 
   const events: DepositOrWithdrawalEvent[] = [
