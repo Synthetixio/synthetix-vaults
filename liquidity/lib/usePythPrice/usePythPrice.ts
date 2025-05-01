@@ -11,6 +11,8 @@ const priceService = new EvmPriceServiceConnection(offchainMainnetEndpoint, {
 
 const priceFeeds: { [key: string]: string } = {
   SNX: '0x39d020f60982ed892abbcd4a06a276a9f9b7bfbce003204c110b6e488f502da3',
+  BTC: '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
+  ETH: '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
 };
 
 export async function fetchPythPrice(symbol: string, time?: number) {
