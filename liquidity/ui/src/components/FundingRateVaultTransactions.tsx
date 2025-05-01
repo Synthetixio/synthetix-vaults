@@ -5,7 +5,7 @@ import { FundingRateVaultDepositsAndWithdrawals } from './FundingRateVaultDeposi
 import { VaultTradeHistory } from './Vault/VaultHistory/VaultTradeHistory';
 import { FundingRateVaultMargin } from './FundingRateVaultMargin';
 import { FundingRateVaultData } from '@snx-v3/useFundingRateVaultData';
-import { VaultPositions } from './Vault/VaultHistory/VaultPositions';
+import { FundingRateVaultPositions } from './FundingRateVaultPositions';
 
 interface Props {
   vaultData?: FundingRateVaultData;
@@ -103,7 +103,7 @@ export const FundingRateVaultTransactions = ({ vaultData }: Props) => {
             <FundingRateVaultMargin vaultData={vaultData} />
           </TabPanel>
           <TabPanel>
-            <VaultPositions vaultData={vaultData} />
+            <FundingRateVaultPositions vaultData={vaultData} />
           </TabPanel>
         </TabPanels>
       </Tabs>

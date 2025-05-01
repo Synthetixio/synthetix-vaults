@@ -1,7 +1,7 @@
 import {
   FundingRateVaultData,
   FundingRateVaultPositionEvent,
-} from '../../../../../lib/useFundingRateVaultData/useFundingRateVaultData';
+} from '@snx-v3/useFundingRateVaultData/useFundingRateVaultData';
 import { formatNumber, formatNumberShort, truncateAddress } from '@snx-v3/formatters';
 import { TransactionTable } from '@snx-v3/TransactionTable';
 import { wei } from '@synthetixio/wei';
@@ -10,7 +10,7 @@ interface Props {
   vaultData?: FundingRateVaultData;
 }
 
-export const VaultPositions = ({ vaultData }: Props) => {
+export const FundingRateVaultPositions = ({ vaultData }: Props) => {
   return (
     <TransactionTable
       headers={[
