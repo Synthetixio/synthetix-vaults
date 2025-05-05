@@ -2,6 +2,7 @@ import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
 import {
   Badge,
   Button,
+  Divider,
   Flex,
   IconButton,
   Link,
@@ -78,16 +79,29 @@ export function NetworkController() {
 
   if (!activeWallet) {
     return (
-      <Button
-        data-cy="connect wallet button"
-        onClick={() => connect()}
-        type="button"
-        size="sm"
-        ml={2}
-        py={5}
-      >
-        Connect Wallet
-      </Button>
+      <>
+        <Button
+          data-cy="connect wallet button"
+          onClick={() => connect()}
+          type="button"
+          size="sm"
+          ml={2}
+          py={5}
+          display={{ base: 'none', md: 'flex' }}
+        >
+          Connect Wallet
+        </Button>
+        <IconButton
+          aria-label="Wallet"
+          data-cy="connect wallet button"
+          icon={<WalletIcon />}
+          variant="outline"
+          borderColor="whiteAlpha.200"
+          _hover={{ bg: 'whiteAlpha.200' }}
+          display={{ base: 'flex', md: 'none' }}
+          onClick={() => connect()}
+        />
+      </>
     );
   }
   return (
@@ -97,20 +111,28 @@ export function NetworkController() {
           as={Button}
           variant="outline"
           colorScheme="gray"
+          borderColor="whiteAlpha.200"
           sx={{ '> span': { display: 'flex', alignItems: 'center' } }}
           mr={1}
           px={3}
+          display={{ base: 'none', md: 'flex' }}
         >
           <NetworkIcon
             filter={currentNetwork?.isTestnet ? 'grayscale(1)' : ''}
             networkId={notConnected ? 8453 : notSupported ? 0 : currentNetwork?.id}
-            mr={2}
+            size="20px"
           />
-          <Text variant="nav" display={{ base: 'none', md: 'inline-block' }}>
+          <Text
+            fontSize="xs"
+            fontWeight={700}
+            variant="nav" 
+            ml={2}
+            display={{ base: 'none', md: 'inline-block' }}
+          >
             {notSupported ? '' : currentNetwork?.label}
           </Text>
         </MenuButton>
-        <MenuList border="1px" borderColor="gray.900">
+        <MenuList border="1px" borderColor="whiteAlpha.200">
           {mainnets.map(({ id, preset, label }) => (
             <MenuItem
               key={`${id}-${preset}`}
@@ -118,7 +140,7 @@ export function NetworkController() {
               isDisabled={window.$chainId ? window.$chainId !== id : false}
             >
               <NetworkIcon networkId={id} size="20px" />
-              <Text variant="nav" ml={2}>
+              <Text variant="nav" ml={4} fontSize="sm">
                 {label}
               </Text>
             </MenuItem>
@@ -130,6 +152,7 @@ export function NetworkController() {
           as={Button}
           variant="outline"
           colorScheme="gray"
+          borderColor="whiteAlpha.200"
           ml={2}
           height={10}
           py="6px"
@@ -137,32 +160,75 @@ export function NetworkController() {
           whiteSpace="nowrap"
           data-cy="wallet button"
         >
-          <WalletIcon color="white" />
-          <Text
-            as="span"
-            ml={1}
-            color="white"
-            fontWeight={700}
-            fontSize="xs"
-            userSelect="none"
-            data-cy="short wallet address"
-          >
-            {activeWallet.ens?.name || prettyString(activeWallet.address)}
-          </Text>
+          <Flex alignItems="center" gap={1}>
+            <WalletIcon color="white" aria-label="Connected Wallet" />
+            <Text
+              as="span"
+              ml={1}
+              color="white"
+              fontWeight={700}
+              fontSize="xs"
+              userSelect="none"
+              data-cy="short wallet address"
+              display={{ base: 'none', md: 'flex' }}
+            >
+              {activeWallet.ens?.name || prettyString(activeWallet.address)}
+            </Text>
+          </Flex>
         </MenuButton>
-        <MenuList>
-          <Flex
-            border="1px solid"
-            rounded="base"
-            borderColor="gray.900"
-            w="370px"
-            _hover={{ bg: 'navy.700' }}
-            backgroundColor="navy.700"
-            opacity={1}
-            p="4"
-          >
-            <Flex flexDir="column" w="100%" gap="2">
-              <Flex justifyContent="space-between">
+        <MenuList
+          borderStyle="solid"
+          borderWidth="1px"
+          borderColor="whiteAlpha.200"
+          borderRadius="base"
+          p={4}
+          mt={0}
+          mr={{ base: 0, md: 'auto' }}
+          w={{ base: 'calc(100vw - 32px)', md: 'auto' }}
+        >
+            <Flex flexDir="column" w="100%" gap="3">
+              <Flex direction="column" gap={2} display={{ base: 'flex', md: 'none' }}>
+                <Text fontSize="14px" color="gray.500">
+                  Network
+                </Text>
+                <Flex
+                  direction="row"
+                  alignItems="center"
+                  borderRadius="base"
+                  backgroundColor="whiteAlpha.50"
+                  p={3}
+                  justifyContent="flex-start"
+                  gap="12px"
+                >
+                  {mainnets.map(({ id, preset, label }) => (
+                    <Flex
+                      alignItems="center"
+                      key={`${id}-${preset}`}
+                      onClick={() => setNetwork(id)}
+                      backgroundColor="transparent"
+                      gap="8px"
+                      borderColor="whiteAlpha.200"
+                      bg={currentNetwork?.id === id ? 'whiteAlpha.400' : 'auto'}
+                      borderWidth="1px"
+                      borderStyle="solid"
+                      borderRadius="base"
+                      p="8px"
+                    >
+                      <NetworkIcon networkId={id} size="20px" />
+                      <Text
+                        variant="nav"
+                        color={currentNetwork?.id === id ? 'white' : 'gray.500'}
+                        fontSize="sm"
+                        fontWeight="medium"
+                      >
+                        {label}
+                      </Text>
+                    </Flex>
+                  ))}
+                </Flex>
+              </Flex>
+              <Divider display={{ base: 'flex', md: 'none' }} />
+              <Flex justifyContent="space-between" gap={3}>
                 <Text fontSize="14px" color="gray.500">
                   Connected with {walletsInfo?.label}
                 </Text>
@@ -180,8 +246,24 @@ export function NetworkController() {
                   Disconnect
                 </Button>
               </Flex>
-              <Flex fontWeight={700} color="white" fontSize="16px" alignItems="center">
-                <Tooltip label={activeWallet.address} fontFamily="monospace" fontSize="0.9em">
+              <Flex 
+                fontWeight={700} 
+                color="white" 
+                fontSize="16px" 
+                alignItems="center"
+                border="base"
+                backgroundColor="whiteAlpha.50"
+                p={3}
+                justifyContent="center"
+              >
+                <Tooltip 
+                  hasArrow 
+                  label={activeWallet.address} 
+                  fontFamily="monospace" 
+                  fontSize="xs"
+                  placement="top-end"
+                  closeOnClick={false}
+                >
                   <Text>{prettyString(activeWallet.address)}</Text>
                 </Tooltip>
                 <Tooltip label={toolTipLabel} closeOnClick={false}>
@@ -258,7 +340,6 @@ export function NetworkController() {
                 </Flex>
               ) : null}
             </Flex>
-          </Flex>
         </MenuList>
       </Menu>
     </Flex>
