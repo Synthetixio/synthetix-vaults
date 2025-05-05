@@ -44,11 +44,11 @@ export const StrategySection = () => {
           letterSpacing="tight"
           color="white"
         >
-          Interest Rate Strategies
+          Funding Rate Strategies
         </Heading>
         <Text color="gray.500" fontSize="1rem" lineHeight={6} fontFamily="heading" mt="1rem">
-          Capture the funding rates on Synthetix Exchange across a range of assets and any staking
-          yield
+          Capture the funding rate and any underlying staking yield across a range of assets on
+          Synthetix Exchange
         </Text>
       </Flex>
       <Flex

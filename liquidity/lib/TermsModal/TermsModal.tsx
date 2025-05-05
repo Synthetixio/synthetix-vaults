@@ -12,7 +12,6 @@ import {
   UnorderedList,
 } from '@chakra-ui/react';
 import { SESSION_STORAGE_KEYS } from '@snx-v3/constants';
-import { theme } from '@snx-v3/theme';
 import { useState } from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 
@@ -33,10 +32,10 @@ export const TermsModal = ({ defaultOpen = true }: TermsModalProps) => {
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    <Modal isOpen={isOpen} onClose={() => {}}>
-      <ModalOverlay />
+    <Modal isOpen={isOpen} onClose={() => {}} isCentered>
+      <ModalOverlay background="blackAlpha.800" />
       <ModalContent
-        bgGradient={theme.gradients['dark'][500]}
+        background="navy.900"
         pt="10"
         pb="3"
         borderWidth="1px"
@@ -46,12 +45,13 @@ export const TermsModal = ({ defaultOpen = true }: TermsModalProps) => {
         <ModalHeader py={0} textAlign="center">
           Synthetix Terms of Service
         </ModalHeader>
-        <ModalBody fontSize="xs" color="gray.600">
+        <ModalBody fontSize="xs" color="gray.500">
           <Text fontSize="sm">
             By clicking “I Agree” below, you agree to be bound by the terms of this Agreement. As
             such, you fully understand that:
           </Text>
           <Box
+            position="relative"
             onScroll={(e) => {
               const div = e.currentTarget;
               const scrollTopWithTolerance = div.scrollTop + 10;
@@ -62,27 +62,25 @@ export const TermsModal = ({ defaultOpen = true }: TermsModalProps) => {
               }
             }}
             as="div"
-            my={2}
-            py={3}
-            height="350px"
+            my={4}
+            height="360px"
             overflow="auto"
-            overflowX="scroll"
             sx={{
-              '::-webkit-scrollbar': {
-                display: 'block',
+              '&::-webkit-scrollbar': {
+                width: '8px',
+                borderRadius: '8px',
+                backgroundColor: 'whiteAlpha.50',
               },
-              '::-webkit-scrollbar-track': {
-                backgroundColor: 'transparent',
-              },
-              '::-webkit-scrollbar-track-piece': {
-                backgroundColor: 'transparent',
-              },
-              '::-webkit-scrollbar-corner': {
-                backgroundColor: 'transparent',
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: 'whiteAlpha.300',
+                borderRadius: '8px',
+                '&:hover': {
+                  backgroundColor: 'whiteAlpha.400',
+                },
               },
             }}
           >
-            <UnorderedList>
+            <UnorderedList px={2}>
               <Text fontSize="14px">
                 <ListItem>
                   <Link
@@ -91,8 +89,8 @@ export const TermsModal = ({ defaultOpen = true }: TermsModalProps) => {
                     color="cyan.500"
                     _focusVisible={{ outline: 'none' }}
                   >
-                    Synthetix{' '}
-                  </Link>
+                    Synthetix
+                  </Link>{' '}
                   is a blockchain-based decentralized finance project. You are participating at your
                   own risk.
                 </ListItem>
@@ -180,12 +178,24 @@ export const TermsModal = ({ defaultOpen = true }: TermsModalProps) => {
                 </ListItem>
               </Text>
             </UnorderedList>
+            <Box
+              position="sticky"
+              bottom="0"
+              left="0"
+              right="0"
+              height="48px"
+              bgGradient="linear(to-t, navy.900, transparent)"
+              pointerEvents="none"
+              opacity={!enabled ? 1 : 0}
+              transition="opacity 300ms ease-out"
+            />
           </Box>
         </ModalBody>
         <Button
           variant="outline"
           _focusVisible={{ outline: 'none' }}
-          my={4}
+          mt={0}
+          mb={4}
           mx={6}
           onClick={onSubmit}
           isDisabled={!enabled}
