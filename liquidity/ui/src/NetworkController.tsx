@@ -125,7 +125,7 @@ export function NetworkController() {
           <Text
             fontSize="xs"
             fontWeight={700}
-            variant="nav" 
+            variant="nav"
             ml={2}
             display={{ base: 'none', md: 'inline-block' }}
           >
@@ -186,160 +186,160 @@ export function NetworkController() {
           mr={{ base: 0, md: 'auto' }}
           w={{ base: 'calc(100vw - 32px)', md: 'auto' }}
         >
-            <Flex flexDir="column" w="100%" gap="3">
-              <Flex direction="column" gap={2} display={{ base: 'flex', md: 'none' }}>
-                <Text fontSize="14px" color="gray.500">
-                  Network
-                </Text>
-                <Flex
-                  direction="row"
-                  alignItems="center"
-                  borderRadius="base"
-                  backgroundColor="whiteAlpha.50"
-                  p={3}
-                  justifyContent="flex-start"
-                  gap="12px"
-                >
-                  {mainnets.map(({ id, preset, label }) => (
-                    <Flex
-                      alignItems="center"
-                      key={`${id}-${preset}`}
-                      onClick={() => setNetwork(id)}
-                      backgroundColor="transparent"
-                      gap="8px"
-                      borderColor="whiteAlpha.200"
-                      bg={currentNetwork?.id === id ? 'whiteAlpha.400' : 'auto'}
-                      borderWidth="1px"
-                      borderStyle="solid"
-                      borderRadius="base"
-                      p="8px"
+          <Flex flexDir="column" w="100%" gap="3">
+            <Flex direction="column" gap={2} display={{ base: 'flex', md: 'none' }}>
+              <Text fontSize="14px" color="gray.500">
+                Network
+              </Text>
+              <Flex
+                direction="row"
+                alignItems="center"
+                borderRadius="base"
+                backgroundColor="whiteAlpha.50"
+                p={3}
+                justifyContent="flex-start"
+                gap="12px"
+              >
+                {mainnets.map(({ id, preset, label }) => (
+                  <Flex
+                    alignItems="center"
+                    key={`${id}-${preset}`}
+                    onClick={() => setNetwork(id)}
+                    backgroundColor="transparent"
+                    gap="8px"
+                    borderColor="whiteAlpha.200"
+                    bg={currentNetwork?.id === id ? 'whiteAlpha.400' : 'auto'}
+                    borderWidth="1px"
+                    borderStyle="solid"
+                    borderRadius="base"
+                    p="8px"
+                  >
+                    <NetworkIcon networkId={id} size="20px" />
+                    <Text
+                      variant="nav"
+                      color={currentNetwork?.id === id ? 'white' : 'gray.500'}
+                      fontSize="sm"
+                      fontWeight="medium"
                     >
-                      <NetworkIcon networkId={id} size="20px" />
-                      <Text
-                        variant="nav"
-                        color={currentNetwork?.id === id ? 'white' : 'gray.500'}
-                        fontSize="sm"
-                        fontWeight="medium"
-                      >
-                        {label}
-                      </Text>
-                    </Flex>
+                      {label}
+                    </Text>
+                  </Flex>
+                ))}
+              </Flex>
+            </Flex>
+            <Divider display={{ base: 'flex', md: 'none' }} />
+            <Flex justifyContent="space-between" gap={3}>
+              <Text fontSize="14px" color="gray.500">
+                Connected with {walletsInfo?.label}
+              </Text>
+              <Button
+                onClick={() => {
+                  if (walletsInfo) {
+                    disconnect(walletsInfo);
+                  }
+                }}
+                size="xs"
+                variant="outline"
+                colorScheme="gray"
+                color="white"
+              >
+                Disconnect
+              </Button>
+            </Flex>
+            <Flex
+              fontWeight={700}
+              color="white"
+              fontSize="16px"
+              alignItems="center"
+              border="base"
+              backgroundColor="whiteAlpha.50"
+              p={3}
+              justifyContent="center"
+            >
+              <Tooltip
+                hasArrow
+                label={activeWallet.address}
+                fontFamily="monospace"
+                fontSize="xs"
+                placement="top-end"
+                closeOnClick={false}
+              >
+                <Text>{prettyString(activeWallet.address)}</Text>
+              </Tooltip>
+              <Tooltip label={toolTipLabel} closeOnClick={false}>
+                <CopyIcon
+                  ml="2"
+                  onClick={() => {
+                    navigator.clipboard.writeText(activeWallet.address);
+                    setTooltipLabel('Copied');
+                    setTimeout(() => {
+                      setTooltipLabel('Copy');
+                    }, 10000);
+                  }}
+                />
+              </Tooltip>
+            </Flex>
+
+            {accounts && accounts.length > 0 ? (
+              <Flex
+                flexDir="column"
+                p="2"
+                border="1px solid"
+                borderColor="gray.900"
+                rounded="base"
+                gap="2"
+              >
+                <Flex w="100%" justifyContent="space-between">
+                  <Text fontWeight={400} fontSize="14px">
+                    {accounts.length > 1 ? 'Accounts' : 'Account'}
+                  </Text>
+                  <Link
+                    href={`?${makeSearch({ page: 'settings', accountId: params.accountId })}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setParams({ page: 'settings', accountId: params.accountId });
+                    }}
+                  >
+                    <IconButton
+                      variant="outline"
+                      colorScheme="gray"
+                      size="xs"
+                      icon={<SettingsIcon />}
+                      aria-label="account settings"
+                    />
+                  </Link>
+                </Flex>
+                <Flex data-cy="accounts list" flexDir="column">
+                  {accounts?.map((accountId) => (
+                    <Text
+                      key={accountId.toString()}
+                      display="flex"
+                      alignItems="center"
+                      color="white"
+                      fontWeight={700}
+                      fontSize="16px"
+                      cursor="pointer"
+                      p="3"
+                      data-cy="account id"
+                      data-account-id={accountId}
+                      _hover={{ bg: 'whiteAlpha.300' }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setParams({ ...params, accountId: accountId.toString() });
+                      }}
+                    >
+                      {renderAccountId(accountId)}
+                      {paramsAccountId && accountId.eq(paramsAccountId) ? (
+                        <Badge ml={2} colorScheme="cyan" variant="outline">
+                          Connected
+                        </Badge>
+                      ) : null}
+                    </Text>
                   ))}
                 </Flex>
               </Flex>
-              <Divider display={{ base: 'flex', md: 'none' }} />
-              <Flex justifyContent="space-between" gap={3}>
-                <Text fontSize="14px" color="gray.500">
-                  Connected with {walletsInfo?.label}
-                </Text>
-                <Button
-                  onClick={() => {
-                    if (walletsInfo) {
-                      disconnect(walletsInfo);
-                    }
-                  }}
-                  size="xs"
-                  variant="outline"
-                  colorScheme="gray"
-                  color="white"
-                >
-                  Disconnect
-                </Button>
-              </Flex>
-              <Flex 
-                fontWeight={700} 
-                color="white" 
-                fontSize="16px" 
-                alignItems="center"
-                border="base"
-                backgroundColor="whiteAlpha.50"
-                p={3}
-                justifyContent="center"
-              >
-                <Tooltip 
-                  hasArrow 
-                  label={activeWallet.address} 
-                  fontFamily="monospace" 
-                  fontSize="xs"
-                  placement="top-end"
-                  closeOnClick={false}
-                >
-                  <Text>{prettyString(activeWallet.address)}</Text>
-                </Tooltip>
-                <Tooltip label={toolTipLabel} closeOnClick={false}>
-                  <CopyIcon
-                    ml="2"
-                    onClick={() => {
-                      navigator.clipboard.writeText(activeWallet.address);
-                      setTooltipLabel('Copied');
-                      setTimeout(() => {
-                        setTooltipLabel('Copy');
-                      }, 10000);
-                    }}
-                  />
-                </Tooltip>
-              </Flex>
-
-              {accounts && accounts.length > 0 ? (
-                <Flex
-                  flexDir="column"
-                  p="2"
-                  border="1px solid"
-                  borderColor="gray.900"
-                  rounded="base"
-                  gap="2"
-                >
-                  <Flex w="100%" justifyContent="space-between">
-                    <Text fontWeight={400} fontSize="14px">
-                      {accounts.length > 1 ? 'Accounts' : 'Account'}
-                    </Text>
-                    <Link
-                      href={`?${makeSearch({ page: 'settings', accountId: params.accountId })}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setParams({ page: 'settings', accountId: params.accountId });
-                      }}
-                    >
-                      <IconButton
-                        variant="outline"
-                        colorScheme="gray"
-                        size="xs"
-                        icon={<SettingsIcon />}
-                        aria-label="account settings"
-                      />
-                    </Link>
-                  </Flex>
-                  <Flex data-cy="accounts list" flexDir="column">
-                    {accounts?.map((accountId) => (
-                      <Text
-                        key={accountId.toString()}
-                        display="flex"
-                        alignItems="center"
-                        color="white"
-                        fontWeight={700}
-                        fontSize="16px"
-                        cursor="pointer"
-                        p="3"
-                        data-cy="account id"
-                        data-account-id={accountId}
-                        _hover={{ bg: 'whiteAlpha.300' }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setParams({ ...params, accountId: accountId.toString() });
-                        }}
-                      >
-                        {renderAccountId(accountId)}
-                        {paramsAccountId && accountId.eq(paramsAccountId) ? (
-                          <Badge ml={2} colorScheme="cyan" variant="outline">
-                            Connected
-                          </Badge>
-                        ) : null}
-                      </Text>
-                    ))}
-                  </Flex>
-                </Flex>
-              ) : null}
-            </Flex>
+            ) : null}
+          </Flex>
         </MenuList>
       </Menu>
     </Flex>

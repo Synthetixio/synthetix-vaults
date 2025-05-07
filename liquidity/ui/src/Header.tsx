@@ -15,11 +15,11 @@ export default function Header() {
   }, [location, onClose]);
 
   return (
-    <Flex 
-      bg="navy.700" 
-      mb="4" 
-      py="3" 
-      borderBottomWidth="1px" 
+    <Flex
+      bg="navy.700"
+      mb="4"
+      py="3"
+      borderBottomWidth="1px"
       borderBottomColor="whiteAlpha.200"
       top="0"
       position="sticky"
@@ -33,9 +33,9 @@ export default function Header() {
         position="relative"
         px={{ base: '16px', md: 'auto' }}
       >
-        <Flex 
-          direction={{ base: "row-reverse", md: "row" }} 
-          justifyContent="start" 
+        <Flex
+          direction={{ base: 'row-reverse', md: 'row' }}
+          justifyContent="start"
           alignItems="center"
         >
           <Flex
