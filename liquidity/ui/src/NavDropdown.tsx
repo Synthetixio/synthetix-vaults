@@ -165,7 +165,7 @@ export const NavDropdown = () => {
 
         <Divider mx="16px" w="calc(100% - 32px)" />
 
-        <Grid templateColumns="repeat(2, 1fr)" gap="16px" p="16px">
+        <Grid templateColumns="repeat(2, 1fr)" gap={4} p={4}>
           <NavLinkItem icon={DocsIcon} title="Docs" href="https://docs.synthetix.io" />
           <NavLinkItem icon={BlogIcon} title="Blog" href="https://blog.synthetix.io" />
           <NavLinkItem
