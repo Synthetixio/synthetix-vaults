@@ -183,8 +183,8 @@ export function NetworkController() {
           borderRadius="base"
           p={4}
           mt={0}
-          mr={{ base: 0, md: 'auto' }}
-          w={{ base: 'calc(100vw - 32px)', md: 'auto' }}
+          mr={{ base: -2, md: 'auto' }}
+          w={{ base: 'calc(100vw - 16px)', md: 'auto' }}
         >
           <Flex flexDir="column" w="100%" gap="3">
             <Flex direction="column" gap={2} display={{ base: 'flex', md: 'none' }}>
@@ -198,7 +198,7 @@ export function NetworkController() {
                 backgroundColor="whiteAlpha.50"
                 p={3}
                 justifyContent="flex-start"
-                gap="12px"
+                gap={3}
               >
                 {mainnets.map(({ id, preset, label }) => (
                   <Flex

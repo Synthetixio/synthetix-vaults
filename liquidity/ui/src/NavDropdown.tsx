@@ -126,13 +126,13 @@ export const NavDropdown = () => {
       />
       <MenuList
         mt={0}
-        ml={{ base: 0, md: '-126px' }}
+        ml={{ base: -2, md: '-126px' }}
         borderColor="whiteAlpha.200"
         borderWidth={1}
         borderStyle="solid"
-        w={{ base: 'calc(100vw - 32px)', md: 'auto' }}
+        w={{ base: 'calc(100vw - 16px)', md: 'auto' }}
       >
-        <Flex direction="column" align="stretch" p="16px" gap={4}>
+        <Flex direction="column" align="stretch" p={4} gap={4}>
           <NavMenuItem
             icon={StakeIcon}
             title="Stake"
