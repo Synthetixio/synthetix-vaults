@@ -11,7 +11,6 @@ import {
 import { formatNumberToUsd, formatNumberToUsdShort } from '@snx-v3/formatters';
 import { InfoIcon } from '@chakra-ui/icons';
 import Wei from '@synthetixio/wei';
-import { AutoCompoundingRow } from './AutoCompoundingRow';
 
 function HeaderText({ ...props }) {
   return (
@@ -145,7 +144,6 @@ export function PoolsListMobile({ pools }: { pools: PoolWithPosition[] }) {
           </Flex>
         );
       })}
-      <AutoCompoundingRow />
     </Flex>
   );
 }
