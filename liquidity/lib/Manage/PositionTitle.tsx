@@ -45,7 +45,6 @@ export function PositionTitle({ isVault, name }: { isVault?: boolean; name?: str
   return (
     <Flex alignItems="top">
       <Flex
-        // bg="linear-gradient(180deg, #08021E 0%, #1F0777 100%)" // not sure if we need this?
         justifyContent="center"
         alignItems="top"
         borderRadius="100%"
