@@ -4,6 +4,7 @@
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
+    "@ethersproject/abi": "^5.7.0",
     "@synthetixio/wei": "^2.74.4",
     "ethers": "^5.7.2",
     "numbro": "^2.5.0"
