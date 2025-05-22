@@ -22,5 +22,3 @@ export * from './importSystemToken';
 export * from './importTrustedMulticallForwarder';
 export * from './importUSDC';
 export * from './importUSDProxy';
-export * from './importPositionManagerDeltaNeutralBTC';
-export * from './importPositionManagerDeltaNeutralETH';

@@ -11,7 +11,6 @@ import { useRewards } from '@snx-v3/useRewards';
 import { wei } from '@synthetixio/wei';
 import React from 'react';
 import { useIssuedDebt } from '@snx-v3/useIssuedDebt';
-import { useStrategyPoolsList } from '@snx-v3/useStrategyPoolsList';
 
 export function StatsTotalPnl() {
   const [params] = useParams();
@@ -27,7 +26,6 @@ export function StatsTotalPnl() {
     params.accountId
   );
   const { data: issuedDebt, isPending: isPendingIssuedDebt } = useIssuedDebt(params.accountId);
-  const fundingRateVaults = useStrategyPoolsList();
 
   const rewardsTokens = React.useMemo(() => {
     const result: Set<string> = new Set();
@@ -86,14 +84,6 @@ export function StatsTotalPnl() {
     return issuedDebt?.reduce((curr, acc) => curr.add(acc.issuance), wei(0));
   }, [issuedDebt]);
 
-  const totalFundingRateVaults = React.useMemo(() => {
-    return (
-      fundingRateVaults?.reduce((result, fundingRateVault) => {
-        return result.add(fundingRateVault.pnl);
-      }, wei(0)) || wei(0)
-    );
-  }, [fundingRateVaults]);
-
   return (
     <StatsBox
       title="My PnL"
@@ -112,14 +102,10 @@ export function StatsTotalPnl() {
       value={
         totalDebt && totalRewardsValue && totalClaimedRewards && totalIssuedDebt ? (
           <PnlAmount
-            debt={totalDebt
-              .sub(totalRewardsValue)
-              .sub(totalClaimedRewards)
-              .sub(totalIssuedDebt)
-              .add(totalFundingRateVaults)}
+            debt={totalDebt.sub(totalRewardsValue).sub(totalClaimedRewards).sub(totalIssuedDebt)}
           />
         ) : (
-          <PnlAmount debt={totalFundingRateVaults} />
+          <PnlAmount debt={wei(0)} />
         )
       }
       label={
