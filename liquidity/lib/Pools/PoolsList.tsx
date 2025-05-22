@@ -6,7 +6,6 @@ import { Tooltip } from '@snx-v3/Tooltip';
 import { InfoIcon } from '@chakra-ui/icons';
 import { PoolCardsLoading } from './PoolCardsLoading';
 import { PoolRow } from './PoolRow';
-import { AutoCompoundingRow } from './AutoCompoundingRow';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPosition';
 import { useShowMyPositionsOnly } from '@snx-v3/useShowMyPositionsOnly';
 import { useRewardsByCollateralType } from '@snx-v3/useRewards';
@@ -161,7 +160,6 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
               />
             )
           )}
-          <AutoCompoundingRow />
         </Flex>
       ) : null}
     </Flex>

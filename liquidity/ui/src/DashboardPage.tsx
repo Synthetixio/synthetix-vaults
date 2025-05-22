@@ -10,7 +10,6 @@ import { useParams } from '@snx-v3/useParams';
 import { StakingSection } from './StakingSection';
 import { MyDeposits, StatsTotalPnl } from './components';
 import { TotalValueLocked } from './components/TotalValueLocked';
-import { StrategySection } from './StrategySection';
 import { MyPositionsOnlyToggle } from './components/MyPositionsOnlyToggle';
 
 export function DashboardPage() {
@@ -117,7 +116,6 @@ export function DashboardPage() {
           </Text>
           <PoolsList positions={filteredLiquidityPositions} />
         </Flex>
-        <StrategySection />
         <StakingSection />
         <Synths />
       </Flex>
