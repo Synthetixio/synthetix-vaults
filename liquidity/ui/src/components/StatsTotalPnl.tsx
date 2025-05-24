@@ -105,7 +105,7 @@ export function StatsTotalPnl() {
             debt={totalDebt.sub(totalRewardsValue).sub(totalClaimedRewards).sub(totalIssuedDebt)}
           />
         ) : (
-          '-'
+          <PnlAmount debt={wei(0)} />
         )
       }
       label={

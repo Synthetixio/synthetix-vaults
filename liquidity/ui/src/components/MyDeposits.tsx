@@ -16,7 +16,7 @@ export function MyDeposits() {
       accountId: params.accountId,
     });
 
-  const totalLocked = React.useMemo(
+  const lpTotalLocked = React.useMemo(
     () =>
       liquidityPositions
         ? liquidityPositions.reduce(
@@ -24,7 +24,7 @@ export function MyDeposits() {
               result.add(liquidityPosition.collateralAmount.mul(liquidityPosition.collateralPrice)),
             wei(0)
           )
-        : undefined,
+        : wei(0),
     [liquidityPositions]
   );
 
@@ -32,7 +32,7 @@ export function MyDeposits() {
     <StatsBox
       title="Total Value of My Deposits"
       isLoading={!(!params.accountId || (params.accountId && !isPendingLiquidityPositions))}
-      value={activeWallet && totalLocked ? <Amount prefix="$" value={totalLocked} /> : '-'}
+      value={activeWallet && lpTotalLocked ? <Amount prefix="$" value={lpTotalLocked} /> : '-'}
       label={
         <>
           <Text textAlign="left">All assets locked in positions</Text>

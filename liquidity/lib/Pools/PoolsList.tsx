@@ -6,7 +6,6 @@ import { Tooltip } from '@snx-v3/Tooltip';
 import { InfoIcon } from '@chakra-ui/icons';
 import { PoolCardsLoading } from './PoolCardsLoading';
 import { PoolRow } from './PoolRow';
-import { AutoCompoundingRow } from './AutoCompoundingRow';
 import { LiquidityPositionType } from '@snx-v3/useLiquidityPosition';
 import { useShowMyPositionsOnly } from '@snx-v3/useShowMyPositionsOnly';
 import { useRewardsByCollateralType } from '@snx-v3/useRewards';
@@ -81,7 +80,16 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
     return <PoolsListMobile pools={filteredPools} />;
   }
   return (
-    <Flex mt={6} maxW="100%" overflowX="auto" direction="column" gap={4}>
+    <Flex
+      maxW="100%"
+      overflowX="auto"
+      direction="column"
+      gap={4}
+      p={['4', '6']}
+      backgroundColor="navy.700"
+      borderRadius="md"
+      mt={0}
+    >
       <Flex flexDir="row" minW="800px" gap={4} py={3} px={4} whiteSpace="nowrap">
         <HeaderText width="260px" justifyContent="left">
           Vault
@@ -137,7 +145,7 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
 
       {isPending ? <PoolCardsLoading /> : null}
       {!isPending && filteredPools ? (
-        <Flex minW="800px" direction="column-reverse" gap={4}>
+        <Flex minW="800px" direction="column" gap={4}>
           {filteredPools?.map(
             ({ network, pool, collateral, totalValue, price, rewardsValue, position }) => (
               <PoolRow
@@ -152,7 +160,6 @@ export function PoolsList({ positions }: { positions: LiquidityPositionType[] })
               />
             )
           )}
-          <AutoCompoundingRow />
         </Flex>
       ) : null}
     </Flex>

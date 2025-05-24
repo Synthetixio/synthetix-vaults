@@ -1,12 +1,13 @@
 {
-  "name": "@snx-v3/usePositionManagerDeltaNeutralETH",
+  "name": "@snx-v3/TransactionTable",
   "private": true,
   "main": "index.ts",
   "version": "0.0.1",
   "dependencies": {
-    "@snx-v3/contracts": "workspace:*",
+    "@chakra-ui/react": "^2.8.2",
+    "@snx-v3/etherscanLink": "workspace:*",
+    "@snx-v3/formatters": "workspace:*",
     "@snx-v3/useBlockchain": "workspace:*",
-    "@tanstack/react-query": "^5.8.3",
     "react": "^18.2.0"
   }
 }

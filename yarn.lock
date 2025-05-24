@@ -5229,6 +5229,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snx-v3/StatsCard@workspace:liquidity/lib/StatsCard":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/StatsCard@workspace:liquidity/lib/StatsCard"
+  dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/BorderBox": "workspace:*"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@snx-v3/SynthSkeleton@workspace:*, @snx-v3/SynthSkeleton@workspace:liquidity/lib/SynthSkeleton":
   version: 0.0.0-use.local
   resolution: "@snx-v3/SynthSkeleton@workspace:liquidity/lib/SynthSkeleton"
@@ -5269,7 +5279,6 @@ __metadata:
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
     "@snx-v3/constants": "workspace:*"
-    "@snx-v3/theme": "workspace:*"
     react: "npm:^18.2.0"
     react-router-dom: "npm:^6.18.0"
   languageName: unknown
@@ -5296,6 +5305,18 @@ __metadata:
   resolution: "@snx-v3/TransactionSummary@workspace:liquidity/lib/TransactionSummary"
   dependencies:
     "@chakra-ui/react": "npm:^2.8.2"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@snx-v3/TransactionTable@workspace:liquidity/lib/TransactionTable":
+  version: 0.0.0-use.local
+  resolution: "@snx-v3/TransactionTable@workspace:liquidity/lib/TransactionTable"
+  dependencies:
+    "@chakra-ui/react": "npm:^2.8.2"
+    "@snx-v3/etherscanLink": "workspace:*"
+    "@snx-v3/formatters": "workspace:*"
+    "@snx-v3/useBlockchain": "workspace:*"
     react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
@@ -5463,6 +5484,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snx-v3/format@workspace:liquidity/lib/format"
   dependencies:
+    "@ethersproject/abi": "npm:^5.7.0"
     "@synthetixio/wei": "npm:^2.74.4"
     ethers: "npm:^5.7.2"
     numbro: "npm:^2.5.0"
@@ -5551,7 +5573,6 @@ __metadata:
     "@snx-v3/Tooltip": "workspace:*"
     "@snx-v3/constants": "workspace:*"
     "@snx-v3/format": "workspace:*"
-    "@snx-v3/formatters": "workspace:*"
     "@snx-v3/icons": "workspace:*"
     "@snx-v3/theme": "workspace:*"
     "@snx-v3/useAccounts": "workspace:*"
@@ -5569,7 +5590,6 @@ __metadata:
     "@snx-v3/usePythPrice": "workspace:*"
     "@snx-v3/useRewards": "workspace:*"
     "@snx-v3/useShowMyPositionsOnly": "workspace:*"
-    "@snx-v3/useStrategyPoolsList": "workspace:*"
     "@synthetixio/devtools-formatters": "workspace:*"
     "@synthetixio/magic-wallet": "workspace:*"
     "@synthetixio/safe-import": "workspace:*"
@@ -5591,10 +5611,12 @@ __metadata:
     core-js: "npm:^3.33.2"
     crypto-browserify: "npm:^3.12.0"
     css-loader: "npm:^6.8.1"
+    date-fns: "npm:^2.30.0"
     dotenv: "npm:^16.4.3"
     ethers: "npm:^5.7.2"
     framer-motion: "npm:^10.16.5"
     html-webpack-plugin: "npm:^5.5.3"
+    numbro: "npm:^2.5.0"
     process: "npm:^0.11.10"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
@@ -6275,28 +6297,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snx-v3/usePositionManagerDeltaNeutralBTC@workspace:liquidity/lib/contracts/usePositionManagerDeltaNeutralBTC":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/usePositionManagerDeltaNeutralBTC@workspace:liquidity/lib/contracts/usePositionManagerDeltaNeutralBTC"
-  dependencies:
-    "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/usePositionManagerDeltaNeutralETH@workspace:liquidity/lib/contracts/usePositionManagerDeltaNeutralETH":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/usePositionManagerDeltaNeutralETH@workspace:liquidity/lib/contracts/usePositionManagerDeltaNeutralETH"
-  dependencies:
-    "@snx-v3/contracts": "workspace:*"
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
 "@snx-v3/usePositionManagerForCollateral@workspace:*, @snx-v3/usePositionManagerForCollateral@workspace:liquidity/lib/contracts/usePositionManagerForCollateral":
   version: 0.0.0-use.local
   resolution: "@snx-v3/usePositionManagerForCollateral@workspace:liquidity/lib/contracts/usePositionManagerForCollateral"
@@ -6488,18 +6488,6 @@ __metadata:
     "@snx-v3/useBlockchain": "workspace:*"
     "@snx-v3/useStaticAaveUSDC": "workspace:*"
     "@tanstack/react-query": "npm:^5.8.3"
-    ethers: "npm:^5.7.2"
-    react: "npm:^18.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@snx-v3/useStrategyPoolsList@workspace:*, @snx-v3/useStrategyPoolsList@workspace:liquidity/lib/useStrategyPoolsList":
-  version: 0.0.0-use.local
-  resolution: "@snx-v3/useStrategyPoolsList@workspace:liquidity/lib/useStrategyPoolsList"
-  dependencies:
-    "@snx-v3/useBlockchain": "workspace:*"
-    "@tanstack/react-query": "npm:^5.8.3"
-    debug: "npm:^4.4.0"
     ethers: "npm:^5.7.2"
     react: "npm:^18.2.0"
   languageName: unknown

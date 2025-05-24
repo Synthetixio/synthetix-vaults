@@ -21,10 +21,10 @@ export function RewardsRow({
           <Fade in>
             <Flex flexDirection="column" ml="12px">
               <Text
-                color="gray.50"
+                color="white"
                 fontSize="14px"
                 fontFamily="heading"
-                fontWeight={500}
+                fontWeight="medium"
                 lineHeight="20px"
               >
                 {displaySymbol}
@@ -35,10 +35,10 @@ export function RewardsRow({
         <Td alignItems="center" px={4} py={3} border="none">
           <Fade in>
             <Text
-              color="gray.50"
+              color="white"
               fontSize="14px"
               fontFamily="heading"
-              fontWeight={500}
+              fontWeight="medium"
               lineHeight="20px"
             >
               <Amount value={claimableAmount} />

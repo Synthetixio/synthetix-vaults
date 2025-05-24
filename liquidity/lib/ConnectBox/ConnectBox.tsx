@@ -12,17 +12,15 @@ export const ConnectBox: FC = () => {
       columnGap={10}
       mt={12}
       justifyContent="space-between"
-      border="1px solid"
-      borderColor="gray.900"
-      borderRadius="6px"
+      borderRadius="md"
       backgroundColor="navy.700"
       position="relative"
     >
       <Flex p={10} flexDirection="column" gap="24px" justifyContent="center">
         <Flex flexDirection="column">
           <Heading
-            color="gray.50"
-            fontSize={['24px', '30px']}
+            color="white"
+            fontSize={['2xl', '3xl']}
             letterSpacing="tight"
             fontWeight="medium"
           >

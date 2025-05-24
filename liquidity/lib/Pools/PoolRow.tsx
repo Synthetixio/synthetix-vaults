@@ -47,10 +47,8 @@ export function PoolRow({
       <Flex
         flexDir="row"
         w="100%"
-        border="1px solid"
-        borderColor="gray.900"
-        rounded="base"
-        bg="navy.700"
+        rounded="md"
+        bg="whiteAlpha.50"
         py={4}
         px={4}
         gap={4}
@@ -63,7 +61,7 @@ export function PoolRow({
             fontFamily="heading"
             fontSize="14px"
             lineHeight="20px"
-            fontWeight={500}
+            fontWeight="medium"
             color="white"
             textAlign="right"
           >
@@ -82,7 +80,7 @@ export function PoolRow({
           <Text
             fontFamily="heading"
             fontSize="14px"
-            fontWeight={500}
+            fontWeight="medium"
             lineHeight="28px"
             color="white"
           >

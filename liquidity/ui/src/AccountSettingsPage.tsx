@@ -7,7 +7,7 @@ export function AccountSettingsPage() {
     <>
       <Helmet>
         <title>Synthetix Account Settings</title>
-        <meta name="description" content="Synthetix Liquidity V3 - Account Settings" />
+        <meta name="description" content="Synthetix Vaults - Account Settings" />
       </Helmet>
       <Flex flexDir="column" mb={16}>
         <Heading
@@ -16,7 +16,7 @@ export function AccountSettingsPage() {
             sm: 8,
           }}
           mb={6}
-          color="gray.50"
+          color="white"
           fontSize="1.5rem"
           data-cy="account settings"
         >

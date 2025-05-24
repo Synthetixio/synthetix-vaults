@@ -132,12 +132,13 @@ export function NetworkController() {
             {notSupported ? '' : currentNetwork?.label}
           </Text>
         </MenuButton>
-        <MenuList border="1px" borderColor="whiteAlpha.200">
+        <MenuList border="1px" borderColor="whiteAlpha.200" backgroundColor="navy.700">
           {mainnets.map(({ id, preset, label }) => (
             <MenuItem
               key={`${id}-${preset}`}
               onClick={() => setNetwork(id)}
               isDisabled={window.$chainId ? window.$chainId !== id : false}
+              backgroundColor="transparent"
             >
               <NetworkIcon networkId={id} size="20px" />
               <Text variant="nav" ml={4} fontSize="sm">

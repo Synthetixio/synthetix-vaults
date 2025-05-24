@@ -21,6 +21,7 @@ export default function Header() {
       py="3"
       borderBottomWidth="1px"
       borderBottomColor="whiteAlpha.200"
+      px={{ base: 1, md: 10 }}
       top="0"
       position="sticky"
       zIndex="10"
